@@ -58,9 +58,10 @@ public class AdminConfigServlet extends HttpServlet{
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
         Map<String, Object> context = new HashMap<>();
+        context.put("test", "this is test");
 
         resp.setContentType("text/html");
-        templateRenderer.render("/templates/adminConfig/edit.vm", context, resp.getWriter());
+        templateRenderer.render("/templates/adminConfig/view.vm", context, resp.getWriter());
         // resp.getWriter().write("<html><body>Hello World</body></html>");
     }
 

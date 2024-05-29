@@ -1,0 +1,11 @@
+<html>
+<head>
+    <title>$action.getText("workflow.designer.edit.workflow.title", $action.htmlEncode($!action.wfName))</title>
+    <meta name="decorator" content="atl.admin"/>
+    <meta name="admin.active.section" content="admin_issues_menu/element_options_section/workflows_section"/>
+    <meta name="admin.active.tab" content="workflows"/>
+</head>
+<body id="jira">
+    <h1> test </h1>
+</body>
+</html>

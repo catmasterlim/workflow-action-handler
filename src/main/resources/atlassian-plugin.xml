@@ -7,39 +7,89 @@
     <vendor name="${project.organization.name}" url="${project.organization.url}"/>  
     <param name="plugin-icon">images/pluginIcon.png</param>  
     <param name="plugin-logo">images/pluginLogo.png</param>  
-    <param name="configure.url">/admin/plugins/gmaps/configurePlugin.action</param> 
+    <param name="configure.url">/secure/AdminConfig.jspa</param> 
   </plugin-info>  
   <!-- add our i18n resource -->  
-  <resource type="i18n" name="i18n" location="react-base"/>  
+  <resource type="i18n" name="i18n" location="base"/>  
   <!-- add our web resources -->  
-  <web-resource key="react-base-resources" name="react-base Web Resources"> 
+  <web-resource key="base-resources" name="base Web Resources"> 
     <dependency>com.atlassian.auiplugin:ajs</dependency>  
-    <resource type="download" name="react-base.css" location="/css/react-base.css"/>  
-    <resource type="download" name="react-base.js" location="/js/react-base.js"/>  
+    <resource type="download" name="base.css" location="/css/base.css"/>  
+    <resource type="download" name="base.js" location="/js/base.js"/>  
     <resource type="download" name="images/" location="/images"/>  
-    <context>react-base</context> 
+    <context>base</context> 
   </web-resource>  
-
   <web-section name="myadmin_config_section" i18n-name-key="myadmin_config_section.name" key="myadmin_config_section" location="admin_plugins_menu" weight="1000"> 
     <description key="myadmin_config_section.description">The myadmin_config_section Plugin</description>  
     <label key="myadmin_config_section.label"/> 
   </web-section>  
   <web-item key="myadmin_config_link" section="admin_plugins_menu/myadmin_config_section"> 
     <label key="myadmin_config_link.label"/>  
-    <link linkId="myadmin_config_link.link" key="myadmin_config_link.description">/my/adminconfig</link> 
+    <link linkId="myadmin_config_link.link" key="myadmin_config_link.description">/plugins/servlet/my/adminconfig</link> 
   </web-item>  
   <webwork1 key="myadmin_config_action" name="myadmin_config_action" i18n-name-key="myadmin_config_action.name" class="java.lang.Object" roles-required="use"> 
     <description key="myadmin_config_action.description">Admin Config</description>  
     <actions> 
-      <action name="dev.jira.jira.webwork.AdminConfigAction" alias="AdminConfigAction" roles-required="sysadmin"> 
-        <view name="success">/templates/adminConfig/success.vm</view>  
-        <view name="input">/templates/adminConfig/input.vm</view>  
+      <action name="dev.jira.webwork.AdminConfigAction" alias="AdminConfig" roles-required="sysadmin"> 
+        <view name="success">/templates/adminConfig/view.vm</view>           
         <view name="error">/templates/adminConfig/error.vm</view> 
       </action> 
     </actions> 
   </webwork1>  
+  <web-item name="WebItemAdminConfig" i18n-name-key="web-item-2.name" key="web-item-2" section="admin_plugins_menu/myadmin_config_section" weight="1000"> 
+    <description key="web-item-2.description">The AdminConfig Plugin</description>  
+    <label key="web-item-2.label"/>  
+    <link linkId="web-item-2-link">/secure/AdminConfigAction.jspa</link> 
+  </web-item>  
+
   <servlet name="Admin Config Servlet" i18n-name-key="admin-config-servlet.name" key="admin-config-servlet" class="dev.jira.servlet.AdminConfigServlet"> 
     <description key="admin-config-servlet.description">The Admin Config Servlet Plugin</description>  
     <url-pattern>/my/adminconfig</url-pattern> 
-  </servlet>
+  </servlet>  
+
+
+<!-- 
+    <web-resource key="global-workflows">
+        <context>jira.workflow.view</context>
+        <dependency>jira.webresources:jira-global</dependency>
+        <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>
+        <resource location="js/require.js" name="require.js" type="download" />
+        <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>
+        <transformation extension="less">
+            <transformer key="lessTransformer" />
+        </transformation>
+        <transformation extension="soy">
+            <transformer key="soyTransformer" />
+        </transformation>
+    </web-resource>
+  -->
+  <!-- <web-resource key="learnmore-url">
+    <data key="data" class="dev.jira.data.WorkflowActionHandlerAnalyticsDataProvider" />
+  </web-resource> -->
+
+  <webwork1 key="testActionApp" name="Test Action">
+        <actions>
+            <action name="dev.jira.webwork.TestAction"
+                alias="Test">
+                <view name="success">/templates/test.vm</view>                
+            </action>
+        </actions>
+    </webwork1>
+
+  <webwork1 key="workflowActionHandlerApp" name="Jira Workflow Action Handler">
+        <actions>
+            <action name="dev.jira.webwork.WorkflowActionHandlerAction"
+                alias="WorkflowActionHandler">
+                <view name="success">/templates/workflowActionHandler.vm</view>
+                <view name="notloggedin">/templates/notloggedin.vm</view>
+                <view name="nopermission">/templates/nopermission.vm</view>
+                <view name="invalidworkflowname">/templates/invalidworkflowname.vm</view>
+                <view name="test">/templates/test.vm</view>
+
+            </action>
+        </actions>
+    </webwork1>
+
 </atlassian-plugin>

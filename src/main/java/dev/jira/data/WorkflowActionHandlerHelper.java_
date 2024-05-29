@@ -1,0 +1,27 @@
+package dev.jira.data;
+ 
+ import com.atlassian.jira.help.HelpUrl;
+ import com.atlassian.jira.help.HelpUrls;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Component;
+ 
+ 
+ 
+ 
+ @Component
+ public class WorkflowActionHandlerHelper
+ {
+   public static final String ADVANCED_WORKFLOW_CONFIGURATION_HELP_URL = "workflow.designer.advanced.workflow.configuration";
+   private final HelpUrls helpUrls;
+   
+   @Autowired
+   public WorkflowActionHandlerHelper(HelpUrls helpUrls) {
+     this.helpUrls = helpUrls;
+   }
+   
+   public HelpUrl getLearnMoreHelpUrl() {
+     return this.helpUrls.getUrl("workflow.designer.advanced.workflow.configuration");
+   }
+ }
+
+

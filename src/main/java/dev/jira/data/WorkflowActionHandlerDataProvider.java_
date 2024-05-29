@@ -1,0 +1,50 @@
+package dev.jira.data;
+ 
+ import com.atlassian.jira.help.HelpUrl;
+ import com.atlassian.jira.help.HelpUrls;
+ import com.atlassian.jira.util.json.JSONException;
+ import com.atlassian.jira.util.json.JSONObject;
+ import com.atlassian.json.marshal.Jsonable;
+ import com.atlassian.webresource.api.data.WebResourceDataProvider;
+ import com.google.common.collect.Maps;
+ import java.io.IOException;
+ import java.io.Writer;
+ import java.util.Map;
+ 
+ 
+ 
+ 
+ public class WorkflowActionHandlerDataProvider
+   implements WebResourceDataProvider
+ {
+   private final HelpUrls helpUrls;
+   private WorkflowActionHandlerHelper WorkflowActionHandlerHelper;
+   
+   public WorkflowActionHandlerDataProvider(HelpUrls helpUrls, WorkflowActionHandlerHelper WorkflowActionHandlerHelper) {
+     this.helpUrls = helpUrls;
+     this.WorkflowActionHandlerHelper = WorkflowActionHandlerHelper;
+   }
+ 
+   
+   public Jsonable get() {
+     return new Jsonable()
+       {
+         public void write(Writer writer) throws IOException {
+           try {
+             WorkflowActionHandlerDataProvider.this.getJsonData().write(writer);
+           } catch (JSONException e) {
+             throw new Jsonable.JsonMappingException(e);
+           } 
+         }
+       };
+   }
+   
+   JSONObject getJsonData() {
+     HelpUrl learnMoreUrl = this.WorkflowActionHandlerHelper.getLearnMoreHelpUrl();
+     
+     Map<String, Object> values = Maps.newHashMap();
+    //  values.put("learnMoreUrl", learnMoreUrl.getUrl());
+     return new JSONObject(values);
+   }
+ }
+

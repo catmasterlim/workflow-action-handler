@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 
 import com.atlassian.jira.bc.issue.IssueService;
@@ -39,6 +40,7 @@ public class AdminConfigServlet extends HttpServlet{
     @JiraImport
     private ConstantsManager constantsManager;
 
+    @Autowired
     AdminConfigServlet(
         IssueService issueService, ProjectService projectService,
         SearchService searchService,

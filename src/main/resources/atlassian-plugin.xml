@@ -19,6 +19,7 @@
     <resource type="download" name="images/" location="/images"/>  
     <context>base</context> 
   </web-resource>  
+  <resource type="helpPaths" name="workflowActionHandlerHelpPaths" location="workflow-action-handler-help-paths"/>  
   <web-section name="myadmin_config_section" i18n-name-key="myadmin_config_section.name" key="myadmin_config_section" location="admin_plugins_menu" weight="1000"> 
     <description key="myadmin_config_section.description">The myadmin_config_section Plugin</description>  
     <label key="myadmin_config_section.label"/> 
@@ -31,8 +32,8 @@
     <description key="myadmin_config_action.description">Admin Config</description>  
     <actions> 
       <action name="dev.jira.webwork.AdminConfigAction" alias="AdminConfig" roles-required="sysadmin"> 
-        <view name="success">/templates/adminConfig/view.vm</view>           
-        <view name="error">/templates/adminConfig/error.vm</view> 
+        <view name="success">/templates/adminConfig/view.vm</view>  
+        <view name="error">/templates/error.vm</view> 
       </action> 
     </actions> 
   </webwork1>  
@@ -41,44 +42,40 @@
     <label key="web-item-2.label"/>  
     <link linkId="web-item-2-link">/secure/AdminConfigAction.jspa</link> 
   </web-item>  
-
   <servlet name="Admin Config Servlet" i18n-name-key="admin-config-servlet.name" key="admin-config-servlet" class="dev.jira.servlet.AdminConfigServlet"> 
     <description key="admin-config-servlet.description">The Admin Config Servlet Plugin</description>  
     <url-pattern>/my/adminconfig</url-pattern> 
   </servlet>  
-
-
-<!-- 
-    <web-resource key="global-workflows">
-        <context>jira.workflow.view</context>
-        <dependency>jira.webresources:jira-global</dependency>
-        <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>
-        <resource location="js/require.js" name="require.js" type="download" />
-        <transformation extension="js">
-            <transformer key="jsI18n" />
-        </transformation>
-        <transformation extension="less">
-            <transformer key="lessTransformer" />
-        </transformation>
-        <transformation extension="soy">
-            <transformer key="soyTransformer" />
-        </transformation>
-    </web-resource>
-  -->
+  <web-resource key="workflows"> 
+    <context>jira.workflow.view</context>  
+    <dependency>jira.webresources:jira-global</dependency>  
+    <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
+    <resource location="js/require.js" name="require.js" type="download"/>  
+    <transformation extension="js"> 
+      <transformer key="jsI18n"/> 
+    </transformation>  
+    <transformation extension="less"> 
+      <transformer key="lessTransformer"/> 
+    </transformation>  
+    <transformation extension="soy"> 
+      <transformer key="soyTransformer"/> 
+    </transformation> 
+  </web-resource>  
   <!-- <web-resource key="learnmore-url">
     <data key="data" class="dev.jira.data.WorkflowActionHandlerAnalyticsDataProvider" />
-  </web-resource> -->
-
-  <webwork1 key="testActionApp" name="Test Action">
-        <actions>
-            <action name="dev.jira.webwork.TestAction"
-                alias="Test">
-                <view name="success">/templates/test.vm</view>                
-            </action>
-        </actions>
-    </webwork1>
-
-  <webwork1 key="workflowActionHandlerApp" name="Jira Workflow Action Handler">
+  </web-resource> -->  
+  <webwork1 key="testActionApp" name="Test Action"> 
+    <actions> 
+      <action name="dev.jira.webwork.TestAction" alias="Test"> 
+        <view name="success">/templates/test.vm</view>  
+        <view name="error">/templates/error.vm</view>  
+        <view name="notloggedin">/templates/notloggedin.vm</view>  
+        <view name="nopermission">/templates/nopermission.vm</view>  
+        <view name="invalidworkflowname">/templates/invalidworkflowname.vm</view> 
+      </action> 
+    </actions> 
+  </webwork1>  
+  <!-- <webwork1 key="workflowActionHandlerApp" name="Jira Workflow Action Handler">
         <actions>
             <action name="dev.jira.webwork.WorkflowActionHandlerAction"
                 alias="WorkflowActionHandler">
@@ -86,10 +83,12 @@
                 <view name="notloggedin">/templates/notloggedin.vm</view>
                 <view name="nopermission">/templates/nopermission.vm</view>
                 <view name="invalidworkflowname">/templates/invalidworkflowname.vm</view>
-                <view name="test">/templates/test.vm</view>
 
             </action>
         </actions>
-    </webwork1>
-
+    </webwork1> -->  
+  <web-panel name="WorkflowActionHandlerWebPanel" i18n-name-key="workflow-action-handler-web-panel.name" key="workflow-action-handler-web-panel" location="atl.jira.view.issue.right.context" weight="-1"> 
+    <description key="workflow-action-handler-web-panel.description">The WorkflowActionHandlerWebPanel Plugin</description> 
+    <resource name="view" type="velocity" location="templates/samples/test.vm"/>
+  </web-panel>
 </atlassian-plugin>

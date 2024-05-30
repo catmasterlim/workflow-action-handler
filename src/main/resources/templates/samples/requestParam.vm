@@ -1,0 +1,8 @@
+<div>
+<h2> Paramters </h2>
+<ul>        
+#foreach( $item in $helper.getRequest().getParameterNames() )
+    <li> $item : $helper.getRequest().getParameter($item) </li>
+#end
+</ul>
+</div>

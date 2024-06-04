@@ -9,7 +9,7 @@ AJS.toInit(function () {
     //     $pageMetadata.append(template);
     // }
 
-    // JIRA.WorkflowActionHandler.Application();
+    JIRA.WorkflowActionHandler.Application();
 });
 
 console.log('-------- test ------');

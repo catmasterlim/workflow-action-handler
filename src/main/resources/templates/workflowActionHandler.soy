@@ -9,7 +9,18 @@
 {template .hello}
 <div>Hello {$workflowMode}!</div>
 <div>Hello {$workflowName}!</div>
-
+<div class="hidden"  id="workflow-view-action-handler">
+    <div id="workflow-action-handler-container">
+        <div class="workflow-action-handler">
+            {call JIRA.WorkflowActionHandler.Templates.actionBarSearch}
+            {/call}
+            {call JIRA.WorkflowActionHandler.Templates.actionBarAdd}
+            {/call}
+            {call JIRA.WorkflowActionHandler.Templates.actionList}
+            {/call}
+        </div>
+    </div>
+</div>
 {/template}
 
 /**
@@ -21,7 +32,7 @@
         <div class="workflow-action-handler">
         <section
     id="demo-dialog"
-    class="aui-dialog2 aui-dialog2-small aui-layer"
+    class="aui-dialog2 aui-dialog2-large aui-layer"
     role="dialog"
     tabindex="-1"
     aria-modal="true"
@@ -32,18 +43,97 @@
     <header class="aui-dialog2-header">
         <h1 class="aui-dialog2-header-main" id="dialog-show-button--heading"> Search Action  </h1>
     </header>
+    <div class="">
+        {call JIRA.WorkflowActionHandler.Templates.actionBarSearch}
+        {/call}
+    </div>
+    <div>
+        {call JIRA.WorkflowActionHandler.Templates.actionBarAdd}
+        {/call}
+    </div>
     <div class="aui-dialog2-content" id="dialog-show-button--description">
-        
-        <table class="aui">
+        {call JIRA.WorkflowActionHandler.Templates.actionList}
+        {/call}
+
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="dialog-submit-button" class="aui-button aui-button-primary">Make it so</button>
+        </div>
+    </footer>
+</section>
+
+        </div>
+    </div>
+</div>
+{/template}
+
+
+/**
+ * Search bar
+ */
+{template .actionBarSearch}
+<div class="search-field-container aui-buttons">    
+        <label for="=search-item-action-name"> Action Name </label>
+        <select id="search-item-action-name" multiple>
+            <option> Action Name 1</option>
+            <option> Action Name 2</option>
+            <option> Action Name 3</option>
+        </select>
+
+        <label for="=search-item-action-type"> Type </label>
+        <select id="search-item-action-type" multiple>
+            <option> Post</option>
+            <option> Condition</option>
+            <option> Validator</option>
+        </select>
+    
+     <input class="text medium-field" type="text"
+               id="select-search-item-1-search" name="select-search-item-1-search" placeholder="검색어를 입력하세요.">
+
+    <button class="aui-button aui-dropdown2-trigger" aria-controls="search-setting-dropdown">
+        Dropdown menu
+    </button>
+
+    <aui-dropdown-menu id="search-setting-dropdown">    
+        <aui-section label="Columns">
+            <aui-item-checkbox interactive checked disabled>Action Name</aui-item-checkbox>
+            <aui-item-checkbox interactive>Type</aui-item-checkbox>
+            <aui-item-checkbox interactive>Order</aui-item-checkbox>
+        </aui-section>
+    <aui-item-checkbox interactive>Class Name</aui-item-checkbox>
+        </aui-section>
+    <aui-item-checkbox interactive>Transition</aui-item-checkbox>
+        </aui-section>
+    </aui-dropdown-menu>
+</div>
+{/template}
+
+/**
+ * add action bar
+ */
+{template .actionBarAdd}
+<div class="aui-buttons">
+    <a class="aui-button" id="add-status" >Add Statu</a>
+    <a class="aui-button" id="add-transition" >Add Transition</a>
+    <a class="aui-button" id="add-action" >Add Action</a>    
+</div>
+{/template}
+
+/**
+ * Action List
+ */
+{template .actionList}
+<table class="aui aui-table-sortable">
     <thead>
         <tr>
-            <th id="basic-number">#</th>
+            <th id="basic-number" class="aui-table-column-issue-key" >#</th>
             <th id="basic-action-name">Action Name</th>
             <th id="basic-type">Type</th>
             <th id="basic-order">Order</th>
             <th id="basic-class-name">Class Name</th>
             <th id="basic-transition">Transition</th>
-            <th id="basic-setting">Setting</th>
+            <th class="aui-table-column-unsortable">Setting</th>
         </tr>
     </thead>
     <tbody>
@@ -65,18 +155,6 @@
         </tr>
     </tbody>
 </table>
-
-    </div>
-    <footer class="aui-dialog2-footer">
-        <div class="aui-dialog2-footer-actions">
-            <button id="dialog-submit-button" class="aui-button aui-button-primary">Make it so</button>
-        </div>
-    </footer>
-</section>
-
-        </div>
-    </div>
-</div>
 {/template}
 
 /**
@@ -87,36 +165,7 @@
     <div id="workflow-action-handler-container">
         <div class="workflow-action-handler">
             <h1> Test Web Panel </h1>
-           <table>
-<thead>
-<tr>
-<th>Action Name</th>
-<th>Type</th>
-<th>Order</th>
-<th>Class Name</th>
-<th>Transition</th>
-<th>Column Setting</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Assignable User</td>
-<td>Post</td>
-<td>2</td>
-<td>Assignable User</td>
-<td>Start Progress</td>
-<td></td>
-</tr>
-<tr>
-<td>Only users in group jira-administrators can execute this transition.<br></td>
-<td>Condition</td>
-<td>2</td>
-<td>User Is In Project Role</td>
-<td>Repoen</td>
-<td></td>
-</tr>
-</tbody>
-</table>
+
 
         </div>
     </div>

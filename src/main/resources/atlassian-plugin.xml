@@ -83,14 +83,22 @@
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
     <dependency>jira.webresources:jira-global</dependency>  
     <dependency>jira.webresources:set-focus</dependency>  
-    <dependency>com.atlassian.auiplugin:ajs</dependency>  
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <dependency>com.atlassian.auiplugin:aui-forms</dependency>
+    <dependency>com.atlassian.auiplugin:aui-button</dependency>  
+    <dependency>com.atlassian.auiplugin:aui-select2</dependency>  
+    <dependency>com.atlassian.auiplugin:aui-dropdown2</dependency>  
     <dependency>com.atlassian.auiplugin:aui-table</dependency>  
+    <dependency>com.atlassian.auiplugin:aui-table-sortable</dependency>  
     <dependency>com.atlassian.auiplugin:inline-dialog</dependency>  
     <dependency>com.atlassian.auiplugin:aui-dialog2</dependency>  
-    <dependency>dev.jira.workflowActionHandler:workflow-action-handler-loader</dependency>  
-    <dependency>dev.jira.workflowActionHandler:workflow-action-handler-templates</dependency>  
-    <resource type="soy" name="workflowActionHandler" location="/templates/workflowActionHandler.soy"/>  
-    <resource type="download" name="workflowActionHandler.soy.js" location="/templates/workflowActionHandler.soy"/>  
+
+    <dependency>dev.jira.workflowActionHandler:workflow-action-handler-loader</dependency>
+    <dependency>dev.jira.workflowActionHandler:workflow-action-handler-templates</dependency>
+
+    <resource type="soy" name="workflowActionHandler" location="/templates/workflowActionHandler.soy"/>
+    <resource type="download" name="workflowActionHandler.soy.js" location="/templates/workflowActionHandler.soy"/>
+
     <transformation extension="js"> 
       <transformer key="jsI18n"/> 
     </transformation>  
@@ -102,8 +110,9 @@
     </transformation>  
     <!--  -->  
     <resource name="Application.js" type="download" location="js/application.js"/>  
-    <!-- <resource name="Sample.js" type="download" location="js/sample/sample.js" />   --> 
+    <!-- <resource name="Sample.js" type="download" location="js/sample/sample.js" />    -->
   </web-resource>  
+
   <rest name="Workflow Action Handler Resource" i18n-name-key="workflow-action-handler-resource.name" key="workflow-action-handler-resource" path="/workflowactionhandler" version="1.0"> 
     <description key="workflow-action-handler-resource.description">The Workflow Action Handler Resource Plugin</description> 
   </rest>  

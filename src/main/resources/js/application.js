@@ -21,6 +21,9 @@ define("workflow-action-handler/application", [
             var self = this;           
             console.log('---> _initWorkflowActionHandler');
 
+            AJS.$("#search-item-action-name").auiSelect2();
+            AJS.$("#search-item-action-type").auiSelect2();
+
             AJS.$("#dialog-submit-button").on('click', function (e) {
                 e.preventDefault();
                 AJS.dialog2("#demo-dialog").hide();

@@ -10,11 +10,10 @@ define("workflow-action-handler/loader", [
 ) {
     return {
         /**
-         * Load the resources required for the workflow designer, then execute a callback.
+         * Load the resources required , then execute a callback.
          *
          * This method can be safely called multiple times, the resources will only be loaded once.
          *
-         * @param {function} [done] A callback to execute after the resources have been loaded. It's given the workflow designer
          *   application constructor.
          * @returns a jQuery promise that is resolved on success, or rejected on failure.
          */

@@ -9,12 +9,23 @@ define("workflow-action-handler/application", [
     WRMData,
     jQuery,
     require,
-    templates
+    Templates
 ) {
-    var Application = function() {                
+    var Application = function() {   
+        
+        var doc = jQuery(document);
+        var instance = this;
+
 
         _initWorkflowActionHandler = function() {
             var self = this;           
+            console.log('---> _initWorkflowActionHandler');
+
+            AJS.$("#dialog-submit-button").on('click', function (e) {
+                e.preventDefault();
+                AJS.dialog2("#demo-dialog").hide();
+            });
+
         };
 
         _getWorkflowData = function() {
@@ -27,54 +38,83 @@ define("workflow-action-handler/application", [
             };
         };
 
+        _getHtmlString = function() {
+            // console.log(this._workflowData);
+            return Templates.test({
+                workflowMode : instance._workflowData.isDraft,
+                workflowName : instance._workflowData.name
+            });     
+        };
+
         _prepare = function() {
+
+            //
+            instance._workflowData =  _getWorkflowData();
+            instance._workflowLinkContainer = jQuery("#workflow-links");
+            
             // button
-            var hasButton = !!jQuery("#workflow-action-handler-button").length;
+            var hasButton = !!jQuery("#workflow-action-handler").length;
             console.log('--->  hasButton : ' + hasButton);
             if( !hasButton ){                
                 // link buttons ( Digram | Text ) - Text
-                var textButton = jQuery('#workflow-links > .aui-buttons > #workflow-text');
+                let textButton = jQuery('#workflow-links > .aui-buttons > #workflow-text');
                 console.log('--->  textButton : ' + textButton);
                 if(textButton.length > 0){
                     textButton.after(
-                        '<a class="aui-button workflow-view-toggle" id="workflow-action-handler-button" href="#workflow-view-action-handler" data-mode="action-handler" resolved="">Action</a>'
+                        '<a class="aui-button" id="workflow-action-handler" href="#workflow-view-action-handler" resolved="">Action</a>'
                     );
                 }
+
+                //
+                let workflow_view_text = jQuery('#workflow-view-text');
+                console.log('--->  workflow_view_text : ' + workflow_view_text);
+                if(workflow_view_text.length > 0){
+                    let tt = _getHtmlString();
+                    console.log('--->  test2 : ' + tt);    
+                    workflow_view_text.after(tt);
+                }                
             }
+
+            instance._workflowView = jQuery("#workflow-view-action-handler");
+
     
         };
 
         _setupPage = function() {
-            var doc = jQuery(document);
-            var instance = this;
             
+            console.log('---> setup');
             //
-            if (!this._workflowView.hasClass("hidden")) {
-                this._initWorkflowActionHandler();
+            if (!instance._workflowView.hasClass("hidden")) {
+                
+                _initWorkflowActionHandler();
             } else {
-                doc.on("click", "#workflow-action-handler-button", function(e) {
-                    instance._initWorkflowActionHandler();
-                    doc.off(e, "#workflow-action-handler-button");
+                _initWorkflowActionHandler();
+                console.log('---> set click');
+                doc.on("click", "#workflow-action-handler", function(e) {
+                    e.preventDefault();
+                    console.log('---> click');                    
+                    // doc.off(e, "#workflow-action-handler");
+                    instance._workflowView.show();
+                    AJS.dialog2("#demo-dialog").show();
                 });
             }
     
             // 
-            if (this._workflowData.isEditable) {
+            if (instance._workflowData.isEditable) {
             }else{                
             }
-    
-            //
+
           };
 
-        this._workflowData =  _getWorkflowData();
-        this._workflowLinkContainer = jQuery("#workflow-links");
-        this._workflowView = jQuery("#workflow-view-action-handler");
 
         //
         _prepare();
 
+
+
         //
-        if (this._workflowView.length > 0) {
+        console.log("this._workflowView.length : " + instance._workflowView.length);
+        if (instance._workflowView.length > 0) {
             _setupPage();
         }
     };

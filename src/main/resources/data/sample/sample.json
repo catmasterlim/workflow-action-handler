@@ -1,0 +1,22 @@
+{
+    "workflowName": "TEST: Project Management Workflow",
+    "isDraft": false,
+    "workflowActions": [
+        {
+            "name": "Test 1",
+            "type": "Validator",
+            "order": 1,
+            "class name": "com.opensymphony.workflow.loader.ValidatorDescriptor",
+            "transition": { "name"  : "Create" }
+        },
+        {
+            "name": "Test 2",
+            "type": "Validator",
+            "order": 2,
+            "class name": "com.opensymphony.workflow.loader.ValidatorDescriptor",
+            "transition":{
+                 "name": "Reopen"
+            }
+        }
+    ]
+}

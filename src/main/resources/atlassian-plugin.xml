@@ -11,7 +11,6 @@
   </plugin-info>  
   <!-- add our i18n resource -->  
   <resource type="i18n" name="i18n" location="base"/>  
-
   <!-- add our web resources -->  
   <web-resource key="base-resources" name="base Web Resources"> 
     <dependency>com.atlassian.auiplugin:ajs</dependency>  
@@ -20,33 +19,25 @@
     <resource type="download" name="images/" location="/images"/>  
     <context>base</context> 
   </web-resource>  
-
-
   <!-- 
     Admin Config 
-  -->
+  -->  
   <servlet name="Admin Config Servlet" i18n-name-key="admin-config-servlet.name" key="admin-config-servlet" class="dev.jira.servlet.AdminConfigServlet"> 
     <description key="admin-config-servlet.description">The Admin Config Servlet Plugin</description>  
     <url-pattern>/my/adminconfig</url-pattern> 
-  </servlet>
-
+  </servlet>  
   <web-section name="myadmin_config_section" i18n-name-key="myadmin_config_section.name" key="myadmin_config_section" location="admin_plugins_menu" weight="1000"> 
     <description key="myadmin_config_section.description">The myadmin_config_section Plugin</description>  
     <label key="myadmin_config_section.label"/> 
   </web-section>  
-
   <web-item key="myadmin_config_link" section="admin_plugins_menu/myadmin_config_section"> 
     <label key="myadmin_config_link.label"/>  
     <link linkId="myadmin_config_link.link" key="myadmin_config_link.description">/plugins/servlet/my/adminconfig</link> 
   </web-item>  
-
- 
-
-
   <!-- 
     Workflow 
-  -->
-<!-- 
+  -->  
+  <!-- 
   <web-resource key="workflows"> 
     <context>jira.workflow.view</context> 
     <dependency>jira.webresources:jira-global</dependency>  
@@ -63,8 +54,7 @@
     </transformation> 
   </web-resource>   
   
-  -->
-
+  -->  
   <!-- 
     <web-panel name="WorkflowActionHandlerWebPanel" i18n-name-key="workflow-action-handler-web-panel.name" key="workflow-action-handler-web-panel" location="atl.jira.view.issue.right.context" weight="-1"> 
     <description key="workflow-action-handler-web-panel.description">The WorkflowActionHandlerWebPanel Plugin</description>  
@@ -73,28 +63,34 @@
     <resource name="require.js" type="download" location="js/sample/sample.js" />  
 
   </web-panel>   
-  -->
-
-  <web-resource key="workflow-action-handler-loader">
-        <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>
-        <resource location="js/loader.js" name="loader.js" type="download" />
-  </web-resource>
-  <web-resource key="workflow-action-handler-templates">
-        <resource location="js/templates.js" name="templates.js" type="download" />
+  -->  
+  <!-- 
+    <rest i18n-name-key="workflow.action.hanlder.rest.resource.name"
+        key="jira-workflow-action-handler-rest-resource" name="jira-workflow-action-handler-rest-resource"
+        path="/workflowActionHandler" version="1.0">
+        <description key="workflow.action.handler.action.rest.resource.description">REST Workflow resource for
+            accessing Jira workflows action</description>
+    </rest> -->  
+  <web-resource key="workflow-action-handler-loader"> 
+    <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
+    <resource location="js/loader.js" name="loader.js" type="download"/> 
   </web-resource>  
-
+  <web-resource key="workflow-action-handler-templates"> 
+    <resource location="js/templates-amd.js" name="templates.js" type="download"/> 
+  </web-resource>  
   <web-resource key="test-view"> 
-    <context>jira.workflow.view</context> 
-
-    <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>      
-    <dependency>jira.webresources:jira-global</dependency>
-    <dependency>jira.webresources:set-focus</dependency>
-    <dependency>com.atlassian.auiplugin:ajs</dependency>
-    <dependency>com.atlassian.auiplugin:inline-dialog</dependency>
-
-    <dependency>dev.jira.workflowActionHandler:workflow-action-handler-loader</dependency>
+    <context>jira.workflow.view</context>  
+    <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
+    <dependency>jira.webresources:jira-global</dependency>  
+    <dependency>jira.webresources:set-focus</dependency>  
+    <dependency>com.atlassian.auiplugin:ajs</dependency>  
+    <dependency>com.atlassian.auiplugin:aui-table</dependency>  
+    <dependency>com.atlassian.auiplugin:inline-dialog</dependency>  
+    <dependency>com.atlassian.auiplugin:aui-dialog2</dependency>  
+    <dependency>dev.jira.workflowActionHandler:workflow-action-handler-loader</dependency>  
     <dependency>dev.jira.workflowActionHandler:workflow-action-handler-templates</dependency>  
-
+    <resource type="soy" name="workflowActionHandler" location="/templates/workflowActionHandler.soy"/>  
+    <resource type="download" name="workflowActionHandler.soy.js" location="/templates/workflowActionHandler.soy"/>  
     <transformation extension="js"> 
       <transformer key="jsI18n"/> 
     </transformation>  
@@ -103,14 +99,13 @@
     </transformation>  
     <transformation extension="soy"> 
       <transformer key="soyTransformer"/> 
-    </transformation> 
+    </transformation>  
+    <!--  -->  
+    <resource name="Application.js" type="download" location="js/application.js"/>  
+    <!-- <resource name="Sample.js" type="download" location="js/sample/sample.js" />   --> 
+  </web-resource>  
+  <rest name="Workflow Action Handler Resource" i18n-name-key="workflow-action-handler-resource.name" key="workflow-action-handler-resource" path="/workflowactionhandler" version="1.0"> 
+    <description key="workflow-action-handler-resource.description">The Workflow Action Handler Resource Plugin</description> 
+  </rest>  
 
-    <!--  -->
-    <resource name="Application.js" type="download" location="js/application.js"/>
-    <resource name="Sample.js" type="download" location="js/sample/sample.js" />  
-
-    
-  </web-resource>
-
-  
 </atlassian-plugin>

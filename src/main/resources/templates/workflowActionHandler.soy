@@ -2,13 +2,123 @@
 
 
 /**
- * Message shown in IE8.
+ * Renders a Hello message.
+ * @param workflowMode the name of the user
+ * @param workflowName the name of the user
  */
-{template .notAvailableMessage}
-<div class="aui-message warning">
-    <p class="title">
-        <span class="aui-icon icon-warning"></span>
-        {getText('workflow.action.handler.workflow.not.available.global')}
-    </p>
+{template .hello}
+<div>Hello {$workflowMode}!</div>
+<div>Hello {$workflowName}!</div>
+
+{/template}
+
+/**
+ * test
+ */
+{template .test}
+<div class="hidden"  id="workflow-view-action-handler">
+    <div id="workflow-action-handler-container">
+        <div class="workflow-action-handler">
+        <section
+    id="demo-dialog"
+    class="aui-dialog2 aui-dialog2-small aui-layer"
+    role="dialog"
+    tabindex="-1"
+    aria-modal="true"
+    aria-labelledby="dialog-show-button--heading"
+    aria-describedby="dialog-show-button--description"
+    hidden
+>
+    <header class="aui-dialog2-header">
+        <h1 class="aui-dialog2-header-main" id="dialog-show-button--heading"> Search Action  </h1>
+    </header>
+    <div class="aui-dialog2-content" id="dialog-show-button--description">
+        
+        <table class="aui">
+    <thead>
+        <tr>
+            <th id="basic-number">#</th>
+            <th id="basic-action-name">Action Name</th>
+            <th id="basic-type">Type</th>
+            <th id="basic-order">Order</th>
+            <th id="basic-class-name">Class Name</th>
+            <th id="basic-transition">Transition</th>
+            <th id="basic-setting">Setting</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td headers="basic-number">1</td>
+           <td headers="basic-action-name">Assignable User</td>           
+            <th id="basic-type">Post</th>
+          <th id="basic-order">2</th>
+            <th id="basic-class-name">Assignable User</th>
+            <th id="basic-transition">Created</th>
+        </tr>
+        <tr>
+            <td headers="basic-number">2</td>
+            <td headers="basic-action-name">Only users in group jira-administrators can execute this transition.</td>
+            <th id="basic-type">Condition</th>
+            <th id="basic-order">2</th>
+            <th id="basic-class-name">User Is In Project Role</th>
+            <th id="basic-transition">Repoen</th>
+        </tr>
+    </tbody>
+</table>
+
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="dialog-submit-button" class="aui-button aui-button-primary">Make it so</button>
+        </div>
+    </footer>
+</section>
+
+        </div>
+    </div>
+</div>
+{/template}
+
+/**
+ * Main Container
+ */
+{template .container}
+<div class="workflow-view" id="workflow-view-action-handler">
+    <div id="workflow-action-handler-container">
+        <div class="workflow-action-handler">
+            <h1> Test Web Panel </h1>
+           <table>
+<thead>
+<tr>
+<th>Action Name</th>
+<th>Type</th>
+<th>Order</th>
+<th>Class Name</th>
+<th>Transition</th>
+<th>Column Setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Assignable User</td>
+<td>Post</td>
+<td>2</td>
+<td>Assignable User</td>
+<td>Start Progress</td>
+<td></td>
+</tr>
+<tr>
+<td>Only users in group jira-administrators can execute this transition.<br></td>
+<td>Condition</td>
+<td>2</td>
+<td>User Is In Project Role</td>
+<td>Repoen</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+        </div>
+    </div>
 </div>
 {/template}

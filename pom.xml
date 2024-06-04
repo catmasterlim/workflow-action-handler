@@ -14,28 +14,32 @@
     <packaging>atlassian-plugin</packaging>
     <dependencies>
         <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>osworkflow</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-api</artifactId>
             <version>${jira.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- Add dependency on jira-core if you want access to JIRA implementation classes as well as the sanctioned API. -->
-        <!-- This is not normally recommended, but may be required eg when migrating a plugin originally developed against JIRA 4.x -->        
+        <!-- This is not normally recommended, but may be required eg when migrating a plugin originally developed against JIRA 4.x -->
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-core</artifactId>
             <version>${jira.version}</version>
             <scope>provided</scope>
-        </dependency>       
-       <!-- https://mvnrepository.com/artifact/com.atlassian.templaterenderer/atlassian-template-renderer-api -->
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.atlassian.templaterenderer/atlassian-template-renderer-api -->
         <dependency>
             <groupId>com.atlassian.templaterenderer</groupId>
             <artifactId>atlassian-template-renderer-api</artifactId>
             <version>6.0.0-m01</version>
             <scope>provided</scope>
         </dependency>
-
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -54,8 +58,12 @@
             <version>1</version>
             <scope>provided</scope>
         </dependency>
-        
         <!-- WIRED TEST RUNNER DEPENDENCIES -->
+        <dependency>
+        <groupId>com.googlecode.json-simple</groupId>
+        <artifactId>json-simple</artifactId>
+        <version>1.1.1</version>
+    </dependency>
         <dependency>
             <groupId>com.atlassian.plugins</groupId>
             <artifactId>atlassian-plugins-osgi-testrunner</artifactId>
@@ -110,6 +118,30 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.8.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.plugins.rest</groupId>
+            <artifactId>atlassian-rest-common</artifactId>
+            <version>1.0.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.sal</groupId>
+            <artifactId>sal-api</artifactId>
+            <version>2.6.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wink</groupId>
+            <artifactId>wink-client</artifactId>
+            <version>1.4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

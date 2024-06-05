@@ -31,15 +31,15 @@
     <div id="workflow-action-handler-container">
         <div class="workflow-action-handler">
         <section
-    id="demo-dialog"
-    class="aui-dialog2 aui-dialog2-large aui-layer"
-    role="dialog"
-    tabindex="-1"
-    aria-modal="true"
-    aria-labelledby="dialog-show-button--heading"
-    aria-describedby="dialog-show-button--description"
-    hidden
->
+            id="demo-dialog"
+            class="aui-dialog2 aui-dialog2-large aui-layer"
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="dialog-show-button--heading"
+            aria-describedby="dialog-show-button--description"
+            hidden
+    >
     <header class="aui-dialog2-header">
         <h1 class="aui-dialog2-header-main" id="dialog-show-button--heading"> Search Action  </h1>
     </header>
@@ -54,7 +54,6 @@
     <div class="aui-dialog2-content" id="dialog-show-button--description">
         {call JIRA.WorkflowActionHandler.Templates.actionList}
         {/call}
-
     </div>
     <footer class="aui-dialog2-footer">
         <div class="aui-dialog2-footer-actions">
@@ -83,16 +82,16 @@
 
         <label for="=search-item-action-type"> Type </label>
         <select id="search-item-action-type" multiple>
-            <option> Post</option>
-            <option> Condition</option>
-            <option> Validator</option>
+            <option>Post</option>
+            <option>Condition</option>
+            <option>Validator</option>
         </select>
     
      <input class="text medium-field" type="text"
                id="select-search-item-1-search" name="select-search-item-1-search" placeholder="검색어를 입력하세요.">
 
     <button class="aui-button aui-dropdown2-trigger" aria-controls="search-setting-dropdown">
-        Dropdown menu
+        Setting
     </button>
 
     <aui-dropdown-menu id="search-setting-dropdown">    

@@ -48,6 +48,7 @@ public class WorkflowActionHandlerResourceModel {
             for(Object post :  action.getValidators() ){
                 this.workflowActions.add( new WorkflowActionPostModel(post, "Validator", action));
             }
+
         }
         
     }

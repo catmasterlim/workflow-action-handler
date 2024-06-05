@@ -1,0 +1,15 @@
+<div class="mod-header">
+    <h3>$i18n.getText('my-issue-tab-panel.label')</h3>
+
+    <div > 
+    test  dddd 22
+    </div>
+
+    $soyRenderer.render('jira.webresources:soy-templates','JIRA.Templates.Links.helpLink',{
+        'isLocal': true,
+        'url': 'test',
+    'title': 'test title'
+    })
+
+    $user
+</div>

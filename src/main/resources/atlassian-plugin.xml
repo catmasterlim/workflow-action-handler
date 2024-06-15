@@ -116,14 +116,23 @@
     <description key="my-issue-tab-panel.description">The My Issue Tab Panel Plugin</description>  
     <label key="my-issue-tab-panel.label"/>  
     <order>100</order>  
-    <resource type="velocity" name="view" location="templates/tabpanels/my-issue-tab-panel.vm"/> 
-
-    <dependency>com.atlassian.auiplugin:soy</dependency>
-    <resource type="soy" name="sample" location="templates/samples/sample.soy"/> 
+    <resource type="velocity" name="view" location="templates/tabpanels/my-issue-tab-panel.vm"/>  
+    <dependency>com.atlassian.auiplugin:soy</dependency>  
+    <resource type="soy" name="sample" location="templates/samples/sample.soy"/>  
     <transformation extension="soy"> 
       <transformer key="soyTransformer"/> 
     </transformation>  
     <resource type="download" name="sample.soy.js" location="templates/samples/sample.soy"/> 
   </issue-tabpanel>  
 
+  <webwork1 key="workflow-action-handler-action" name="WorkflowActionHandlerAction" i18n-name-key="workflow-action-handler-action.name"> 
+    <description key="workflow-action-handler-action.description">The WorkflowActionHandlerAction Plugin</description>  
+    <actions> 
+      <action name="dev.jira.webwork.WorkflowActionHandlerAction" alias="WorkflowActionHandlerAction"> 
+        <view name="success">/templates/workflow-action-handler-action/success.vm</view>  
+        <view name="input">/templates/workflow-action-handler-action/input.vm</view>  
+        <view name="error">/templates/workflow-action-handler-action/error.vm</view> 
+      </action> 
+    </actions> 
+  </webwork1>
 </atlassian-plugin>

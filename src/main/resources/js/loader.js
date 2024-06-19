@@ -1,5 +1,5 @@
 
-define("workflow-action-handler/loader", [
+define("jira-workflow-action-handler/loader", [
     "wrm/require",
     "jquery",
     "require"
@@ -19,15 +19,15 @@ define("workflow-action-handler/loader", [
          */
         load: function requireWRM(done) {
             return new Promise(function (resolve, reject) {
-                wrmRequire(["wrc!dev.jira.workflowActionHandler"], function () {
-                    done && done(require("workflow-action-handler/loader"));
+                wrmRequire(["wrc!dev.jiraWorkflowActionHandler"], function () {
+                    done && done(require("jira-workflow-action-handler/loader"));
                 }).done(resolve).fail(reject);
             });
         }
     };
 });
 
-AJS.namespace("JIRA.WorkflowActionHandler.loader", null, require("workflow-action-handler/loader").load);
+AJS.namespace("JIRA.WorkflowActionHandler.loader", null, require("jira-workflow-action-handler/loader").load);
 
 
 

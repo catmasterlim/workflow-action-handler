@@ -62,8 +62,8 @@
     <dependency>com.atlassian.auiplugin:aui-table-sortable</dependency>  
     <dependency>com.atlassian.auiplugin:inline-dialog</dependency>  
     <dependency>com.atlassian.auiplugin:aui-dialog2</dependency>  
-    <dependency>dev.jiraWorkflowActionHandler:jira-workflow-action-handler-loader</dependency>  
-    <dependency>dev.jiraWorkflowActionHandler:jira-workflow-action-handler-templates</dependency>  
+    <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-loader</dependency>  
+    <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-templates</dependency>  
     <resource type="soy" name="jiraWorkflowActionHandler" location="/templates/jiraWorkflowActionHandler.soy"/>  
     <resource type="download" name="jiraWorkflowActionHandler.soy.js" location="/templates/jiraWorkflowActionHandler.soy"/>  
     <transformation extension="js"> 

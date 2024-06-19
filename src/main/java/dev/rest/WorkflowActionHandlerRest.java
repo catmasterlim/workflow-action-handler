@@ -30,7 +30,7 @@ public class WorkflowActionHandlerRest {
 
 
     @GET
-    @Path("test")
+    @Path("/test")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response getTest(
             @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft,
@@ -38,12 +38,12 @@ public class WorkflowActionHandlerRest {
 
 
         return Response.ok(
-                "workflowName : " + workflowName
+                "isDraft : " + isDraft
         ).build();
     }
 
     @GET
-    @Path("actions")
+    @Path("/actions")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response getActions(
             @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft,

@@ -1,0 +1,127 @@
+{namespace JIRA.WorkflowActionHandler.Templates}
+
+/**
+ * action search dialog
+ * @param title the title of the dialog
+ * @param workflowMode isDraft
+ * @param workflowName name of workflow
+ */
+{template .searchDialog}
+<section
+    id="workflow-action-handler-dialog"
+    class="aui-dialog2 aui-dialog2-small aui-layer"
+    role="dialog"
+    tabindex="-1"
+    aria-modal="true"
+    aria-labelledby="dialog-show-button--heading"
+    aria-describedby="dialog-show-button--description"
+    hidden
+>
+    <header class="aui-dialog2-header">
+        <h1 class="aui-dialog2-header-main" id="dialog-show-button--heading">{$title}</h1>
+    </header>
+    <div class="aui-dialog2-content" id="dialog-show-button--description">
+        <h2>
+                             <span class="workflow-name">{$workflowName}</span>
+                             <span class=""> isDraft : {$workflowMode} </span>
+        </h2>
+        <p>We've detected debris of some sort in a loose orbit.</p>
+        <p>I suggest we beam a section aboard for analysis...</p>
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="workflow-action-handler-dialog-submit-button" class="aui-button aui-button-primary">Make it so</button>
+        </div>
+    </footer>
+</section>
+{/template}
+
+
+/**
+ * Search bar
+ *
+ */
+{template .actionBarSearch}
+<div class="search-field-container aui-buttons">
+        <label for="=search-item-action-name"> Action Name </label>
+        <select id="search-item-action-name" multiple>
+            <option> Action Name 1</option>
+            <option> Action Name 2</option>
+            <option> Action Name 3</option>
+        </select>
+
+        <label for="=search-item-action-type"> Type </label>
+        <select id="search-item-action-type" multiple>
+            <option>Post</option>
+            <option>Condition</option>
+            <option>Validator</option>
+        </select>
+
+     <input class="text medium-field" type="text"
+               id="select-search-item-1-search" name="select-search-item-1-search" placeholder="검색어를 입력하세요.">
+
+    <button class="aui-button aui-dropdown2-trigger" aria-controls="search-setting-dropdown">
+        Setting
+    </button>
+
+    <aui-dropdown-menu id="search-setting-dropdown">
+        <aui-section label="Columns">
+            <aui-item-checkbox interactive checked disabled>Action Name</aui-item-checkbox>
+            <aui-item-checkbox interactive>Type</aui-item-checkbox>
+            <aui-item-checkbox interactive>Order</aui-item-checkbox>
+        </aui-section>
+    <aui-item-checkbox interactive>Class Name</aui-item-checkbox>
+        </aui-section>
+    <aui-item-checkbox interactive>Transition</aui-item-checkbox>
+        </aui-section>
+    </aui-dropdown-menu>
+</div>
+{/template}
+
+/**
+ * add action bar
+ */
+{template .actionBarAdd}
+<div class="aui-buttons">
+    <a class="aui-button" id="add-status" >Add Statu</a>
+    <a class="aui-button" id="add-transition" >Add Transition</a>
+    <a class="aui-button" id="add-action" >Add Action</a>
+</div>
+{/template}
+
+/**
+ * Action List
+ */
+{template .actionList}
+<table class="aui aui-table-sortable">
+    <thead>
+        <tr>
+            <th id="basic-number" class="aui-table-column-issue-key" >#</th>
+            <th id="basic-action-name">Action Name</th>
+            <th id="basic-type">Type</th>
+            <th id="basic-order">Order</th>
+            <th id="basic-class-name">Class Name</th>
+            <th id="basic-transition">Transition</th>
+            <th class="aui-table-column-unsortable">Setting</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td headers="basic-number">1</td>
+           <td headers="basic-action-name">Assignable User</td>
+            <th id="basic-type">Post</th>
+          <th id="basic-order">2</th>
+            <th id="basic-class-name">Assignable User</th>
+            <th id="basic-transition">Created</th>
+        </tr>
+        <tr>
+            <td headers="basic-number">2</td>
+            <td headers="basic-action-name">Only users in group jira-administrators can execute this transition.</td>
+            <th id="basic-type">Condition</th>
+            <th id="basic-order">2</th>
+            <th id="basic-class-name">User Is In Project Role</th>
+            <th id="basic-transition">Repoen</th>
+        </tr>
+    </tbody>
+</table>
+{/template}

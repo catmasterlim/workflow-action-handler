@@ -1,0 +1,27 @@
+package dev.rest;
+
+import com.atlassian.jira.workflow.JiraWorkflow;
+
+import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.ErrorManager;
+import java.util.stream.Collectors;
+
+public class ErrorFactory {
+    public static ErrorModel CreateUnknownError(){
+        ErrorModel model = new ErrorModel();
+        return model;
+    }
+
+    public static ErrorModel CreatePermissionError(){
+        ErrorModel model = new ErrorModel(400, "PermissionError", "권한이 없음", "");
+        return model;
+    }
+
+    public static ErrorModel CreateNoDraftError(){
+        ErrorModel model = new ErrorModel(400, "NoDraft", "workflow draft가 없음", "");
+        return model;
+    }
+}

@@ -2,6 +2,8 @@ package dev.rest;
 
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.opensymphony.workflow.loader.ActionDescriptor;
+import com.opensymphony.workflow.loader.StepDescriptor;
+import com.opensymphony.workflow.loader.FunctionDescriptor;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
@@ -18,8 +20,11 @@ public class WorkflowActionHandlerRestModel {
     @XmlElement(name = "isDraft")
     public boolean isDraft;
 
+    @XmlElement(name = "countActions")
+    public int countAction;
+
     @XmlElement(name = "workflowActions")
-    public List<WorkflowActionHandlerSearchEntity> workflowActions;
+    public List<ActionTransitionEntity> workflowActions;
 
     public WorkflowActionHandlerRestModel() {
     }
@@ -28,23 +33,34 @@ public class WorkflowActionHandlerRestModel {
     public WorkflowActionHandlerRestModel(String workflowName, boolean isDraft, JiraWorkflow workflow) {
         this.workflowName = workflowName;
         this.isDraft = isDraft;
-        Collection<ActionDescriptor> actions = workflow.getAllActions();
+        Collection<ActionDescriptor> transitions = workflow.getAllActions();
 
         workflowActions = new ArrayList<>();
 
-        for(ActionDescriptor action : actions){
-            for(Object post :  action.getPostFunctions() ){
-                this.workflowActions.add( new WorkflowActionHandlerSearchEntity(post, "POST", action));
-            }
-            for(Object post :  action.getPreFunctions() ){
-                this.workflowActions.add( new WorkflowActionHandlerSearchEntity(post, "PRE", action));
-            }
-            for(Object post :  action.getConditionalResults() ){
-                this.workflowActions.add( new WorkflowActionHandlerSearchEntity(post, "CONDITION", action));
-            }
-            for(Object post :  action.getValidators() ){
-                this.workflowActions.add( new WorkflowActionHandlerSearchEntity(post, "Validator", action));
-            }
+        this.countAction = transitions.size();
+
+        for(ActionDescriptor transition : transitions){
+            this.workflowActions.add(new ActionTransitionEntity(transition, workflow));
+            // for(Object item :  transition.getAllActions() ){
+            //     this.workflowActions.add( new WorkflowActionHandlerSearchEntityPost(item, transition));
+            // }
+   
+            // for(Object post :  action.getPreFunctions() ){
+            //     this.workflowActions.add( new WorkflowActionHandlerSearchEntity(post, "PRE", action));
+            // }
+            // for(Object post :  action.getConditionalResults() ){
+            //     this.workflowActions.add( new WorkflowActionHandlerSearchEntity(post, "CONDITION", action));
+            // }
+            // for(Object post :  action.getValidators() ){
+            //     this.workflowActions.add( new WorkflowActionHandlerSearchEntity(post, "Validator", action));
+            // }
+            // for(StepDescriptor stepDescriptor :  workflow.getStepsForTransition(transition)){
+            //     this.workflowActions.add( new WorkflowActionHandlerSearchEntity(stepDescriptor, "Step", transition));
+            // }
+
+            // for(FunctionDescriptor functionDescriptor :  workflow.getPostFunctionsForTransition(action)){
+            //     this.workflowActions.add( new WorkflowActionHandlerSearchEntity(functionDescriptor, "POST", action));
+            // }
 
         }
 

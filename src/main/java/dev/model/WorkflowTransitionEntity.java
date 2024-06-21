@@ -1,4 +1,4 @@
-package dev.rest;
+package dev.model;
 
 
 import java.lang.reflect.InvocationTargetException;
@@ -20,12 +20,12 @@ import com.opensymphony.workflow.loader.RestrictionDescriptor;
 
 
 
-@XmlRootElement(name = "ActionTransitionEntity")
+@XmlRootElement(name = "WorkflowTransitionEntity")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ActionTransitionEntity {
+public class WorkflowTransitionEntity {
 
     @XmlElement(name = "id")
-    private int id;
+    public int id;
 
     @XmlElement(name = "name")
     public String name;
@@ -48,7 +48,6 @@ public class ActionTransitionEntity {
     @XmlElement(name = "attributes")
     public String attributes;
 
-
     @XmlElement(name = "isCommon")
     public boolean isCommon;
 
@@ -62,7 +61,7 @@ public class ActionTransitionEntity {
     public String view;
 
 
-    public ActionTransitionEntity(ActionDescriptor transition, JiraWorkflow workfloww){
+    public WorkflowTransitionEntity(ActionDescriptor transition, JiraWorkflow workflow){
 
         this.id= transition.getId();
         this.name = transition.getName();
@@ -71,7 +70,7 @@ public class ActionTransitionEntity {
         this.countValidator = transition.getValidators().size();
         RestrictionDescriptor restrict = transition.getRestriction();
         this.countConditional = restrict == null ? 0 : restrict.getConditionsDescriptor().getConditions().size();
-        this.countPostFunction = workfloww.getPostFunctionsForTransition(transition).size();
+        this.countPostFunction = workflow.getPostFunctionsForTransition(transition).size();
         this.countAttribute = transition.getMetaAttributes().keySet().size();
 
         Map map = transition.getMetaAttributes();

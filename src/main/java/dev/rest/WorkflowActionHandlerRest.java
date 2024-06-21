@@ -13,6 +13,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import dev.model.*;
+
+
 /**
  * actions list
  */
@@ -81,28 +84,18 @@ public class WorkflowActionHandlerRest {
             @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft,
             @QueryParam("workflowName") String workflowName) {
 
+        JiraWorkflow workflow = this.workflowManager.getWorkflow(workflowName);
         // TODO : 권한 체크
+
         // TODO : draft 가 없을 경우 에러 처리 
-
-        // TODO : Test data
-        // try {
-        // InputStream stream = getClass().getClassLoader().getResourceAsStream("/data/sample/sample.json");
-        // return Response.ok(stream).build();
-
-        // } catch (Exception e) {
-        //     return Response.ok(e.toString()).build();
-        // }
-
-        JiraWorkflow w = this.workflowManager.getWorkflow(workflowName);
+        if(isDraft && !workflow.hasDraftWorkflow()){
+            return Response.ok( ErrorFactory.CreateNoDraftError() ).status(Status.BAD_REQUEST).build();
+        }
+        
         if(isDraft){
-            w = this.workflowManager.getDraftWorkflow(workflowName);
+            workflow = this.workflowManager.getDraftWorkflow(workflowName);
         }
 
-        return Response.ok(
-                new WorkflowActionHandlerRestModel(
-                        workflowName,
-                    isDraft, w
-                )
-        ).build();
+        return Response.ok( new WorkflowActionModel(workflow, isDraft)).build();
     }
 }

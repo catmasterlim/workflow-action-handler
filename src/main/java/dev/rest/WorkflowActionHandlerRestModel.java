@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import dev.model.*;
+
 @XmlRootElement(name = "workflow")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class WorkflowActionHandlerRestModel {
@@ -24,7 +26,7 @@ public class WorkflowActionHandlerRestModel {
     public int countAction;
 
     @XmlElement(name = "workflowActions")
-    public List<ActionTransitionEntity> workflowActions;
+    public List<WorkflowTransitionEntity> workflowActions;
 
     public WorkflowActionHandlerRestModel() {
     }
@@ -40,7 +42,7 @@ public class WorkflowActionHandlerRestModel {
         this.countAction = transitions.size();
 
         for(ActionDescriptor transition : transitions){
-            this.workflowActions.add(new ActionTransitionEntity(transition, workflow));
+            this.workflowActions.add(new WorkflowTransitionEntity(transition, workflow));
             // for(Object item :  transition.getAllActions() ){
             //     this.workflowActions.add( new WorkflowActionHandlerSearchEntityPost(item, transition));
             // }

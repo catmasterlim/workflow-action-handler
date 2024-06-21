@@ -1,4 +1,4 @@
-package dev.rest;
+package dev.model;
 
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,9 +12,9 @@ import com.opensymphony.workflow.loader.StepDescriptor;
 import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
 
-@XmlRootElement(name = "ActionEntity")
+@XmlRootElement(name = "WorkflowActionEntity")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ActionEntity {
+public class WorkflowActionEntity {
 
     @XmlElement(name = "id")
     private int id;
@@ -26,10 +26,10 @@ public class ActionEntity {
     public String className;
 
     @XmlElement(name = "transition")
-    public ActionTransitionEntity transitionEntity;
+    public WorkflowTransitionEntity transitionEntity;
 
 
-    public ActionEntity(ActionTransitionEntity transitionEntity){
+    public WorkflowActionEntity(WorkflowTransitionEntity transitionEntity){
 
         // this.id= transition.getId();
         // this.name = transition.getName();

@@ -1,4 +1,4 @@
-package dev.rest;
+package dev.model;
 
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.opensymphony.workflow.loader.ActionDescriptor;

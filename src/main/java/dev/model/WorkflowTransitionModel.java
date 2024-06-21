@@ -1,4 +1,4 @@
-package dev.rest;
+package dev.model;
 
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.opensymphony.workflow.loader.ActionDescriptor;
@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@XmlRootElement(name = "workflow")
+@XmlRootElement(name = "transitions")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class WorkflowTransitionModel {
 
@@ -28,7 +28,7 @@ public class WorkflowTransitionModel {
     public boolean isActive;
 
     @XmlElement(name = "transitions")
-    public List<ActionTransitionEntity> transitions;
+    public List<WorkflowTransitionEntity> transitions;
 
     public WorkflowTransitionModel() {
     }
@@ -39,6 +39,6 @@ public class WorkflowTransitionModel {
         this.description = workflow.getDescription();
         Collection<ActionDescriptor> actions = workflow.getAllActions();
 
-        transitions = actions.stream().map( transition -> new ActionTransitionEntity(transition, workflow) ).collect(Collectors.toList());
+        transitions = actions.stream().map( transition -> new WorkflowTransitionEntity(transition, workflow) ).collect(Collectors.toList());
     }
 }

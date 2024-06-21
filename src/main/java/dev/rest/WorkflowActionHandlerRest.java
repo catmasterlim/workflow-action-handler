@@ -89,7 +89,6 @@ public class WorkflowActionHandlerRest {
         // filter 
         WorkflowActionFilterModel filterModel = new WorkflowActionFilterModel();
         filterModel.addFilterActionTypeAll(paramActionTypes);
-        // filterModel.addFilterActionType(WorkflowActionType.PostFunction);
 
         JiraWorkflow workflow = this.workflowManager.getWorkflow(workflowName);
         if(workflow == null){

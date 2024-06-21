@@ -3,13 +3,13 @@
 /**
  * action search dialog
  * @param title the title of the dialog
- * @param workflowMode isDraft
+ * @param isDraft isDraft
  * @param workflowName name of workflow
  */
 {template .searchDialog}
 <section
     id="workflow-action-handler-dialog"
-    class="aui-dialog2 aui-dialog2-small aui-layer"
+    class="aui-dialog2 aui-dialog2-xlarge aui-layer"
     role="dialog"
     tabindex="-1"
     aria-modal="true"
@@ -22,11 +22,16 @@
     </header>
     <div class="aui-dialog2-content" id="dialog-show-button--description">
         <h2>
-                             <span class="workflow-name">{$workflowName}</span>
-                             <span class=""> isDraft : {$workflowMode} </span>
+                <span class="workflow-name">{$workflowName}</span>
+                <span class=""> isDraft : {$isDraft} </span>
         </h2>
         <p>We've detected debris of some sort in a loose orbit.</p>
         <p>I suggest we beam a section aboard for analysis...</p>
+
+        
+        {call .actionList}
+        {/call}
+
     </div>
     <footer class="aui-dialog2-footer">
         <div class="aui-dialog2-footer-actions">

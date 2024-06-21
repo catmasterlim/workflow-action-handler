@@ -43,8 +43,9 @@ define("jira-workflow-action-handler/Application", [
             console.log(  " _getSearchView - _workflowData : " + this._workflowData);
             return Templates.searchDialog({
                 title: "Action Search Dialog",
-                workflowMode : this._workflowData.isDraft,
-                workflowName : this._workflowData.name
+                isDraft : this._workflowData.isDraft,
+                workflowName : this._workflowData.name,
+                actions : []
             });
         }
 
@@ -109,7 +110,36 @@ define("jira-workflow-action-handler/Application", [
             }else{
             }
 
+            this._searchActions();
+
             return this._dialog._id;
+        }
+
+        _searchActions(){
+            console.log('---> search actions');
+
+            let data = {
+                "isDraft" : this._workflowData.isDraft
+                , "workflowName" : this._workflowData.name
+                , "actionTypes" : ["Validator"]
+            };
+            console.log(this._workflowData);
+            console.log(data);
+
+            return jQuery.ajax({
+                url : AJS.contextPath() +'/rest/workflowactionhandler/1.0/actions.json'
+                , method : "GET"
+                , dataType: 'json'
+                , data : jQuery.param(data)
+            });
+            // }).done(function(data){
+            //     console.log('--- done -----');
+            //     console.log(data);
+            // }).fail(function(xhr, textStatus, errorThrown){
+            //     console.log('--- fail -----');
+            //     console.log(errorThrown);
+            // });
+            
         }
 
         _setupPage() {
@@ -120,7 +150,6 @@ define("jira-workflow-action-handler/Application", [
             this._workflowLinkContainer = jQuery("#workflow-links");
             this._workflowActionLink = this._setupActionLink();
             this._workflowView = this._setupDialog();
-
         }
     }
 

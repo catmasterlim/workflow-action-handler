@@ -51,12 +51,15 @@ public class WorkflowActionConditionEntity {
     public WorkflowActionConditionEntity(ConditionDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
 
         this.id= descriptor.getId();
-        this.name = descriptor.getName();
         this.className = (String)descriptor.getArgs().get("class.name");
-        // this.className = (String)descriptor.getClass().getName();
         this.classSimpleName = this.className.substring(this.className.lastIndexOf(".")+1);
+        this.name = descriptor.getName();
         this.order = order;
         this.transitionId = transitionId;
+
+        if(this.name.isEmpty()){
+            this.name = this.classSimpleName;
+        }
 
         this.args = descriptor.getArgs();
         this.asXML = descriptor.asXML();

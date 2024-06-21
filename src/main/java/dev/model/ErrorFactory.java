@@ -24,4 +24,10 @@ public class ErrorFactory {
         ErrorModel model = new ErrorModel(400, "NoDraft", "workflow draft가 없음", "");
         return model;
     }
+    public static ErrorModel CreateNoWorkflowError(String workflowName){
+        ErrorModel model = new ErrorModel(400, "NoWorkflow"
+        , String.format("해당 워크플로우({})가 존재하지 않습니다.", workflowName)
+        , "");
+        return model;
+    }
 }

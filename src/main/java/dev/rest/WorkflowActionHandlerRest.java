@@ -12,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.util.List;
 
 import dev.model.*;
 
@@ -81,10 +82,20 @@ public class WorkflowActionHandlerRest {
     @Path("/actions")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response getActions(
-            @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft,
+            @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft, 
+            @QueryParam("actionTypes") List<String> paramActionTypes ,
             @QueryParam("workflowName") String workflowName) {
 
+        // filter 
+        WorkflowActionFilterModel filterModel = new WorkflowActionFilterModel();
+        filterModel.addFilterActionTypeAll(paramActionTypes);
+        // filterModel.addFilterActionType(WorkflowActionType.PostFunction);
+
         JiraWorkflow workflow = this.workflowManager.getWorkflow(workflowName);
+        if(workflow == null){
+            return Response.ok( ErrorFactory.CreateNoWorkflowError(workflowName) ).status(Status.BAD_REQUEST).build();
+        }
+
         // TODO : 권한 체크
 
         // TODO : draft 가 없을 경우 에러 처리 
@@ -96,6 +107,6 @@ public class WorkflowActionHandlerRest {
             workflow = this.workflowManager.getDraftWorkflow(workflowName);
         }
 
-        return Response.ok( new WorkflowActionModel(workflow, isDraft)).build();
+        return Response.ok(new WorkflowActionModel(workflow, isDraft, filterModel)).build();
     }
 }

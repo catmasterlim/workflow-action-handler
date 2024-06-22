@@ -66,17 +66,29 @@
             <version>1.1.1</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Uncomment to use TestKit in your project. Details at https://bitbucket.org/atlassian/jira-testkit -->
         <!-- You can read more about TestKit at https://developer.atlassian.com/display/JIRADEV/Plugin+Tutorial+-+Smarter+integration+testing+with+TestKit -->
-        <!--
-        <dependency>
+        <!-- <dependency>
             <groupId>com.atlassian.jira.tests</groupId>
             <artifactId>jira-testkit-client</artifactId>
             <version>${testkit.version}</version>
             <scope>test</scope>
         </dependency>
-        -->
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-func-tests</artifactId>
+            <version>${testkit.version}</version>
+        </dependency> -->
+
+       
     </dependencies>
 
 
@@ -91,15 +103,15 @@
                     <productVersion>${jira.version}</productVersion>
                     <productDataVersion>${jira.version}</productDataVersion>
                     <!-- Uncomment to install TestKit backdoor in JIRA. -->
-                    <!--
-                    <pluginArtifacts>
+                    
+                    <!-- <pluginArtifacts>
                         <pluginArtifact>
                             <groupId>com.atlassian.jira.tests</groupId>
                             <artifactId>jira-testkit-plugin</artifactId>
                             <version>${testkit.version}</version>
                         </pluginArtifact>
-                    </pluginArtifacts>
-                    -->
+                    </pluginArtifacts> -->
+                   
                     <enableQuickReload>true</enableQuickReload>
 
                     <!-- See here for an explanation of default instructions: -->

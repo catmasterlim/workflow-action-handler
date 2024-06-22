@@ -131,14 +131,28 @@ define("jira-workflow-action-handler/Application", [
                 , method : "GET"
                 , dataType: 'json'
                 , data : jQuery.param(data)
+            }).done(function(data){
+                console.log('--- done -----');
+                console.log(data.actions);
+
+                // for(let item of data.actions){
+                //     // console.log(item);
+
+                // }
+                let htmlActionList = Templates.actionList({
+                    title: "Action List",
+                    isDraft : data.isDraft,
+                    workflowName : data.name,
+                    actions : data.actions
+                });
+                let containerActionList = jQuery('#container-workflow-action-handler-actions');
+                containerActionList.empty();
+                containerActionList.append(htmlActionList);
+
+            }).fail(function(xhr, textStatus, errorThrown){
+                console.log('--- fail -----');
+                console.log(errorThrown);
             });
-            // }).done(function(data){
-            //     console.log('--- done -----');
-            //     console.log(data);
-            // }).fail(function(xhr, textStatus, errorThrown){
-            //     console.log('--- fail -----');
-            //     console.log(errorThrown);
-            // });
             
         }
 

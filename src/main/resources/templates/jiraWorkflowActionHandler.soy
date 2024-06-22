@@ -28,9 +28,8 @@
         <p>We've detected debris of some sort in a loose orbit.</p>
         <p>I suggest we beam a section aboard for analysis...</p>
 
-        
-        {call .actionList}
-        {/call}
+        <div id="container-workflow-action-handler-actions">
+        </div>
 
     </div>
     <footer class="aui-dialog2-footer">
@@ -96,9 +95,13 @@
 
 /**
  * Action List
+ * @param isDraft isDraft
+ * @param workflowName name of workflow
+ * @param actions name of workflow
  */
 {template .actionList}
 <table class="aui aui-table-sortable">
+    <h2> {$workflowName} {$isDraft} {$actions} </h2>
     <thead>
         <tr>
             <th id="basic-number" class="aui-table-column-issue-key" >#</th>
@@ -111,22 +114,20 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td headers="basic-number">1</td>
-           <td headers="basic-action-name">Assignable User</td>
-            <th id="basic-type">Post</th>
-          <th id="basic-order">2</th>
-            <th id="basic-class-name">Assignable User</th>
-            <th id="basic-transition">Created</th>
+        {foreach $a in $actions}
+            {$a['classSimpleName']}
+            <tr>
+                <td headers="basic-number">2</td>
+                <td headers="basic-action-name" value="{$a['name']}" >{$a['name']}</td>
+                <th id="basic-type" value="{$a['type']}" >{$a['type']}</th>
+                <th id="basic-order" value={$a['order']} >{$a['order']}</th>
+                <th id="basic-class-name" value="{$a['className']}" >{$a['classSimpleName']}</th>
+                <th id="basic-transition" value={$a['transitionId']} >{$a['transitionId']}</th>
+            </tr>
         </tr>
-        <tr>
-            <td headers="basic-number">2</td>
-            <td headers="basic-action-name">Only users in group jira-administrators can execute this transition.</td>
-            <th id="basic-type">Condition</th>
-            <th id="basic-order">2</th>
-            <th id="basic-class-name">User Is In Project Role</th>
-            <th id="basic-transition">Repoen</th>
-        </tr>
+        {ifempty}
+	        is Empty
+        {/foreach} 
     </tbody>
 </table>
 {/template}

@@ -1,5 +1,8 @@
 
-
+<th id="basic-type" value="{$a['type']}" >{$a['type']}</th>
+                <th id="basic-order" >{$a['order']}</th>
+                <th id="basic-class-name" value="{$a['className']}" >{$a['classSimpleName']}</th>
+                <th id="basic-transition" value="{$transitionId}" >{$a['transitionId']}</th>
 
 
 /**
@@ -33,7 +36,7 @@
             <td id="action-transition">{$action.transitonId}</th>
         </tr>
         {/for}
-        
+
     </tbody>
 </table>
 {/template}

@@ -78,7 +78,8 @@
     <!--  -->  
     <resource name="Application.js" type="download" location="js/application.js"/>  
     <!-- <resource name="Sample.js" type="download" location="js/sample/sample.js" />    --> 
-  </web-resource>  
+  </web-resource> 
+ 
   <rest name="Workflow Action Handler Rest" i18n-name-key="workflow-action-handler-rest.name" key="workflow-action-handler-rest" path="/workflowactionhandler" version="1.0"> 
     <description key="workflow-action-handler-rest.description">The Workflow Action Handler Rest Plugin</description>
   </rest> 

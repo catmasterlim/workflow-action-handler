@@ -61,34 +61,44 @@ public class WorkflowActionModel {
 
             // log.warn("test trid : {}, actionType : {},  isFiltered : {} " , transitionEntity.id, WorkflowActionType.Condition, filterModel.isFilteredActionType(WorkflowActionType.Condition));
             // Conditions
-            if(!filterModel.isFilteredActionType(WorkflowActionType.Condition)){
-                List conditions = transition.getRestriction() == null ? new ArrayList<>() : transition.getRestriction().getConditionsDescriptor().getConditions();
-                int conditionOrder = 0;
-                for( Object obj : conditions){
-                    ConditionDescriptor descriptor = (ConditionDescriptor)obj;
-                    actions.add(new WorkflowActionConditionEntity(descriptor, workflow, conditionOrder, transitionEntity.id ));
-                    conditionOrder++;
+            List conditions = transition.getRestriction() == null ? new ArrayList<>() : transition.getRestriction().getConditionsDescriptor().getConditions();
+            int conditionOrder = 0;
+            for( Object obj : conditions){
+                conditionOrder++;
+                ConditionDescriptor descriptor = (ConditionDescriptor)obj;
+                WorkflowActionConditionEntity entity = WorkflowActionItemEntityFactory.createConditionEntity(filterModel, descriptor, workflow, conditionOrder, transitionEntity.id );
+                if(entity == null ){
+                    continue;
                 }
+                actions.add(entity);                
             }
+            
 
             // Validators
-            if(!filterModel.isFilteredActionType(WorkflowActionType.Validator)){
-                int validatorOrder = 0;
-                for( Object obj : transition.getValidators()){
-                    ValidatorDescriptor descriptor = (ValidatorDescriptor)obj;
-                    actions.add(new WorkflowActionValidatorEntity(descriptor, workflow, validatorOrder, transitionEntity.id ));
-                    validatorOrder++;
+            int validatorOrder = 0;
+            for( Object obj : transition.getValidators()){
+                validatorOrder++;
+                ValidatorDescriptor descriptor = (ValidatorDescriptor)obj;                
+                WorkflowActionValidatorEntity entity = WorkflowActionItemEntityFactory.createValidatorEntity(filterModel, descriptor, workflow, conditionOrder, transitionEntity.id );
+                if(entity == null ){
+                    continue;
                 }
+                actions.add(entity);
             }
+            
 
             // PostFunctions
-            if(!filterModel.isFilteredActionType(WorkflowActionType.PostFunction)){
-                int postfunctionOrder = 0;
-                for( FunctionDescriptor descriptor : workflow.getPostFunctionsForTransition(transition)){
-                    actions.add(new WorkflowActionPostFunctionEntity(descriptor, workflow, postfunctionOrder, transitionEntity.id ));
-                    postfunctionOrder++;
+            int postfunctionOrder = 0;
+            for( FunctionDescriptor descriptor : workflow.getPostFunctionsForTransition(transition)){
+                postfunctionOrder++;
+                // actions.add(new WorkflowActionPostFunctionEntity(descriptor, workflow, postfunctionOrder, transitionEntity.id ));
+                WorkflowActionPostFunctionEntity entity = WorkflowActionItemEntityFactory.createPostFunctionEntity(filterModel, descriptor, workflow, postfunctionOrder, transitionEntity.id );
+                if(entity == null ){
+                    continue;
                 }
+                actions.add(entity);
             }
+            
         }
 
 

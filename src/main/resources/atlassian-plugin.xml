@@ -41,10 +41,14 @@
   <!--  -->  
   <web-resource key="jira-workflow-action-handler-loader"> 
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
-    <resource location="js/loader.js" name="loader.js" type="download"/> 
+    <resource location="js/wah-loader.js" name="loader.js" type="download"/> 
   </web-resource>  
   <web-resource key="jira-workflow-action-handler-templates"> 
-    <resource location="js/templates-amd.js" name="templates.js" type="download"/> 
+    <resource location="js/wah-templates-amd.js" name="templates.js" type="download"/> 
+  </web-resource>  
+  <web-resource key="jira-workflow-action-handler-variables"> 
+    <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
+    <resource location="js/wah-variables.js" name="variables.js" type="download"/> 
   </web-resource>  
   <web-resource key="jira-workflow-action-handler-search-view"> 
     <!--    <context>jira.workflow.view</context>  -->  
@@ -62,8 +66,11 @@
     <dependency>com.atlassian.auiplugin:aui-table-sortable</dependency>  
     <dependency>com.atlassian.auiplugin:inline-dialog</dependency>  
     <dependency>com.atlassian.auiplugin:aui-dialog2</dependency>  
+
     <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-loader</dependency>  
     <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-templates</dependency>  
+    <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-variables</dependency>  
+
     <resource type="soy" name="jiraWorkflowActionHandler" location="/templates/jiraWorkflowActionHandler.soy"/>  
     <resource type="download" name="jiraWorkflowActionHandler.soy.js" location="/templates/jiraWorkflowActionHandler.soy"/>  
     <transformation extension="js"> 
@@ -76,8 +83,8 @@
       <transformer key="soyTransformer"/> 
     </transformation>  
     <!--  -->  
-    <resource name="Application.js" type="download" location="js/application.js"/>  
-    <!-- <resource name="Sample.js" type="download" location="js/sample/sample.js" />    --> 
+    <resource name="Application.js" type="download" location="js/wah-application.js"/>  
+    <resource name="search-view-dialog.js" type="download" location="js/search-view-dialog.js" />    
   </web-resource> 
  
   <rest name="Workflow Action Handler Rest" i18n-name-key="workflow-action-handler-rest.name" key="workflow-action-handler-rest" path="/workflowactionhandler" version="1.0"> 

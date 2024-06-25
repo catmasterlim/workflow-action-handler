@@ -46,6 +46,9 @@ public class WorkflowActionPostFunctionEntity {
     @XmlElement(name = "asXML")
     public String asXML;
 
+    @XmlElement(name = "isFiltered")
+    public boolean isFiltered;
+
 
     public WorkflowActionPostFunctionEntity(FunctionDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
 
@@ -62,6 +65,7 @@ public class WorkflowActionPostFunctionEntity {
 
         this.args = descriptor.getArgs();
         this.asXML = descriptor.asXML();
+        this.isFiltered = false;
 
     }
 

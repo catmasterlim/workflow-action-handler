@@ -25,10 +25,15 @@
                 <span class="workflow-name">{$workflowName}</span>
                 <span class=""> isDraft : {$isDraft} </span>
         </h2>
-        <p>We've detected debris of some sort in a loose orbit.</p>
-        <p>I suggest we beam a section aboard for analysis...</p>
 
-        <div id="container-workflow-action-handler-actions">
+
+        <div id="container-workflow-action-handler-searchbar" > 
+                {call .searchOptions}
+                {/call}
+        </div>
+                                        
+        <div id="container-workflow-action-handler-actions" class="navigator-group">
+
         </div>
 
     </div>
@@ -45,41 +50,90 @@
  * Search bar
  *
  */
-{template .actionBarSearch}
-<div class="search-field-container aui-buttons">
-        <label for="=search-item-action-name"> Action Name </label>
-        <select id="search-item-action-name" multiple>
-            <option> Action Name 1</option>
-            <option> Action Name 2</option>
-            <option> Action Name 3</option>
-        </select>
+{template .searchOptions}
+<form class="aui navigator-search query-component generic-styled">
+<div class="aui-group">
+<div class="aui-item search-wrap">
+<div class="search-container" data-mode="basic">
+<div class="search-field-container">
+<div class="search-criteria-container">
+<div class="search-criteria">     
+    <ul class="criteria-list" style="display: flex;">
+        <li data-id="action-name">
+            <button id="action-name-button" class="aui-button aui-dropdown2-trigger" aria-controls="action-name-dropdown">
+                Action : All
+            </button>
 
-        <label for="=search-item-action-type"> Type </label>
-        <select id="search-item-action-type" multiple>
-            <option>Post</option>
-            <option>Condition</option>
-            <option>Validator</option>
-        </select>
+            <aui-dropdown-menu id="action-name-dropdown">
+                <aui-section label="">
+                
+                <div class="check-list-field-container">
+                    <div class="assistive" aria-live="polite">1 result available. Type to search and press Tab to navigate through options.</div>
+                        <input autocomplete="off" placeholder="Find Names..." class="text" id="searcher-aname-input" />
+                        <span class="icon-default aui-icon aui-icon-small aui-iconfont-search noloading"></span>
+                    </div>
+                
+                </aui-section>
+                <aui-section label="ActionName" class="aui-list-truncate">
+                </aui-section>
+            </aui-dropdown-menu>
+        </li>
+        <li data-id="action-type">
+            <button id="action-type-button" class="aui-button aui-dropdown2-trigger" aria-controls="action-type-dropdown">
+                Type : All
+            </button>
 
-     <input class="text medium-field" type="text"
-               id="select-search-item-1-search" name="select-search-item-1-search" placeholder="검색어를 입력하세요.">
+            <aui-dropdown-menu id="action-type-dropdown">
+                <aui-section label="">
+                
+                <div class="check-list-field-container">
+                    <div class="assistive" aria-live="polite">1 result available. Type to search and press Tab to navigate through options.</div>
+                        <input autocomplete="off" placeholder="Find Names..." class="text" id="searcher-atype-input" />
+                        <span class="icon-default aui-icon aui-icon-small aui-iconfont-search noloading"></span>
+                    </div>
+                
+                </aui-section>
+                <aui-section label="ActionType" class="aui-list-truncate">
+                    <aui-item-checkbox interactive value="Validator" >Validator</aui-item-checkbox>
+                    <aui-item-checkbox interactive value="Condition" >Condition</aui-item-checkbox>
+                    <aui-item-checkbox interactive value="PostFunction" >PostFunction</aui-item-checkbox>
+                </aui-section>
+            </aui-dropdown-menu>
+        </li>
+        <li data-id="action-class-type">
+            <button id="action-class-type-button" class="aui-button aui-dropdown2-trigger" aria-controls="action-type-dropdown">
+                Type : All
+            </button>
 
-    <button class="aui-button aui-dropdown2-trigger" aria-controls="search-setting-dropdown">
-        Setting
-    </button>
-
-    <aui-dropdown-menu id="search-setting-dropdown">
-        <aui-section label="Columns">
-            <aui-item-checkbox interactive checked disabled>Action Name</aui-item-checkbox>
-            <aui-item-checkbox interactive>Type</aui-item-checkbox>
-            <aui-item-checkbox interactive>Order</aui-item-checkbox>
-        </aui-section>
-    <aui-item-checkbox interactive>Class Name</aui-item-checkbox>
-        </aui-section>
-    <aui-item-checkbox interactive>Transition</aui-item-checkbox>
-        </aui-section>
-    </aui-dropdown-menu>
+            <aui-dropdown-menu id="action-class-type-dropdown">
+                <aui-section label="">
+                
+                <div class="check-list-field-container">
+                    <div class="assistive" aria-live="polite">1 result available. Type to search and press Tab to navigate through options.</div>
+                        <input autocomplete="off" placeholder="Find Names..." class="text" id="searcher-atype-input" />
+                        <span class="icon-default aui-icon aui-icon-small aui-iconfont-search noloading"></span>
+                    </div>
+                
+                </aui-section>
+                <aui-section label="ActionClassType" class="aui-list-truncate">
+                    <aui-item-checkbox interactive value="JiraSystem" >JiraSystem</aui-item-checkbox>
+                    <aui-item-checkbox interactive value="Atlassian" >Condition</aui-item-checkbox>
+                    <aui-item-checkbox interactive value="PostFunction" >PostFunction</aui-item-checkbox>
+                </aui-section>
+            </aui-dropdown-menu>
+        </li>
+        <li>
+            <button id="workflow-action-handler-search-button" class="aui-button aui-button-primary search-button"> Search Action </button>
+        </li>
+   </ui>
 </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</form>
+
 {/template}
 
 /**
@@ -93,6 +147,17 @@
 </div>
 {/template}
 
+
+/**
+ * Search Option - action name
+ * @param actions name of action
+ */
+{template .searchOptionActionName}
+    {foreach $a in $actions}
+        <aui-item-checkbox interactive value="{$a.name}" >{$a.name}</aui-item-checkbox>
+    {/foreach} 
+{/template}
+
 /**
  * Action List
  * @param isDraft isDraft
@@ -100,34 +165,38 @@
  * @param actions name of workflow
  */
 {template .actionList}
+<div class="results-panel navigator-item">
+<div class="navigator-content" >
 <table class="aui aui-table-sortable">
-    <h2> {$workflowName} {$isDraft} {$actions} </h2>
+    <h2 class="hidden" > {$workflowName} {$isDraft} </h2>
     <thead>
         <tr>
-            <th id="basic-number" class="aui-table-column-issue-key" >#</th>
-            <th id="basic-action-name">Action Name</th>
-            <th id="basic-type">Type</th>
-            <th id="basic-order">Order</th>
-            <th id="basic-class-name">Class Name</th>
-            <th id="basic-transition">Transition</th>
-            <th class="aui-table-column-unsortable">Setting</th>
+            <th id="alist-action-name" class="aui-table-column-issue-key" >Action Name</th>
+            <th id="alist-type">Type</th>
+            <th id="alist-order">Order</th>
+            <th id="alist-class-name">Class Name</th>
+            <th id="alist-transition">Transition</th>
+            <th id="alist-class-full">Class Full name</th>
         </tr>
     </thead>
     <tbody>
         {foreach $a in $actions}
-            {$a['classSimpleName']}
+            {if not $a.isFiltered}
             <tr>
-                <td headers="basic-number">2</td>
-                <td headers="basic-action-name" value="{$a['name']}" >{$a['name']}</td>
-                <th id="basic-type" value="{$a['type']}" >{$a['type']}</th>
-                <th id="basic-order" value={$a['order']} >{$a['order']}</th>
-                <th id="basic-class-name" value="{$a['className']}" >{$a['classSimpleName']}</th>
-                <th id="basic-transition" value={$a['transitionId']} >{$a['transitionId']}</th>
+                <td headers="alist-action-name" value="{$a['name']}" >{$a['name']}</td>
+                <th id="alist-type" value="{$a['type']}" >{$a['type']}</th>
+                <th id="alist-order" value={$a['order']} >{$a['order']}</th>
+                <th id="alist-class-name" value="{$a['classSimpleName']}" >{$a['classSimpleName']}</th>
+                <th id="alist-transition" value={$a['transitionId']} >{$a['transitionId']}</th>
+                <th id="alist-class-full" value={$a['className']} >{$a['className']}</th>
             </tr>
+            {/if}
         </tr>
         {ifempty}
 	        is Empty
         {/foreach} 
     </tbody>
 </table>
+</div>
+</div>
 {/template}

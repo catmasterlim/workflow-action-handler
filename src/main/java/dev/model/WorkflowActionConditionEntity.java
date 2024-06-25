@@ -18,7 +18,7 @@ import com.opensymphony.workflow.loader.ConditionDescriptor;
 
 @XmlRootElement(name = "Condition")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class WorkflowActionConditionEntity {
+public class WorkflowActionConditionEntity  {
 
     @XmlElement(name = "id")
     private int id;
@@ -47,6 +47,8 @@ public class WorkflowActionConditionEntity {
     @XmlElement(name = "asXML")
     public String asXML;
 
+    @XmlElement(name = "isFiltered")
+    public boolean isFiltered;
 
     public WorkflowActionConditionEntity(ConditionDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
 
@@ -64,7 +66,7 @@ public class WorkflowActionConditionEntity {
         this.args = descriptor.getArgs();
         this.asXML = descriptor.asXML();
 
+        this.isFiltered = false;
+
     }
-
-
 }

@@ -13,30 +13,23 @@ public class WorkflowActionFilterModel {
 
     private static final Logger log = LoggerFactory.getLogger(WorkflowActionFilterModel.class);
 
-    private String actionName;
+    private Set<String> actionNames;
     private Set<WorkflowActionType> actionTypes;
 
-    public boolean isFilteredActionName(){
-        if( actionName == null || actionName.isEmpty()){
-            return false;
-        }
-
-        return true;
-    }
 
     public boolean isFilteredActionType(){
-        if( actionTypes == null || actionTypes.size() == 0){
+        if( this.actionTypes == null || this.actionTypes.size() == 0){
             return false;
         }
 
         return true;
     }
     public boolean isFilteredActionType(WorkflowActionType actionType){
-        if( actionTypes == null || actionTypes.size() == 0){
+        if( this.actionTypes == null || this.actionTypes.size() == 0){
             return false;
         }
 
-        if(actionTypes.contains(actionType)){
+        if(this.actionTypes.contains(actionType)){
             return false;
         }
 
@@ -44,11 +37,11 @@ public class WorkflowActionFilterModel {
     }
 
     public void addFilterActionType(WorkflowActionType actionType){
-        actionTypes.add(actionType);
+        this.actionTypes.add(actionType);
     }
     public void addFilterActionType(String actionType){
         WorkflowActionType type = WorkflowActionType.valueOf(actionType);
-        actionTypes.add( type );
+        this.actionTypes.add( type );
     }
     public void addFilterActionTypeAll(List<String> actionTypes){
         if(actionTypes==null){
@@ -63,9 +56,45 @@ public class WorkflowActionFilterModel {
         }
     }
 
+    public boolean isFilteredActionName(){
+        if( this.actionNames == null || this.actionNames.size() == 0){
+            return false;
+        }
+
+        return true;
+    }
+    public boolean isFilteredActionName(String actionName){
+        if( this.actionNames == null || this.actionNames.size() == 0){
+            return false;
+        }
+
+        for(String filterActionName : this.actionNames){
+            if(filterActionName.indexOf(actionName) > -1){
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    public void addFilterActionName(String actionName){
+        this.actionNames.add(actionName);
+    }
+    public void addFilterActionNameAll(List<String> actionNames){
+        if(actionNames==null){
+            return;
+        }
+        try{
+            for(String item : actionNames){
+                this.addFilterActionName(item);
+            }
+        }catch(Exception ex){
+            log.warn("ActionName Filter : {}", actionNames );
+        }
+    }
+
     public WorkflowActionFilterModel(){
 
-        this.actionName = "";
+        this.actionNames = new HashSet();
         this.actionTypes = new HashSet();
 
     }

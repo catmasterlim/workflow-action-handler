@@ -3,21 +3,25 @@ define("jira-workflow-action-handler/Application", [
     "wrm/data",
     "jquery",
     "require",
-    "jira-workflow-action-handler/templates"
+    "jira-workflow-action-handler/templates",
+    "jira-workflow-action-handler/variables"
 ], function(
     wrmRequire,
     WRMData,
     jQuery,
     require,
-    Templates
+    Templates,
+    Variables
 ) {
+
     class ApplicationWorkflowActionHandler {
         constructor(){
             this.doc = jQuery(document);
-//            this.instance = this;
         }
         //
         execute(){
+            console.log(Variables);
+
             this._setupPage();
            /* //
             console.log("this._workflowView.length : " + this._workflowView.length);
@@ -49,9 +53,10 @@ define("jira-workflow-action-handler/Application", [
             });
         }
 
-        _actionLinkOnClick(e){
+        _eventShow(e){
             e.preventDefault();
-            AJS.dialog2(this._workflowView).show();
+            let classThis = JIRA.WorkflowActionHandler.Variables.Application;
+            AJS.dialog2(classThis._workflowView).show();
         }
         _setupActionLink(){
             let actionLinkEl = jQuery("#jira-workflow-action-handler");
@@ -63,7 +68,6 @@ define("jira-workflow-action-handler/Application", [
             }
 
             // link buttons ( Digram | Text ) - Text
-//            let textButton = jQuery('#workflow-links > .aui-buttons > #workflow-text');
             let el = jQuery('#workflow-links');
             console.log('--->  target : ' + el.length);
             if(el.length > 0){
@@ -73,14 +77,23 @@ define("jira-workflow-action-handler/Application", [
             }
 
             actionLinkEl = jQuery("#jira-workflow-action-handler");
-            actionLinkEl.on('click', this._actionLinkOnClick.bind(this));
+            actionLinkEl.on('click', this._eventShow.bind(this));
         }
 
-        _dialogSubmit(e){
+        _setupSearchOption(){
+            // action-name-button
+            // action-name-dropdown
+
+            // action-type-button
+            // action-type-dropdown
+        }
+
+        
+        _eventHide(e){
             e.preventDefault();
-            AJS.dialog2(this._dialog._id).hide();
+            let classThis = JIRA.WorkflowActionHandler.Variables.Application;
+            AJS.dialog2(classThis._dialog._id).hide();
         }
-
         _setupDialog(){
             this._dialog = {};
             this._dialog._id = jQuery("#workflow-action-handler-dialog");
@@ -97,64 +110,34 @@ define("jira-workflow-action-handler/Application", [
             }
 
             this._dialog._id = jQuery("#workflow-action-handler-dialog");
-            this._dialog._submit = jQuery('#workflow-action-handler-dialog-submit-button');
+            this._dialog._btn_hide = jQuery('#workflow-action-handler-dialog-submit-button');
+            // this._dialog._btn_search = jQuery('#workflow-action-handler-search-button');
 
             AJS.$("#search-item-action-name").auiSelect2();
             AJS.$("#search-item-action-type").auiSelect2();
+            // AJS.$(this._dialog._btn_search).auiButton2();
 
-            this._dialog._submit.on('click', this._dialogSubmit.bind(this));
+            // this._dialog._btn_hide.on('click', this._eventHide.bind(this));
+            // this._dialog._btn_search.on('click', this._eventSearch.bind(this));
 
+            this._dialog._btn_hide.on('click', this._eventHide);
+            // this._dialog._btn_search.on('click', this._eventSearch);
+            
+            
 
             //
             if (this._workflowData.isEditable) {
             }else{
             }
 
-            this._searchActions();
+            // click
+            // this._dialog._btn_search.trigger('click');
 
             return this._dialog._id;
         }
 
-        _searchActions(){
-            console.log('---> search actions');
+        
 
-            let data = {
-                "isDraft" : this._workflowData.isDraft
-                , "workflowName" : this._workflowData.name
-                , "actionTypes" : ["Validator"]
-            };
-            console.log(this._workflowData);
-            console.log(data);
-
-            return jQuery.ajax({
-                url : AJS.contextPath() +'/rest/workflowactionhandler/1.0/actions.json'
-                , method : "GET"
-                , dataType: 'json'
-                , data : jQuery.param(data)
-            }).done(function(data){
-                console.log('--- done -----');
-                console.log(data.actions);
-
-                // for(let item of data.actions){
-                //     // console.log(item);
-
-                // }
-                let htmlActionList = Templates.actionList({
-                    title: "Action List",
-                    isDraft : data.isDraft,
-                    workflowName : data.name,
-                    actions : data.actions
-                });
-                let containerActionList = jQuery('#container-workflow-action-handler-actions');
-                containerActionList.empty();
-                containerActionList.append(htmlActionList);
-
-            }).fail(function(xhr, textStatus, errorThrown){
-                console.log('--- fail -----');
-                console.log(errorThrown);
-            });
-            
-        }
 
         _setupPage() {
 
@@ -168,6 +151,7 @@ define("jira-workflow-action-handler/Application", [
     }
 
     let app = new ApplicationWorkflowActionHandler();
+    Variables.Application = app;
     return app;
 });
 

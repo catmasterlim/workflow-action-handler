@@ -8,6 +8,9 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.jira.workflow.WorkflowManager;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,6 +26,7 @@ import dev.model.*;
 @Path("/")
 public class WorkflowActionHandlerRest {
 
+    private static final Logger log = LoggerFactory.getLogger(WorkflowActionHandlerRest.class);
 
     @JiraImport
     private final WorkflowManager workflowManager;
@@ -82,13 +86,22 @@ public class WorkflowActionHandlerRest {
     @Path("/actions")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response getActions(
-            @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft, 
-            @QueryParam("actionTypes") List<String> paramActionTypes ,
-            @QueryParam("workflowName") String workflowName) {
+            @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft
+            , @QueryParam("workflowName") String workflowName
+            , @QueryParam("actionName") List<String> paramActionName
+            , @QueryParam("actionType") List<String> paramActionType
+           ) {
+
+        
+        log.info("params - isDraft : {}", isDraft);
+        log.info("params - workflowName : {}", workflowName);
+        log.info("params - actionName : {}", paramActionName);
+        log.info("params - actionType : {}", paramActionType);
 
         // filter 
         WorkflowActionFilterModel filterModel = new WorkflowActionFilterModel();
-        filterModel.addFilterActionTypeAll(paramActionTypes);
+        filterModel.addFilterActionNameAll(paramActionName);
+        filterModel.addFilterActionTypeAll(paramActionType);
 
         JiraWorkflow workflow = this.workflowManager.getWorkflow(workflowName);
         if(workflow == null){

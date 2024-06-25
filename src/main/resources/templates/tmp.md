@@ -1,42 +1,26 @@
+<form class="aui navigator-search query-component generic-styled">
+<div class="aui-group">
+<div class="aui-item search-wrap">
+<div class="search-container" data-mode="basic">
+<div class="search-field-container">
+<div class="search-criteria-container">
+<div class="search-criteria"> 
 
-<th id="basic-type" value="{$a['type']}" >{$a['type']}</th>
-                <th id="basic-order" >{$a['order']}</th>
-                <th id="basic-class-name" value="{$a['className']}" >{$a['classSimpleName']}</th>
-                <th id="basic-transition" value="{$transitionId}" >{$a['transitionId']}</th>
 
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</form>
 
-/**
- * Action List
- * @param workflowMode isDraft
- * @param workflowName name of workflow
- * @param actions action of workflow
- */
-{template .actionList}
-<table class="aui aui-table-sortable">
-    <thead>
-        <tr>
-            <th id="action-number" class="aui" >#</th>
-            <th id="action-action-name">Action Name</th>
-            <th id="action-type">Type</th>
-            <th id="action-order">Order</th>
-            <th id="action-class-name">Class Name</th>
-            <th id="action-transition">Transition</th>
-            <th class="">Setting</th>
-        </tr>
-    </thead>
-    <tbody>
-        
-        {for $action in $actions}
-        <tr>
-            <td id="action-number" class="aui" >{$action.id}</td>
-            <td id="action-action-name">{$action.name}</td>
-            <td id="action-type">{$action.type}</th>
-            <td id="action-order">{$action.order}</th>
-            <td id="action-class-name">{$action.className}</th>
-            <td id="action-transition">{$action.transitonId}</th>
-        </tr>
-        {/for}
-
-    </tbody>
-</table>
-{/template}
+            <button id="action-type-button" class="criteria-selector aui-button aui-button-subtle jira-aui-dropdown2-trigger" aria-controls="action-type-dropdown">
+                <div class="criteria-wrap">
+                    <div class="searcherValue" data-selected-search-option-atype="10000">
+                        <span id="field-search-option-atype" class="fieldValue">
+                            Type : All
+                        </span>
+                    </div>
+                </div>
+            </button>

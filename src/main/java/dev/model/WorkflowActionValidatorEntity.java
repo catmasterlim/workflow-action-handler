@@ -46,6 +46,9 @@ public class WorkflowActionValidatorEntity {
     @XmlElement(name = "asXML")
     public String asXML;
 
+    @XmlElement(name = "isFiltered")
+    public boolean isFiltered;
+
 
     public WorkflowActionValidatorEntity(ValidatorDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
 
@@ -62,6 +65,8 @@ public class WorkflowActionValidatorEntity {
 
         this.args = descriptor.getArgs();
         this.asXML = descriptor.asXML();
+
+        this.isFiltered = false;
 
     }
 

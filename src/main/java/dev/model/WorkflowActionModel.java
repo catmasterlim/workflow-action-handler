@@ -46,7 +46,7 @@ public class WorkflowActionModel {
     public WorkflowActionModel() {
     }
 
-    public WorkflowActionModel(JiraWorkflow workflow, boolean isDraft, WorkflowActionFilterModel filterModel ) {
+    public WorkflowActionModel(boolean includedFiltered, JiraWorkflow workflow, boolean isDraft, WorkflowActionFilterModel filterModel ) {
 
         this.name = workflow.getName();
         this.isDraft = isDraft;
@@ -70,6 +70,9 @@ public class WorkflowActionModel {
                 if(entity == null ){
                     continue;
                 }
+                if(includedFiltered == false && entity.isFiltered == false) {
+                    continue;
+                }
                 actions.add(entity);                
             }
             
@@ -83,6 +86,9 @@ public class WorkflowActionModel {
                 if(entity == null ){
                     continue;
                 }
+                if(includedFiltered == false && entity.isFiltered == false) {
+                    continue;
+                }
                 actions.add(entity);
             }
             
@@ -94,6 +100,9 @@ public class WorkflowActionModel {
                 // actions.add(new WorkflowActionPostFunctionEntity(descriptor, workflow, postfunctionOrder, transitionEntity.id ));
                 WorkflowActionPostFunctionEntity entity = WorkflowActionItemEntityFactory.createPostFunctionEntity(filterModel, descriptor, workflow, postfunctionOrder, transitionEntity.id );
                 if(entity == null ){
+                    continue;
+                }
+                if(includedFiltered == false && entity.isFiltered == false) {
                     continue;
                 }
                 actions.add(entity);

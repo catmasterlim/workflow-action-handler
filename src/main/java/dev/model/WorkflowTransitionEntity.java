@@ -60,6 +60,15 @@ public class WorkflowTransitionEntity {
     @XmlElement(name = "view")
     public String view;
 
+    @XmlElement(name = "isGlobal")
+    public boolean isGlobal;
+
+    @XmlElement(name = "isInitialAction")
+    public boolean isInitialAction;
+
+    @XmlElement(name = "isOrdinaryAction")
+    public boolean isOrdinaryAction;
+
 
     public WorkflowTransitionEntity(ActionDescriptor transition, JiraWorkflow workflow){
 
@@ -83,7 +92,9 @@ public class WorkflowTransitionEntity {
         this.isFinish = transition.isFinish();
         this.isAutoExecute = transition.getAutoExecute();
         this.view = transition.getView();
-
+        this.isGlobal = workflow.isGlobalAction(transition);
+        this.isInitialAction = workflow.isInitialAction(transition);
+        this.isOrdinaryAction = workflow.isOrdinaryAction(transition);
     }
 
 

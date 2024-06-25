@@ -13,6 +13,7 @@ define('jira-workflow-action-handler/search-view-dialog', [
     // options
     var searchOptionActionNames = new Set([]);
     var searchOptionActionTypes = new Set([]);
+    var searchOptionActionClassTypes = new Set([]);
 
 
     function _getSearchActionOption() {
@@ -22,6 +23,7 @@ define('jira-workflow-action-handler/search-view-dialog', [
         return {
             actionName: Array.from(searchOptionActionNames)
             ,actionType: Array.from(searchOptionActionTypes)
+            ,actionClassType: Array.from(searchOptionActionClassTypes)
             ,actionClass: []
             ,transitionId: []
         };
@@ -52,6 +54,7 @@ define('jira-workflow-action-handler/search-view-dialog', [
             , "workflowName" : classThis._workflowData.name
             , "actionName" : searchOption.actionName
             , "actionType" : searchOption.actionType
+            , "actionClassType" : searchOption.actionClassType
         };
         console.log(classThis._workflowData);
         console.log(data);
@@ -84,6 +87,9 @@ define('jira-workflow-action-handler/search-view-dialog', [
                     let containerActionList = jQuery('#container-workflow-action-handler-actions');
                     containerActionList.empty();
                     containerActionList.append(htmlActionList);
+
+                    // sorted table
+                    AJS.tablessortable.setTableSortable(AJS.$(".aui-table-sortable"));
 
                     resolve({result, textStatus, jqXHR});
                   }
@@ -203,6 +209,57 @@ define('jira-workflow-action-handler/search-view-dialog', [
         
       }
       AJS.$(document).on('input', '#searcher-atype-input', _eventSearchOption_atype_find);
+
+
+      //---------------------------------------------------------
+      //--------------------- < action class type > -------------------
+      function _eventSearchOption_aclasstype(e){
+          let isChecked = e.target.hasAttribute('checked');
+          let val = e.target.getAttribute('value')
+          if (isChecked) {
+              searchOptionActionClassTypes.add(val);
+            } else {
+              searchOptionActionClassTypes.delete(val);
+            }
+
+          console.log('searchOptionActionClassTypes : ', searchOptionActionClassTypes);
+
+          //
+          let text = "ClassType : All";
+          if(searchOptionActionClassTypes.size > 0){
+            text = truncateString(Array.from(searchOptionActionClassTypes).join(','), 15);
+          }
+
+          //
+          console.log('text : ', text);
+          jQuery('#action-class-type-button').text(text);
+
+        }
+
+        AJS.$(document).on('change', '#action-class-type-dropdown', _eventSearchOption_aclasstype);
+
+
+        function _eventSearchOption_aclasstype_find(e){
+          let val = e.target.value
+          console.log( 'find value ', val);
+
+          let items = AJS.$('#action-class-type-dropdown  aui-item-checkbox')
+
+          for(let item of items){
+            console.log('item text : ', item.textContent);
+            if(val=="" || item.textContent.includes(val) ){
+              item.style.visibility = "visible";
+            }else {
+              item.style.visibility = "hidden";
+            }
+          }
+
+        }
+        AJS.$(document).on('input', '#searcher-aclasstype-input', _eventSearchOption_aclasstype_find);
+
+
+    //--------------- end search options ----------- ---
+
 
     //   this._dialog._btn_search = jQuery('#workflow-action-handler-search-button');
     //   this._dialog._btn_search.on('click', this._eventSearch);

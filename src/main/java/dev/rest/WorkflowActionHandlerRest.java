@@ -82,26 +82,39 @@ public class WorkflowActionHandlerRest {
         return Response.ok( new WorkflowTransitionModel(workflow, isDraft)).build();
     }
 
+    /**
+     * getActions
+     * @param includedFiltered 필터된 action 결과에 포함여부, default : true
+     * @param isDraft 편집 모드
+     * @param workflowName 워크프로우 이름
+     * @param paramActionName 액션 이름 리스트 ( stirng [] )
+     * @param paramActionType 액션 타입 리스트 ( stirng [] )
+     * @return Response
+     */
     @GET
     @Path("/actions")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response getActions(
-            @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft
+            @DefaultValue("true") @QueryParam("includedFiltered") Boolean includedFiltered
+            , @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft
             , @QueryParam("workflowName") String workflowName
             , @QueryParam("actionName") List<String> paramActionName
             , @QueryParam("actionType") List<String> paramActionType
+            , @QueryParam("actionClassType") List<String> paramActionClassType
            ) {
 
-        
+        log.info("params - includedFiltered : {}", includedFiltered);
         log.info("params - isDraft : {}", isDraft);
         log.info("params - workflowName : {}", workflowName);
         log.info("params - actionName : {}", paramActionName);
         log.info("params - actionType : {}", paramActionType);
+        log.info("params - actionClassType : {}", paramActionClassType);
 
         // filter 
         WorkflowActionFilterModel filterModel = new WorkflowActionFilterModel();
         filterModel.addFilterActionNameAll(paramActionName);
         filterModel.addFilterActionTypeAll(paramActionType);
+        filterModel.addFilterActionClassTypeAll(paramActionClassType);
 
         JiraWorkflow workflow = this.workflowManager.getWorkflow(workflowName);
         if(workflow == null){
@@ -119,6 +132,6 @@ public class WorkflowActionHandlerRest {
             workflow = this.workflowManager.getDraftWorkflow(workflowName);
         }
 
-        return Response.ok(new WorkflowActionModel(workflow, isDraft, filterModel)).build();
+        return Response.ok(new WorkflowActionModel(includedFiltered, workflow, isDraft, filterModel)).build();
     }
 }

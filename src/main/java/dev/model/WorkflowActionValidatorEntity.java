@@ -31,6 +31,9 @@ public class WorkflowActionValidatorEntity {
     @XmlElement(name = "classSimpleName")
     public String classSimpleName;
 
+    @XmlElement(name = "classType")
+    public String classType;
+
     @XmlElement(name = "type")
     public final WorkflowActionType type = WorkflowActionType.Validator;
 
@@ -67,7 +70,7 @@ public class WorkflowActionValidatorEntity {
         this.asXML = descriptor.asXML();
 
         this.isFiltered = false;
-
+        this.classType = ClassTypeFactory.create(this.className);
     }
 
 

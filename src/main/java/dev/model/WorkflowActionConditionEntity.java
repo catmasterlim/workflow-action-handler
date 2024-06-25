@@ -32,6 +32,9 @@ public class WorkflowActionConditionEntity  {
     @XmlElement(name = "classSimpleName")
     public String classSimpleName;
 
+    @XmlElement(name = "classType")
+    public String classType;
+
     @XmlElement(name = "type")
     public final WorkflowActionType type = WorkflowActionType.Condition;
 
@@ -49,6 +52,9 @@ public class WorkflowActionConditionEntity  {
 
     @XmlElement(name = "isFiltered")
     public boolean isFiltered;
+
+    @XmlElement(name = "isNegate")
+    public boolean isNegate;
 
     public WorkflowActionConditionEntity(ConditionDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
 
@@ -68,5 +74,7 @@ public class WorkflowActionConditionEntity  {
 
         this.isFiltered = false;
 
+        this.isNegate = descriptor.isNegate();
+        this.classType = ClassTypeFactory.create(this.className);
     }
 }

@@ -31,6 +31,9 @@ public class WorkflowActionPostFunctionEntity {
     @XmlElement(name = "classSimpleName")
     public String classSimpleName;
 
+    @XmlElement(name = "classType")
+    public String classType;
+
     @XmlElement(name = "type")
     public final WorkflowActionType type = WorkflowActionType.PostFunction;
 
@@ -66,6 +69,8 @@ public class WorkflowActionPostFunctionEntity {
         this.args = descriptor.getArgs();
         this.asXML = descriptor.asXML();
         this.isFiltered = false;
+
+        this.classType = ClassTypeFactory.create(this.className);
 
     }
 

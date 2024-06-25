@@ -22,6 +22,9 @@ public class WorkflowActionItemEntityFactory {
         if ( filter.isFilteredActionName(entity.name)){
             entity.isFiltered = true;
         }
+        if ( filter.isFilteredActionClassType(entity.classType)){
+            entity.isFiltered = true;
+        }
 
         return entity;
     }
@@ -38,6 +41,9 @@ public class WorkflowActionItemEntityFactory {
         if ( filter.isFilteredActionName(entity.name)){
             entity.isFiltered = true;
         }
+        if ( filter.isFilteredActionClassType(entity.classType)){
+            entity.isFiltered = true;
+        }
 
         return entity;
     }
@@ -50,6 +56,9 @@ public class WorkflowActionItemEntityFactory {
             entity.isFiltered = true;
         }
         if ( filter.isFilteredActionName(entity.name)){
+            entity.isFiltered = true;
+        }
+        if ( filter.isFilteredActionClassType(entity.classType)){
             entity.isFiltered = true;
         }
 

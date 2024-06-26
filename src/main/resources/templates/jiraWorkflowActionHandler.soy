@@ -28,7 +28,7 @@
 
 
         <div id="container-workflow-action-handler-searchbar" > 
-                {call .searchOptions}
+                {call .searchOptionsBar}
                 {/call}
         </div>
                                         
@@ -50,7 +50,7 @@
  * Search bar
  *
  */
-{template .searchOptions}
+{template .searchOptionsBar}
 <form class="aui navigator-search query-component generic-styled">
 <div class="aui-group">
 <div class="aui-item search-wrap">
@@ -59,69 +59,49 @@
 <div class="search-criteria-container">
 <div class="search-criteria">     
     <ul class="criteria-list" style="display: flex;">
-        <li data-id="action-name">
-            <button id="action-name-button" class="aui-button aui-dropdown2-trigger" aria-controls="action-name-dropdown">
-                Action : All
-            </button>
+        {call .searchOption}
+            {param optionId: 'action-name' /}
+            {param optionLabel : 'ActionName' /}
+            {param useFindInput : true /}
+            {param items: [] /}
+            {param checkedItems: [] /}
+        {/call}
 
-            <aui-dropdown-menu id="action-name-dropdown">
-                <aui-section label="">
-                
-                <div class="check-list-field-container">
-                    <div class="assistive" aria-live="polite">1 result available. Type to search and press Tab to navigate through options.</div>
-                        <input autocomplete="off" placeholder="Find Names..." class="text" id="searcher-aname-input" />
-                        <span class="icon-default aui-icon aui-icon-small aui-iconfont-search noloading"></span>
-                    </div>
-                
-                </aui-section>
-                <aui-section label="ActionName" class="aui-list-truncate">
-                </aui-section>
-            </aui-dropdown-menu>
-        </li>
-        <li data-id="action-type">
-            <button id="action-type-button" class="aui-button aui-dropdown2-trigger" aria-controls="action-type-dropdown">
-                Type : All
-            </button>
 
-            <aui-dropdown-menu id="action-type-dropdown">
-                <aui-section label="">
-                
-                <div class="check-list-field-container">
-                    <div class="assistive" aria-live="polite">1 result available. Type to search and press Tab to navigate through options.</div>
-                        <input autocomplete="off" placeholder="Find Names..." class="text" id="searcher-atype-input" />
-                        <span class="icon-default aui-icon aui-icon-small aui-iconfont-search noloading"></span>
-                    </div>
-                
-                </aui-section>
-                <aui-section label="ActionType" class="aui-list-truncate">
-                    <aui-item-checkbox interactive value="Validator" >Validator</aui-item-checkbox>
-                    <aui-item-checkbox interactive value="Condition" >Condition</aui-item-checkbox>
-                    <aui-item-checkbox interactive value="PostFunction" >PostFunction</aui-item-checkbox>
-                </aui-section>
-            </aui-dropdown-menu>
-        </li>
-        <li data-id="action-class-type">
-            <button id="action-class-type-button" class="aui-button aui-dropdown2-trigger" aria-controls="action-class-type-dropdown">
-                ClassType : All
-            </button>
+        {let $actionTypes: ['Validator' : 'Validator', 'Condition' : 'Condition', 'PostFunction' : 'PostFunction']/}
+        {call .searchOption}
+            {param optionId: 'action-type' /}
+            {param optionLabel : 'ActionType' /}
+            {param useFindInput : false /}
+            {param items: $actionTypes /}
+            {param checkedItems: [] /}
+        {/call}
 
-            <aui-dropdown-menu id="action-class-type-dropdown">
-                <aui-section label="">
-                
-                <div class="check-list-field-container">
-                    <div class="assistive" aria-live="polite">1 result available. Type to search and press Tab to navigate through options.</div>
-                        <input autocomplete="off" placeholder="Find Names..." class="text" id="searcher-aclasstype-input" />
-                        <span class="icon-default aui-icon aui-icon-small aui-iconfont-search noloading"></span>
-                    </div>
-                
-                </aui-section>
-                <aui-section label="ActionClassType" class="aui-list-truncate">
-                    <aui-item-checkbox interactive value="Default" >Default</aui-item-checkbox>
-                    <aui-item-checkbox interactive value="JiraBase">JiraBase</aui-item-checkbox>
-                    <aui-item-checkbox interactive value="Custom" >Custom</aui-item-checkbox>
-                </aui-section>
-            </aui-dropdown-menu>
-        </li>
+        {let $actionClassTypes: ['Default' : 'Default' , 'JiraBase' : 'JiraBase', 'Custom' : 'Custom']/}
+        {call .searchOption}
+            {param optionId: 'action-class-type' /}
+            {param optionLabel : 'ActionClassType' /}
+            {param useFindInput : false /}
+            {param items: $actionClassTypes /}
+            {param checkedItems: [] /}
+        {/call}
+
+        {call .searchOption}
+            {param optionId: 'transition-id' /}
+            {param optionLabel : 'Transition' /}
+            {param useFindInput : false /}
+            {param items: [] /}
+            {param checkedItems: [] /}
+        {/call}
+
+        {call .searchOption}
+            {param optionId: 'transition-name' /}
+            {param optionLabel : 'TransitionName' /}
+            {param useFindInput : true /}
+            {param items: [] /}
+            {param checkedItems: [] /}
+        {/call}
+
         <li>
             <button id="workflow-action-handler-search-button" class="aui-button aui-button-primary search-button"> Search Action </button>
         </li>
@@ -149,13 +129,35 @@
 
 
 /**
- * Search Option - action name
- * @param actions name of action
+ * Search Option
+ * @param optionId id of option
+ * @param optionLabel label of option(display)
+ * @param useFindInput find input - true, false
+ * @param items item of option map ( key, value )
+ * @param checkedItems checked item list (set)
  */
-{template .searchOptionActionName}
-    {foreach $a in $actions}
-        <aui-item-checkbox interactive value="{$a.name}" >{$a.name}</aui-item-checkbox>
-    {/foreach} 
+{template .searchOption}
+<li data-id="{$optionId}">
+    <button id="{$optionId}-button" class="aui-button aui-dropdown2-trigger" aria-controls="{$optionId}-dropdown">
+        {$optionLabel} : All
+    </button>
+    <aui-dropdown-menu id="{$optionId}-dropdown">
+        {if $useFindInput}
+        <aui-section label="">
+            <div class="check-list-field-container">
+                <div class="assistive" aria-live="polite">1 result available. Type to search and press Tab to navigate through options.</div>
+                <input autocomplete="off" placeholder="Find ..." class="text" id="searcher-{$optionId}-input" >
+                <span class="icon-default aui-icon aui-icon-small aui-iconfont-search noloading"></span>
+            </div>
+        </aui-section>
+        {/if}
+        <aui-section label="{$optionLabel}" class="aui-list-truncate">
+            {foreach $key in keys($items)}
+                <aui-item-checkbox interactive value="$key" >{$items[$key]}  </aui-item-checkbox>
+            {/foreach}
+        </aui-section>
+    </aui-dropdown-menu>
+ </li>
 {/template}
 
 /**

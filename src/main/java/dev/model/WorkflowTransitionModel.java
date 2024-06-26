@@ -6,9 +6,7 @@ import com.opensymphony.workflow.loader.StepDescriptor;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
 
 import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @XmlRootElement(name = "transitions")
@@ -28,7 +26,9 @@ public class WorkflowTransitionModel {
     public boolean isActive;
 
     @XmlElement(name = "transitions")
-    public List<WorkflowTransitionEntity> transitions;
+    public final List<WorkflowTransitionEntity> transitions = new ArrayList<>();
+
+    private final Map<Integer, WorkflowTransitionEntity> transitionMap = new HashMap<>();
 
     public WorkflowTransitionModel() {
     }
@@ -37,8 +37,17 @@ public class WorkflowTransitionModel {
         this.name = workflow.getName();
         this.isDraft = isDraft;
         this.description = workflow.getDescription();
-        Collection<ActionDescriptor> actions = workflow.getAllActions();
 
-        transitions = actions.stream().map( transition -> new WorkflowTransitionEntity(transition, workflow) ).collect(Collectors.toList());
+        for(ActionDescriptor transition :  workflow.getAllActions()){
+            WorkflowTransitionEntity entity = new WorkflowTransitionEntity(transition, workflow);
+            this.transitionMap.put(entity.id,  entity);
+            this.transitions.add(entity);
+        }
+//        this.transitions = workflow.getAllActions().stream().map( transition -> new WorkflowTransitionEntity(transition, workflow) ).collect(Collectors.toList());
+
+    }
+
+    public WorkflowTransitionEntity getTransitionEntity(Integer id){
+        return transitionMap.get(id);
     }
 }

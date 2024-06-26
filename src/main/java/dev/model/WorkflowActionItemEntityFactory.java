@@ -11,54 +11,85 @@ import com.opensymphony.workflow.loader.ConditionDescriptor;
 
 public class WorkflowActionItemEntityFactory {
 
-    public static WorkflowActionConditionEntity createConditionEntity(WorkflowActionFilterModel filter,  ConditionDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
+    WorkflowTransitionModel transitionModel;
+    JiraWorkflow workflow;
+    boolean isDraft;
+    WorkflowActionFilterModel filter;
+    
+    public WorkflowActionItemEntityFactory(JiraWorkflow workflow, boolean isDraft, WorkflowActionFilterModel filter){
+        this.transitionModel = new WorkflowTransitionModel(workflow, isDraft);
+        this.workflow = workflow;
+        this.isDraft = isDraft;
+        this.filter = filter;
+    }
+    
+    public WorkflowActionConditionEntity createConditionEntity( ConditionDescriptor descriptor, int order, int transitionId){
 
-        WorkflowActionConditionEntity entity = new WorkflowActionConditionEntity(descriptor, workflow, order, transitionId);
+        WorkflowActionConditionEntity entity = new WorkflowActionConditionEntity(descriptor, this.workflow, order, transitionId);
         
         entity.isFiltered = false;
-        if( filter.isFilteredActionType(WorkflowActionType.Condition) ){
+        if( this.filter.isFilteredActionType(WorkflowActionType.Condition) ){
             entity.isFiltered = true;
         }
-        if ( filter.isFilteredActionName(entity.name)){
+        if ( this.filter.isFilteredActionName(entity.name)){
             entity.isFiltered = true;
         }
-        if ( filter.isFilteredActionClassType(entity.classType)){
+        if ( this.filter.isFilteredActionClassType(entity.classType)){
             entity.isFiltered = true;
         }
-
-        return entity;
-    }
-    public static WorkflowActionValidatorEntity createValidatorEntity(WorkflowActionFilterModel filter,  ValidatorDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
-
-
-
-        WorkflowActionValidatorEntity entity = new WorkflowActionValidatorEntity(descriptor, workflow, order, transitionId);
-
-        entity.isFiltered = false;
-        if( filter.isFilteredActionType(WorkflowActionType.Validator) ){
+        if ( this.filter.isFilteredTransitionId(entity.transitionId)){
             entity.isFiltered = true;
         }
-        if ( filter.isFilteredActionName(entity.name)){
-            entity.isFiltered = true;
-        }
-        if ( filter.isFilteredActionClassType(entity.classType)){
+        WorkflowTransitionEntity transitionEntity = this.transitionModel.getTransitionEntity(entity.transitionId);
+        if ( this.filter.isFilteredTransitionName(transitionEntity.name)){
             entity.isFiltered = true;
         }
 
         return entity;
     }
-    public static WorkflowActionPostFunctionEntity createPostFunctionEntity(WorkflowActionFilterModel filter,  FunctionDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
-
-        WorkflowActionPostFunctionEntity entity = new WorkflowActionPostFunctionEntity(descriptor, workflow, order, transitionId);
+    public WorkflowActionValidatorEntity createValidatorEntity(ValidatorDescriptor descriptor, int order, int transitionId){
+        
+        WorkflowActionValidatorEntity entity = new WorkflowActionValidatorEntity(descriptor, this.workflow, order, transitionId);
 
         entity.isFiltered = false;
-        if( filter.isFilteredActionType(WorkflowActionType.PostFunction) ){
+        if( this.filter.isFilteredActionType(WorkflowActionType.Validator) ){
             entity.isFiltered = true;
         }
-        if ( filter.isFilteredActionName(entity.name)){
+        if ( this.filter.isFilteredActionName(entity.name)){
             entity.isFiltered = true;
         }
-        if ( filter.isFilteredActionClassType(entity.classType)){
+        if ( this.filter.isFilteredActionClassType(entity.classType)){
+            entity.isFiltered = true;
+        }
+        if ( this.filter.isFilteredTransitionId(entity.transitionId)){
+            entity.isFiltered = true;
+        }
+        WorkflowTransitionEntity transitionEntity = this.transitionModel.getTransitionEntity(entity.transitionId);
+        if ( this.filter.isFilteredTransitionName(transitionEntity.name)){
+            entity.isFiltered = true;
+        }
+
+        return entity;
+    }
+    public WorkflowActionPostFunctionEntity createPostFunctionEntity(FunctionDescriptor descriptor, int order, int transitionId){
+
+        WorkflowActionPostFunctionEntity entity = new WorkflowActionPostFunctionEntity(descriptor, this.workflow, order, transitionId);
+
+        entity.isFiltered = false;
+        if( this.filter.isFilteredActionType(WorkflowActionType.PostFunction) ){
+            entity.isFiltered = true;
+        }
+        if ( this.filter.isFilteredActionName(entity.name)){
+            entity.isFiltered = true;
+        }
+        if ( this.filter.isFilteredActionClassType(entity.classType)){
+            entity.isFiltered = true;
+        }
+        if ( this.filter.isFilteredTransitionId(entity.transitionId)){
+            entity.isFiltered = true;
+        }
+        WorkflowTransitionEntity transitionEntity = this.transitionModel.getTransitionEntity(entity.transitionId);
+        if ( this.filter.isFilteredTransitionName(transitionEntity.name)){
             entity.isFiltered = true;
         }
 

@@ -40,22 +40,19 @@ public class WorkflowActionModel {
     @XmlElement(name = "actions")
     public List actions;
 
-    @XmlElement(name = "test")
-    public String test;
 
     public WorkflowActionModel() {
     }
 
-    public WorkflowActionModel(boolean includedFiltered, JiraWorkflow workflow, boolean isDraft, WorkflowActionFilterModel filterModel ) {
+    public WorkflowActionModel(boolean includedFiltered, JiraWorkflow workflow, boolean isDraft, WorkflowActionFilterModel filer ) {
 
         this.name = workflow.getName();
         this.isDraft = isDraft;
         this.description = workflow.getDescription();
-        // transitions = actions.stream().map( transition -> new WorkflowTransitionEntity(transition, workflow) ).collect(Collectors.toList());
-        this.test = "";
 
-        actions = new ArrayList<>();
-        
+        WorkflowActionItemEntityFactory factory = new WorkflowActionItemEntityFactory(workflow, isDraft, filer);
+
+        this.actions = new ArrayList<>();
         for(ActionDescriptor transition :  workflow.getAllActions()){
             WorkflowTransitionEntity transitionEntity = new WorkflowTransitionEntity(transition, workflow);
 
@@ -66,7 +63,7 @@ public class WorkflowActionModel {
             for( Object obj : conditions){
                 conditionOrder++;
                 ConditionDescriptor descriptor = (ConditionDescriptor)obj;
-                WorkflowActionConditionEntity entity = WorkflowActionItemEntityFactory.createConditionEntity(filterModel, descriptor, workflow, conditionOrder, transitionEntity.id );
+                WorkflowActionConditionEntity entity = factory.createConditionEntity(descriptor, conditionOrder, transitionEntity.id );
                 if(entity == null ){
                     continue;
                 }
@@ -82,7 +79,7 @@ public class WorkflowActionModel {
             for( Object obj : transition.getValidators()){
                 validatorOrder++;
                 ValidatorDescriptor descriptor = (ValidatorDescriptor)obj;                
-                WorkflowActionValidatorEntity entity = WorkflowActionItemEntityFactory.createValidatorEntity(filterModel, descriptor, workflow, conditionOrder, transitionEntity.id );
+                WorkflowActionValidatorEntity entity = factory.createValidatorEntity(descriptor, conditionOrder, transitionEntity.id );
                 if(entity == null ){
                     continue;
                 }
@@ -98,7 +95,7 @@ public class WorkflowActionModel {
             for( FunctionDescriptor descriptor : workflow.getPostFunctionsForTransition(transition)){
                 postfunctionOrder++;
                 // actions.add(new WorkflowActionPostFunctionEntity(descriptor, workflow, postfunctionOrder, transitionEntity.id ));
-                WorkflowActionPostFunctionEntity entity = WorkflowActionItemEntityFactory.createPostFunctionEntity(filterModel, descriptor, workflow, postfunctionOrder, transitionEntity.id );
+                WorkflowActionPostFunctionEntity entity = factory.createPostFunctionEntity(descriptor, postfunctionOrder, transitionEntity.id );
                 if(entity == null ){
                     continue;
                 }

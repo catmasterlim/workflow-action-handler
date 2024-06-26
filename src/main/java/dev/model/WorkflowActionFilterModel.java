@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 
 public class WorkflowActionFilterModel {
@@ -16,6 +17,8 @@ public class WorkflowActionFilterModel {
     private final Set<String> actionNames = new HashSet<>();
     private final Set<WorkflowActionType> actionTypes = new HashSet<>();
     private final Set<String> actionClassType = new HashSet<>();
+    private final Set<Integer> transitionId = new HashSet<>();
+    private final Set<String> transitionName = new HashSet<>();
 
     public boolean isFilteredActionType(WorkflowActionType actionType){
         if( this.actionTypes == null || this.actionTypes.isEmpty()){
@@ -104,6 +107,64 @@ public class WorkflowActionFilterModel {
             }
         }catch(Exception ex){
             log.warn("Action Class Type Filter : {}", list );
+        }
+    }
+
+    public boolean isFilteredTransitionId(Integer at){
+        if( this.transitionId == null || this.transitionId.isEmpty()){
+            return false;
+        }
+
+        for(Integer item: this.transitionId){
+            if(item == at){
+                return false;
+            }
+        }
+
+        return true;
+    }
+    public void addFilterTransitionId(Integer at){
+        this.transitionId.add(at);
+    }
+    public void addFilterTransitionIdAll(List<Integer> list){
+        if(list==null){
+            return;
+        }
+        try{
+            for(Integer item : list){
+                this.addFilterTransitionId(item);
+            }
+        }catch(Exception ex){
+            log.warn("Transition Id Filter : {}", list );
+        }
+    }
+
+    public boolean isFilteredTransitionName(String at){
+        if( this.transitionName == null || this.transitionName.isEmpty()){
+            return false;
+        }
+
+        for(String item: this.transitionName){
+            if(item.contains(at)){
+                return false;
+            }
+        }
+
+        return true;
+    }
+    public void addFilterTransitionName(String at){
+        this.transitionName.add(at);
+    }
+    public void addFilterTransitionNameAll(List<String> list){
+        if(list==null){
+            return;
+        }
+        try{
+            for(String item : list){
+                this.addFilterTransitionName(item);
+            }
+        }catch(Exception ex){
+            log.warn("Transition Name Filter : {}", list );
         }
     }
 

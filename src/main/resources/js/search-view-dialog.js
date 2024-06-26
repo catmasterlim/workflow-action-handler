@@ -14,6 +14,14 @@ define('jira-workflow-action-handler/search-view-dialog', [
     var searchOptionActionNames = new Set([]);
     var searchOptionActionTypes = new Set([]);
     var searchOptionActionClassTypes = new Set([]);
+    var searchOptionTransitionIds = new Set([]);
+    var searchOptionTransitionNames = new Set([]);
+
+    var searchResult = {
+        "isDraft" : false
+        , "name" : ""
+        , "actions" : []
+    };
 
 
     function _getSearchActionOption() {
@@ -25,15 +33,9 @@ define('jira-workflow-action-handler/search-view-dialog', [
             ,actionType: Array.from(searchOptionActionTypes)
             ,actionClassType: Array.from(searchOptionActionClassTypes)
             ,actionClass: []
-            ,transitionId: []
+            ,transitionId: Array.from(searchOptionTransitionIds)
+            ,transitionName: Array.from(searchOptionTransitionNames)
         };
-
-        // return {
-        //     actionName: containerOptions.find(".search-option-action-name")
-        //     ,actionType: containerOptions.find(".search-option-action-type")
-        //     ,actionClass: containerOptions.find(".search-option-action-class")
-        //     ,transitionId: containerOptions.find(".search-option-action-transition-id")
-        // };
     }
 
     //
@@ -42,6 +44,36 @@ define('jira-workflow-action-handler/search-view-dialog', [
             return [str.slice(0, maxLength - 3), '...'].join('');
         }
         return str;
+    }
+
+    function searchResultProcess(){
+
+        let searchOption = _getSearchActionOption();
+
+        // search option action name
+        let htmlActionNameList = Templates.searchOptionActionName({
+            isDraft : searchResult.isDraft,
+            workflowName : searchResult.name,
+            actions : searchResult.actions,
+            searchOption : searchOption
+        });
+        let nameItems = AJS.$('#action-name-dropdown .aui-list-truncate');
+        nameItems.empty();
+        nameItems.append(htmlActionNameList);
+
+        // action list
+        let htmlActionList = Templates.actionList({
+            title: "Action List",
+            isDraft : searchResult.isDraft,
+            workflowName : searchResult.name,
+            actions : searchResult.actions
+        });
+        let containerActionList = jQuery('#container-workflow-action-handler-actions');
+        containerActionList.empty();
+        containerActionList.append(htmlActionList);
+
+        // sorted table
+        AJS.tablessortable.setTableSortable(AJS.$(".aui-table-sortable"));
     }
     
     async function search(){
@@ -55,6 +87,8 @@ define('jira-workflow-action-handler/search-view-dialog', [
             , "actionName" : searchOption.actionName
             , "actionType" : searchOption.actionType
             , "actionClassType" : searchOption.actionClassType
+            , "transitionId" : searchOption.transitionId
+            , "transitionName" : searchOption.transitionName
         };
         console.log(classThis._workflowData);
         console.log(data);
@@ -66,31 +100,8 @@ define('jira-workflow-action-handler/search-view-dialog', [
                 , dataType: 'json'
                 , data : jQuery.param(data)
                 , success: function(result, textStatus, jqXHR) {
-                    
-                    // search option action name
-                    let htmlActionNameList = Templates.searchOptionActionName({
-                        isDraft : result.isDraft,
-                        workflowName : result.name,
-                        actions : result.actions
-                    });
-                    let nameItems = AJS.$('#action-name-dropdown aui-item-checkbox');
-                    nameItems.empty();
-                    nameItems.append(htmlActionNameList);
-
-                    // action list
-                    let htmlActionList = Templates.actionList({
-                        title: "Action List",
-                        isDraft : result.isDraft,
-                        workflowName : result.name,
-                        actions : result.actions
-                    });
-                    let containerActionList = jQuery('#container-workflow-action-handler-actions');
-                    containerActionList.empty();
-                    containerActionList.append(htmlActionList);
-
-                    // sorted table
-                    AJS.tablessortable.setTableSortable(AJS.$(".aui-table-sortable"));
-
+                    searchResult = result;
+                    searchResultProcess();
                     resolve({result, textStatus, jqXHR});
                   }
                 , error: function(jqXHR, textStatus, error) {
@@ -115,6 +126,12 @@ define('jira-workflow-action-handler/search-view-dialog', [
             search().finally( () => that.idle() );    
         }
     }
+
+    //   this._dialog._btn_search = jQuery('#workflow-action-handler-search-button');
+    //   this._dialog._btn_search.on('click', this._eventSearch);
+    console.log("---> _eventSearch", _eventSearch);
+    AJS.$(document).on('click', '#workflow-action-handler-search-button', _eventSearch);
+
 
     //--------------------------------------------------------- 
     //--------------------- < action name > -------------------
@@ -141,7 +158,6 @@ define('jira-workflow-action-handler/search-view-dialog', [
       jQuery('#action-name-button').text(text);
       
     }
-    
     AJS.$(document).on('change', '#action-name-dropdown', _eventSearchOption_aname);
     
     
@@ -189,85 +205,120 @@ define('jira-workflow-action-handler/search-view-dialog', [
         
       }
       
-      AJS.$(document).on('change', '#action-type-dropdown', _eventSearchOption_atype);
+    AJS.$(document).on('change', '#action-type-dropdown', _eventSearchOption_atype);
       
       
-      function _eventSearchOption_atype_find(e){  
-        let val = e.target.value
-        console.log( 'find value ', val);
-        
-        let items = AJS.$('#action-type-dropdown  aui-item-checkbox')
-        
-        for(let item of items){
-          console.log('item text : ', item.textContent);
-          if(val=="" || item.textContent.includes(val) ){
-            item.style.visibility = "visible";
-          }else {
-            item.style.visibility = "hidden";
-          }
-        }
-        
+    function _eventSearchOption_atype_find(e){
+    let val = e.target.value
+    console.log( 'find value ', val);
+
+    let items = AJS.$('#action-type-dropdown  aui-item-checkbox')
+
+    for(let item of items){
+      console.log('item text : ', item.textContent);
+      if(val=="" || item.textContent.includes(val) ){
+        item.style.visibility = "visible";
+      }else {
+        item.style.visibility = "hidden";
       }
-      AJS.$(document).on('input', '#searcher-atype-input', _eventSearchOption_atype_find);
+    }
+
+  }
+    AJS.$(document).on('input', '#searcher-atype-input', _eventSearchOption_atype_find);
 
 
-      //---------------------------------------------------------
-      //--------------------- < action class type > -------------------
-      function _eventSearchOption_aclasstype(e){
-          let isChecked = e.target.hasAttribute('checked');
-          let val = e.target.getAttribute('value')
-          if (isChecked) {
-              searchOptionActionClassTypes.add(val);
-            } else {
-              searchOptionActionClassTypes.delete(val);
-            }
-
-          console.log('searchOptionActionClassTypes : ', searchOptionActionClassTypes);
-
-          //
-          let text = "ClassType : All";
-          if(searchOptionActionClassTypes.size > 0){
-            text = truncateString(Array.from(searchOptionActionClassTypes).join(','), 15);
-          }
-
-          //
-          console.log('text : ', text);
-          jQuery('#action-class-type-button').text(text);
-
+  //---------------------------------------------------------
+  //--------------------- < action class type > -------------------
+  function _eventSearchOption_aclasstype(e){
+      let isChecked = e.target.hasAttribute('checked');
+      let val = e.target.getAttribute('value')
+      if (isChecked) {
+          searchOptionActionClassTypes.add(val);
+        } else {
+          searchOptionActionClassTypes.delete(val);
         }
 
-        AJS.$(document).on('change', '#action-class-type-dropdown', _eventSearchOption_aclasstype);
+      console.log('searchOptionActionClassTypes : ', searchOptionActionClassTypes);
 
+      //
+      let text = "ClassType : All";
+      if(searchOptionActionClassTypes.size > 0){
+        text = truncateString(Array.from(searchOptionActionClassTypes).join(','), 15);
+      }
 
-        function _eventSearchOption_aclasstype_find(e){
-          let val = e.target.value
-          console.log( 'find value ', val);
+      //
+      console.log('text : ', text);
+      jQuery('#action-class-type-button').text(text);
 
-          let items = AJS.$('#action-class-type-dropdown  aui-item-checkbox')
+    }
+  AJS.$(document).on('change', '#action-class-type-dropdown', _eventSearchOption_aclasstype);
 
-          for(let item of items){
-            console.log('item text : ', item.textContent);
-            if(val=="" || item.textContent.includes(val) ){
-              item.style.visibility = "visible";
-            }else {
-              item.style.visibility = "hidden";
-            }
-          }
+  function _eventSearchOption_aclasstype_find(e){
+      let val = e.target.value
+      console.log( 'find value ', val);
 
+      let items = AJS.$('#action-class-type-dropdown  aui-item-checkbox')
+
+      for(let item of items){
+        console.log('item text : ', item.textContent);
+        if(val=="" || item.textContent.includes(val) ){
+          item.style.visibility = "visible";
+        }else {
+          item.style.visibility = "hidden";
         }
-        AJS.$(document).on('input', '#searcher-aclasstype-input', _eventSearchOption_aclasstype_find);
+      }
+
+    }
+  AJS.$(document).on('input', '#searcher-aclasstype-input', _eventSearchOption_aclasstype_find);
 
 
-    //--------------- end search options ----------- ---
+  //---------------------------------------------------------
+  //--------------------- < transition id > -------------------
+  function _eventSearchOption_transitionId(e){
+    let isChecked = e.target.hasAttribute('checked');
+    let val = e.target.getAttribute('value')
+    if (isChecked) {
+        searchOptionTransitionIds.add(val);
+      } else {
+        searchOptionTransitionIds.delete(val);
+      }
 
-
-    //   this._dialog._btn_search = jQuery('#workflow-action-handler-search-button');
-    //   this._dialog._btn_search.on('click', this._eventSearch);
-      AJS.$(document).on('click', '#workflow-action-handler-search-button', _eventSearch);
+    console.log('searchOptionTransitionIds : ', searchOptionTransitionIds);
 
     //
-    AJS.namespace("JIRA.WorkflowActionHandler.SearchViewDialog");
-    return JIRA.WorkflowActionHandler.SearchViewDialog;
+    let text = "Transition : All";
+    if(searchOptionTransitionIds.size > 0){
+      text = truncateString(Array.from(searchOptionTransitionIds).join(','), 15);
+    }
+
+    //
+    console.log('text : ', text);
+    jQuery('#transition-id-button').text(text);
+
+  }
+  AJS.$(document).on('change', '#transition-id-dropdown', _eventSearchOption_transitionId);
+
+  function _eventSearchOption_transitionId_find(e){
+    let val = e.target.value
+    console.log( 'find value ', val);
+
+    let items = AJS.$('#transition-id-dropdown  aui-item-checkbox')
+
+    for(let item of items){
+      console.log('item text : ', item.textContent);
+      if(val=="" || item.textContent.includes(val) ){
+        item.style.visibility = "visible";
+      }else {
+        item.style.visibility = "hidden";
+      }
+    }
+  }
+  AJS.$(document).on('input', '#searcher-transition-id-input', _eventSearchOption_transitionId_find);
+
+
+  //--------------- end search options ----------- ---
+  AJS.namespace("JIRA.WorkflowActionHandler.SearchViewDialog");
+  return JIRA.WorkflowActionHandler.SearchViewDialog;
 });
 
 AJS.namespace("JIRA.WorkflowActionHandler.SearchViewDialog", null, require("jira-workflow-action-handler/search-view-dialog"));

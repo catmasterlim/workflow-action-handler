@@ -1,26 +1,29 @@
-<form class="aui navigator-search query-component generic-styled">
-<div class="aui-group">
-<div class="aui-item search-wrap">
-<div class="search-container" data-mode="basic">
-<div class="search-field-container">
-<div class="search-criteria-container">
-<div class="search-criteria"> 
+            <aui-section label="">
+                <li class="check-list-group-actions"><a class="clear-all" href="#">Clear selected items</a></li>
+            </aui-section>
 
 
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</form>
+{call .searchOption}
+{param optionId: 'action-name' /}
+{param optionLabel : 'ActionName' /}
+{param items: [] /}
+{/call}
+{call .searchOption}
+{param optionId: 'action-type' /}
+{param optionLabel : 'ActionType' /}
+{param items: [
+"Validator" : "Validator""
+, "Condition" : "Condition"
+, "PostFunction" : "PostFunction"
+] /}
+{/call}
 
-            <button id="action-type-button" class="criteria-selector aui-button aui-button-subtle jira-aui-dropdown2-trigger" aria-controls="action-type-dropdown">
-                <div class="criteria-wrap">
-                    <div class="searcherValue" data-selected-search-option-atype="10000">
-                        <span id="field-search-option-atype" class="fieldValue">
-                            Type : All
-                        </span>
-                    </div>
-                </div>
-            </button>
+        {call .searchOption}
+            {param optionId: 'action-class-type' /}
+            {param optionLabel : 'ActionClassType' /}
+            {param items: [
+                "Default" : "Default""
+                , "JiraBase" : "JiraBase"
+                , "Custom" : "Custom"
+            ] /}
+        {/call}

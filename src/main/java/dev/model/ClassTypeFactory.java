@@ -13,6 +13,7 @@ public class ClassTypeFactory {
             , "com.atlassian.jira.workflow.function.misc.CreateCommentFunction"
             , "com.atlassian.jira.workflow.function.issue.GenerateChangeHistoryFunction"
             , "com.atlassian.jira.workflow.function.misc.CreateCommentFunction"
+            , "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
     );
     public static boolean isDefaultClassType(String classFullName){
         if(classFullName == null || classFullName.isEmpty() ){

@@ -87,8 +87,8 @@ public class WorkflowActionHandlerRest {
      * @param includedFiltered 필터된 action 결과에 포함여부, default : true
      * @param isDraft 편집 모드
      * @param workflowName 워크프로우 이름
-     * @param paramActionName 액션 이름 리스트 ( stirng [] )
-     * @param paramActionType 액션 타입 리스트 ( stirng [] )
+     * @param actionName 액션 이름 리스트 ( stirng [] )
+     * @param actionType 액션 타입 리스트 ( stirng [] )
      * @return Response
      */
     @GET
@@ -98,23 +98,27 @@ public class WorkflowActionHandlerRest {
             @DefaultValue("true") @QueryParam("includedFiltered") Boolean includedFiltered
             , @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft
             , @QueryParam("workflowName") String workflowName
-            , @QueryParam("actionName") List<String> paramActionName
-            , @QueryParam("actionType") List<String> paramActionType
-            , @QueryParam("actionClassType") List<String> paramActionClassType
+            , @QueryParam("actionName") List<String> actionName
+            , @QueryParam("actionType") List<String> actionType
+            , @QueryParam("actionClassType") List<String> actionClassType
+            , @QueryParam("transitionId") List<String> transitionId
+            , @QueryParam("transitionName") List<String> transitionName
            ) {
 
         log.info("params - includedFiltered : {}", includedFiltered);
         log.info("params - isDraft : {}", isDraft);
         log.info("params - workflowName : {}", workflowName);
-        log.info("params - actionName : {}", paramActionName);
-        log.info("params - actionType : {}", paramActionType);
-        log.info("params - actionClassType : {}", paramActionClassType);
+        log.info("params - actionName : {}", actionName);
+        log.info("params - actionType : {}", actionType);
+        log.info("params - actionClassType : {}", actionClassType);
+        log.info("params - transitionId : {}", transitionId);
+        log.info("params - transitionName : {}", transitionName);
 
         // filter 
         WorkflowActionFilterModel filterModel = new WorkflowActionFilterModel();
-        filterModel.addFilterActionNameAll(paramActionName);
-        filterModel.addFilterActionTypeAll(paramActionType);
-        filterModel.addFilterActionClassTypeAll(paramActionClassType);
+        filterModel.addFilterActionNameAll(actionName);
+        filterModel.addFilterActionTypeAll(actionType);
+        filterModel.addFilterActionClassTypeAll(actionClassType);
 
         JiraWorkflow workflow = this.workflowManager.getWorkflow(workflowName);
         if(workflow == null){

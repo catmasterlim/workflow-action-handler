@@ -65,7 +65,9 @@
     <dependency>com.atlassian.auiplugin:aui-table</dependency>  
     <dependency>com.atlassian.auiplugin:aui-table-sortable</dependency>
     <dependency>com.atlassian.auiplugin:inline-dialog</dependency>  
-    <dependency>com.atlassian.auiplugin:aui-dialog2</dependency>  
+    <dependency>com.atlassian.auiplugin:aui-dialog2</dependency>
+    <dependency>com.atlassian.auiplugin:soy </dependency>
+
 
     <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-loader</dependency>  
     <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-templates</dependency>  
@@ -80,8 +82,8 @@
       <transformer key="lessTransformer"/> 
     </transformation>  
     <transformation extension="soy"> 
-      <transformer key="soyTransformer"/> 
-    </transformation>  
+      <transformer key="soyTransformer"/>
+    </transformation>
     <!--  -->  
     <resource name="Application.js" type="download" location="js/wah-application.js"/>  
     <resource name="search-view-dialog.js" type="download" location="js/search-view-dialog.js" />    

@@ -59,48 +59,12 @@
 <div class="search-criteria-container">
 <div class="search-criteria">     
     <ul class="criteria-list" style="display: flex;">
-        {call .searchOption}
-            {param optionId: 'action-name' /}
-            {param optionLabel : 'ActionName' /}
-            {param useFindInput : true /}
-            {param items: [] /}
-            {param checkedItems: [] /}
-        {/call}
+
+        {let $tempMap: ['Validator' : 'Validator', 'Condition' : 'Condition', 'PostFunction' : 'PostFunction'] /}
+        {let $tempList: ['Condition' : true, 'PostFunction' : false] /}
 
 
-        {let $actionTypes: ['Validator' : 'Validator', 'Condition' : 'Condition', 'PostFunction' : 'PostFunction']/}
-        {call .searchOption}
-            {param optionId: 'action-type' /}
-            {param optionLabel : 'ActionType' /}
-            {param useFindInput : false /}
-            {param items: $actionTypes /}
-            {param checkedItems: [] /}
-        {/call}
 
-        {let $actionClassTypes: ['Default' : 'Default' , 'JiraBase' : 'JiraBase', 'Custom' : 'Custom']/}
-        {call .searchOption}
-            {param optionId: 'action-class-type' /}
-            {param optionLabel : 'ActionClassType' /}
-            {param useFindInput : false /}
-            {param items: $actionClassTypes /}
-            {param checkedItems: [] /}
-        {/call}
-
-        {call .searchOption}
-            {param optionId: 'transition-id' /}
-            {param optionLabel : 'Transition' /}
-            {param useFindInput : false /}
-            {param items: [] /}
-            {param checkedItems: [] /}
-        {/call}
-
-        {call .searchOption}
-            {param optionId: 'transition-name' /}
-            {param optionLabel : 'TransitionName' /}
-            {param useFindInput : true /}
-            {param items: [] /}
-            {param checkedItems: [] /}
-        {/call}
 
         <li>
             <button id="workflow-action-handler-search-button" class="aui-button aui-button-primary search-button"> Search Action </button>
@@ -127,17 +91,25 @@
 </div>
 {/template}
 
+{export extern ...}
+  {javaimpl class="dev.impl.SoyFunctions"
+      method="includes"
+      params="java.util.List, Object"
+      return="boolean" /}
+{/extern}
+
+
 
 /**
  * Search Option
- * @param optionId id of option
- * @param optionLabel label of option(display)
- * @param useFindInput find input - true, false
- * @param items item of option map ( key, value )
- * @param checkedItems checked item list (set)
  */
 {template .searchOption}
-<li data-id="{$optionId}">
+    {@param optionId: string}   // id of option
+    {@param optionLabel: string} // label of option(display)
+    {@param useFindInput: ?}  // useFindInput find input - true, false
+    {@param items: ?} // item of option map ( key, value )
+    {@param checkedItems: ? }
+<li data-id="{$optionId}" class="search-option">
     <button id="{$optionId}-button" class="aui-button aui-dropdown2-trigger" aria-controls="{$optionId}-dropdown">
         {$optionLabel} : All
     </button>
@@ -153,7 +125,12 @@
         {/if}
         <aui-section label="{$optionLabel}" class="aui-list-truncate">
             {foreach $key in keys($items)}
-                <aui-item-checkbox interactive value="$key" >{$items[$key]}  </aui-item-checkbox>
+                {let $hasCheck : $checkedItems?[$key] /}
+                {if $hasCheck }
+                    <aui-item-checkbox interactive checked value="{$key}" > {$items?[$key]} </aui-item-checkbox>
+                {else}
+                    <aui-item-checkbox interactive value="{$key}" > {$items?[$key]} </aui-item-checkbox>
+                {/if}
             {/foreach}
         </aui-section>
     </aui-dropdown-menu>

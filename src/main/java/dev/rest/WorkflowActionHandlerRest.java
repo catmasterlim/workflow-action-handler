@@ -101,7 +101,7 @@ public class WorkflowActionHandlerRest {
             , @QueryParam("actionName") List<String> actionName
             , @QueryParam("actionType") List<String> actionType
             , @QueryParam("actionClassType") List<String> actionClassType
-            , @QueryParam("transitionId") List<String> transitionId
+            , @QueryParam("transitionId") List<Integer> transitionId
             , @QueryParam("transitionName") List<String> transitionName
            ) {
 
@@ -119,6 +119,8 @@ public class WorkflowActionHandlerRest {
         filterModel.addFilterActionNameAll(actionName);
         filterModel.addFilterActionTypeAll(actionType);
         filterModel.addFilterActionClassTypeAll(actionClassType);
+        filterModel.addFilterTransitionIdAll(transitionId);
+        filterModel.addFilterTransitionNameAll(transitionName);
 
         JiraWorkflow workflow = this.workflowManager.getWorkflow(workflowName);
         if(workflow == null){

@@ -107,8 +107,11 @@
     {@param optionId: string}   // id of option
     {@param optionLabel: string} // label of option(display)
     {@param useFindInput: ?}  // useFindInput find input - true, false
+    {@param? useShowSelectedOnTop: ?}  // useShowSelectedOnTop find input - true, false
     {@param items: ?} // item of option map ( key, value )
     {@param selectedItems: ? }
+
+    {let $hasSelected : length($selectedItems) > 0 /}
 <li data-id="{$optionId}" class="search-option">
     <button id="{$optionId}-button" class="aui-button aui-dropdown2-trigger" aria-controls="{$optionId}-dropdown">
         {$optionLabel} : All
@@ -123,14 +126,22 @@
             </div>
         </aui-section>
         {/if}
-        <aui-section label="{$optionLabel}" class="aui-list-truncate">
-            <script>
-                console.log('optionId  : ', '{$optionId}');
-            </script>
-
+        {if $useShowSelectedOnTop}
+        <aui-section label="" class="selected-items">
+            <button class="clear-all aui-button aui-button-link aui-button-link-icon-text"  {if not $hasSelected} style="display: none;" {/if} href="#" >Clear selected items</button>
             {foreach $key in keys($items)}
                 {if $selectedItems?[$key]}
                 <aui-item-checkbox interactive checked value="{$key}" > {$items?[$key]} </aui-item-checkbox>
+                {/if}
+            {/foreach}
+        </aui-section>
+        {/if}
+        <aui-section label="{$optionLabel}" class="aui-list-truncate items">
+            {foreach $key in keys($items)}
+                {if $selectedItems?[$key]}
+                    {if not $useShowSelectedOnTop}
+                    <aui-item-checkbox interactive checked value="{$key}" > {$items?[$key]} </aui-item-checkbox>
+                    {/if}
                 {else}
                 <aui-item-checkbox interactive value="{$key}" > {$items?[$key]} </aui-item-checkbox>
                 {/if}
@@ -139,6 +150,7 @@
     </aui-dropdown-menu>
  </li>
 {/template}
+
 
 /**
  * Action List
@@ -157,8 +169,9 @@
             <th id="alist-type">Type</th>
             <th id="alist-order">Order</th>
             <th id="alist-class-name">Class Name</th>
-            <th id="alist-transition">Transition</th>
             <th id="alist-class-full">Class Full name</th>
+            <th id="alist-transition-id">TransitionId</th>
+            <th id="alist-transition-name">TransitionName</th>
         </tr>
     </thead>
     <tbody>
@@ -169,8 +182,9 @@
                 <th id="alist-type" value="{$a['type']}" >{$a['type']}</th>
                 <th id="alist-order" value={$a['order']} >{$a['order']}</th>
                 <th id="alist-class-name" value="{$a['classSimpleName']}" >{$a['classSimpleName']}</th>
-                <th id="alist-transition" value={$a['transitionId']} >{$a['transitionId']}</th>
                 <th id="alist-class-full" value={$a['className']} >{$a['className']}</th>
+                <th id="alist-transition-id" value={$a['transitionId']} >{$a['transitionId']}</th>
+                <th id="alist-transition-name" value={$a['transitionName']} >{$a['transitionName']}</th>
             </tr>
             {/if}
         </tr>

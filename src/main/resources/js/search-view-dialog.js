@@ -9,12 +9,36 @@ define('jira-workflow-action-handler/search-view-dialog', [
     Templates,
     Variables
 ) {
+    //
+    function getInstSearchOptionSelected(){
+        if(Variables.searchOptionSelected == undefined){
+            Variables.searchOptionSelected = new Map();
+        }
+        return Variables.searchOptionSelected;
+    }
+    //  singletone - SearchOptionClass
+    function getInstSearchOptionClass(optionId, optionLabel, useFindInput, items, selectedItems, forceRefreshItems=false){
+
+        let searchOptionClass = getInstSearchOptionSelected().get(optionId);
+        if( searchOptionClass == undefined){
+            searchOptionClass = new SearchOptionClass(optionId, optionLabel, useFindInput, items, selectedItems);
+            getInstSearchOptionSelected().set(optionId, searchOptionClass);
+        }
+
+        if(forceRefreshItems){
+            searchOptionClass.items = items;
+            searchOptionClass.removeSelectedNotIn();
+        }
+
+        return searchOptionClass;
+    }
 
     class SearchOptionClass {
         constructor(optionId, optionLabel, useFindInput, items, selectedItems ){
             this.optionId = optionId;
             this.optionLabel = optionLabel;
             this.useFindInput = useFindInput;
+            this.useShowSelectedOnTop = useFindInput;
             this.items = items == undefined ?  {} : items;
             this.selectedItems = selectedItems == undefined ?  {} : selectedItems;
         }
@@ -24,16 +48,33 @@ define('jira-workflow-action-handler/search-view-dialog', [
                     optionId : this.optionId,
                     optionLabel : this.optionLabel,
                     useFindInput : this.useFindInput,
+                    useShowSelectedOnTop : this.useShowSelectedOnTop,
                     items : this.items,
                     selectedItems : this.selectedItems
                 });
             return html;
         }
 
-        register(){
+        //
+        removeSelectedNotIn(){
+            let keyItems = Object.keys(this.items);
+            let keySelectedItems = Object.keys(this.selectedItems);
 
-            AJS.$(document).off('change', '#'+this.optionId+'-dropdown');
-            AJS.$(document).on('change', '#'+this.optionId+'-dropdown', e => {
+            let newSelected = {}
+            for(let key of keySelectedItems){
+                if(keyItems.includes(key)){
+                    newSelected[key] = true;
+                }
+            }
+
+            this.selectedItems = newSelected;
+        }
+
+        regEvent(){
+            let elDropdown = jQuery(`#${this.optionId}-dropdown`);
+            elDropdown.off('change');
+            elDropdown.on('change', e => {
+                e.preventDefault();
                 let isChecked = e.target.hasAttribute('checked');
                 let val = e.target.getAttribute('value');
 
@@ -45,34 +86,72 @@ define('jira-workflow-action-handler/search-view-dialog', [
                 } else {
                     delete this.selectedItems[val];
                 }
-
                 console.log('optionId', this.optionId, 'selectedItems  : ', this.selectedItems);
 
-                let selectedOptionText = this.optionLabel;
-                if(this.selectedItems.size > 0){
-                    selectedOptionText = truncateString(Array.from(this.selectedItems).join(','), 15);
-                }
-
-                //
-                console.log('selectedOptionText : ', selectedOptionText);
-                jQuery('#'+this.optionId+'-button').text(selectedOptionText);
+                this._changeSelected(val, isChecked);
             });
+
+            if(this.useShowSelectedOnTop){
+                let elClear = jQuery(`#${this.optionId}-dropdown .selected-items .clear-all`);
+                elClear.off('click');
+                elClear.on('click', e => {
+                    e.preventDefault();
+                    let selected = jQuery(`#${this.optionId}-dropdown .selected-items aui-item-checkbox`);
+                    for(let item of selected){
+                        item.removeAttribute('checked');
+                    }
+                });
+            }
             if(this.useFindInput){
-                AJS.$(document).off('input', '#searcher-'+this.optionId+'-input');
-                AJS.$(document).on('input', '#searcher-'+this.optionId+'-input', e => {
+                let elInput = jQuery('#searcher-'+this.optionId+'-input');
+
+                elInput.off('input');
+                elInput.on('input', e => {
+                    e.preventDefault();
                     let val = e.target.value
                     console.log( 'find value ', val);
-                    let items = AJS.$('#action-name-dropdown  aui-item-checkbox')
-
-                    for(let item of items){
+                    let elItems = jQuery('#'+this.optionId+'-dropdown .items aui-item-checkbox');
+                    for(let item of elItems){
                         console.log('item text : ', item.textContent);
                         if(val=="" || item.textContent.includes(val) ){
-                          item.style.visibility = "visible";
+                          jQuery(item).show();
                         }else {
-                          item.style.visibility = "hidden";
+                           jQuery(item).hide();
                         }
                     }
                 });
+            }
+        }
+
+        _changeSelected(val, isChecked){
+            let hasSelected = Object.keys(this.selectedItems).length > 0;
+            let selectedOptionText = this.optionLabel + " : All";
+            if( hasSelected ){
+                selectedOptionText = truncateString( _arrayFromValues(this.selectedItems).join(','), 15);
+            }
+            console.log('selectedOptionText : ', selectedOptionText);
+            jQuery('#'+this.optionId+'-button').text(selectedOptionText);
+
+            // selected to top
+            let elContainerSelected = jQuery(`#${this.optionId}-dropdown .selected-items`);
+            if(this.useShowSelectedOnTop && elContainerSelected.length > 0) {
+
+                let elClear = jQuery(`#${this.optionId}-dropdown .selected-items .clear-all`);
+                let elContainer = jQuery(`#${this.optionId}-dropdown .items`);
+                let elSelected = jQuery(`#${this.optionId}-dropdown aui-item-checkbox[value="${val}"]`);
+
+                if( hasSelected ){
+                    elClear.show();
+                } else {
+                    elClear.hide();
+                }
+
+                if(isChecked) {
+                    elContainerSelected.append(jQuery(elSelected).detach());
+                } else {
+                    elContainer.append(jQuery(elSelected).detach());
+                }
+
             }
         }
 
@@ -93,8 +172,7 @@ define('jira-workflow-action-handler/search-view-dialog', [
 
             }
     }
-    var searchOptionActionTypes = new Set([]);
-    var searchOptionActionClassTypes = new Set([]);
+
     var searchOptionTransitionIds = new Set([]);
     var searchOptionTransitionNames = new Set([]);
 
@@ -104,25 +182,32 @@ define('jira-workflow-action-handler/search-view-dialog', [
         , "actions" : []
     };
 
-    function _arrayFrom(items, defaultVal){
+    function _arrayFromKeys(items, defaultVal){
         if( items === undefined || !items ){
             return defaultVal;
         }
 
         return Array.from(Object.keys(items));
     }
+    function _arrayFromValues(items, defaultVal){
+            if( items === undefined || !items ){
+                return defaultVal;
+            }
+
+            return Array.from(Object.keys(items));
+        }
 
     function _getSearchActionOption() {
 
         let containerOptions = jQuery("#workflow-action-handler-dialog");
-        let optionMap = JIRA.WorkflowActionHandler.Variables.searchOptionSelected;
+        let optionMap = getInstSearchOptionSelected();
         return {
-            actionName: _arrayFrom(optionMap?.get('action-name')?.selectedItems, [])
-            ,actionType: _arrayFrom(optionMap?.get('action-type')?.selectedItems, [])
-            ,actionClassType: _arrayFrom(optionMap?.get('action-class-type')?.selectedItems, [])
-            ,actionClass: []
-            ,transitionId: Array.from(searchOptionTransitionIds)
-            ,transitionName: Array.from(searchOptionTransitionNames)
+            actionName: _arrayFromKeys(optionMap?.get('action-name')?.selectedItems, [])
+            ,actionType: _arrayFromKeys(optionMap?.get('action-type')?.selectedItems, [])
+            ,actionClassType: _arrayFromKeys(optionMap?.get('action-class-type')?.selectedItems, [])
+            ,actionClass: _arrayFromKeys(optionMap?.get('class-type')?.selectedItems, [])
+            ,transitionId: _arrayFromKeys(optionMap?.get('transition-id')?.selectedItems, [])
+            ,transitionName: _arrayFromKeys(optionMap?.get('transition-name')?.selectedItems, [])
         };
     }
 
@@ -135,19 +220,6 @@ define('jira-workflow-action-handler/search-view-dialog', [
     }
 
     function searchResultProcess(){
-
-//        let searchOption = _getSearchActionOption();
-
-        // search option action name
-//        let htmlActionNameList = Templates.searchOptionActionName({
-//            isDraft : searchResult.isDraft,
-//            workflowName : searchResult.name,
-//            actions : searchResult.actions,
-//            searchOption : searchOption
-//        });
-//        let nameItems = AJS.$('#action-name-dropdown .aui-list-truncate');
-//        nameItems.empty();
-//        nameItems.append(htmlActionNameList);
 
         // search options
         _setupSearchOption();
@@ -227,73 +299,64 @@ define('jira-workflow-action-handler/search-view-dialog', [
 
   // options selected (checkItems)
   function _setupSearchOption(){
-      if(Variables.searchOptionSelected == undefined){
-          Variables.searchOptionSelected = new Map();
-      }
 
-      // Variables.searchResult
-
-      let searchOptionContainer = AJS.$('#container-workflow-action-handler-searchbar ul');
-      searchOptionContainer.find('.search-option').empty();
-      // reverse ( prepend )
-      //
-    {
-          let optionId = 'action-class-type';
-          let searchOptionClass = Variables.searchOptionSelected.get(optionId);
-          if( searchOptionClass == undefined){
-              let items = {
-                                  'Default' : 'Default',
-                                  'JiraBase' : 'JiraBase',
-                                  'Custom' : 'Custom',
-                          };
-              let itemsChecked = {
-                'JiraBase': true,
-                'Custom': true,
-              };
-
-              searchOptionClass = new SearchOptionClass(optionId, 'ActionClassType', false, items, itemsChecked);
-              Variables.searchOptionSelected.set(optionId, searchOptionClass);
-          }
-          let html = searchOptionClass.getHtml();
-          searchOptionContainer.prepend(html);
-          searchOptionClass.register();
-      }
-      //
-      {
-            let optionId = 'action-type';
-            let searchOptionClass = Variables.searchOptionSelected.get(optionId);
-            if( searchOptionClass == undefined){
-                let items = {
-                                    'Validator' : 'Validator',
-                                    'Condition' : 'Condition',
-                                    'PostFunction' : 'PostFunction',
-                            };
-                let itemsChecked = {
-                  'Validator': true,
-                };
-
-                searchOptionClass = new SearchOptionClass(optionId, 'ActionType', false, items, itemsChecked);
-                Variables.searchOptionSelected.set(optionId, searchOptionClass);
+        let searchOptionContainer = AJS.$('#container-workflow-action-handler-searchbar ul');
+        searchOptionContainer.find('.search-option').empty();
+        // reverse ( prepend )
+        //
+        {
+            let items = {}
+            for(let a of Variables.searchResult.actions){
+              items[a.transitionName] = a.transitionName;
             }
+            let searchOptionClass = getInstSearchOptionClass('transition-name', 'TransitionName', true, items, {}, true);
             let html = searchOptionClass.getHtml();
             searchOptionContainer.prepend(html);
-            searchOptionClass.register();
+            searchOptionClass.regEvent();
         }
-      //
-      {
-          let optionId = 'action-name';
-          let searchOptionClass = Variables.searchOptionSelected.get(optionId);
-          if( searchOptionClass == undefined){
-              let items = {};
-              let itemsChecked = {};
-
-              searchOptionClass = new SearchOptionClass(optionId, 'ActionName', true, items, itemsChecked);
-              Variables.searchOptionSelected.set(optionId, searchOptionClass);
-          }
-          let html = searchOptionClass.getHtml();
-          searchOptionContainer.prepend(html);
-          searchOptionClass.register();
-      }
+        //
+        {
+            let items = {}
+            for(let a of Variables.searchResult.actions){
+              items[a.transitionId] = a.transitionId;
+            }
+            let searchOptionClass = getInstSearchOptionClass('transition-id', 'TransitionId', true, items, {}, true);
+            let html = searchOptionClass.getHtml();
+            searchOptionContainer.prepend(html);
+            searchOptionClass.regEvent();
+        }
+        //
+        {
+            let optionId = 'action-class-type';
+            let items = {'Default' : 'Default', 'JiraBase' : 'JiraBase', 'Custom' : 'Custom',};
+            let itemsChecked = {'JiraBase': true,'Custom': true,};
+            let searchOptionClass = getInstSearchOptionClass(optionId, 'ActionClassType', false, items, itemsChecked);
+            let html = searchOptionClass.getHtml();
+            searchOptionContainer.prepend(html);
+            searchOptionClass.regEvent();
+        }
+        //
+        {
+            let optionId = 'action-type';
+            let items = {'Validator' : 'Validator','Condition' : 'Condition','PostFunction' : 'PostFunction', };
+            let itemsChecked = {'Validator': true,};
+            let searchOptionClass = getInstSearchOptionClass(optionId, 'ActionType', false, items, itemsChecked);
+            let html = searchOptionClass.getHtml();
+            searchOptionContainer.prepend(html);
+            searchOptionClass.regEvent();
+        }
+        //
+        {
+            let items = {}
+            let itemsChecked = {}
+            for(let a of Variables.searchResult.actions){
+              items[a.name] = a.name;
+            }
+            let searchOptionClass = getInstSearchOptionClass('action-name', 'ActionName', true, items, itemsChecked, true);
+            let html = searchOptionClass.getHtml();
+            searchOptionContainer.prepend(html);
+            searchOptionClass.regEvent();
+        }
   }
 
   //

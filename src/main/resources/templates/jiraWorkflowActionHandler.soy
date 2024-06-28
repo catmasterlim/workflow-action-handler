@@ -108,7 +108,7 @@
     {@param optionLabel: string} // label of option(display)
     {@param useFindInput: ?}  // useFindInput find input - true, false
     {@param items: ?} // item of option map ( key, value )
-    {@param checkedItems: ? }
+    {@param selectedItems: ? }
 <li data-id="{$optionId}" class="search-option">
     <button id="{$optionId}-button" class="aui-button aui-dropdown2-trigger" aria-controls="{$optionId}-dropdown">
         {$optionLabel} : All
@@ -124,12 +124,15 @@
         </aui-section>
         {/if}
         <aui-section label="{$optionLabel}" class="aui-list-truncate">
+            <script>
+                console.log('optionId  : ', '{$optionId}');
+            </script>
+
             {foreach $key in keys($items)}
-                {let $hasCheck : $checkedItems?[$key] /}
-                {if $hasCheck }
-                    <aui-item-checkbox interactive checked value="{$key}" > {$items?[$key]} </aui-item-checkbox>
+                {if $selectedItems?[$key]}
+                <aui-item-checkbox interactive checked value="{$key}" > {$items?[$key]} </aui-item-checkbox>
                 {else}
-                    <aui-item-checkbox interactive value="{$key}" > {$items?[$key]} </aui-item-checkbox>
+                <aui-item-checkbox interactive value="{$key}" > {$items?[$key]} </aui-item-checkbox>
                 {/if}
             {/foreach}
         </aui-section>

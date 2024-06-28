@@ -10,18 +10,13 @@ define('jira-workflow-action-handler/search-view-dialog', [
     Variables
 ) {
 
-    // options selected
-    var searchOptionSelected = {
-    }
     class SearchOptionClass {
-        constructor(optionId, optionLabel, useFindInput, items, checkedItems ){
+        constructor(optionId, optionLabel, useFindInput, items, selectedItems ){
             this.optionId = optionId;
             this.optionLabel = optionLabel;
             this.useFindInput = useFindInput;
-            this.items = items;
-            this.checkedItems = checkedItems;
-
-            this.selected = new Set([]);
+            this.items = items == undefined ?  {} : items;
+            this.selectedItems = selectedItems == undefined ?  {} : selectedItems;
         }
 
         getHtml(){
@@ -30,12 +25,14 @@ define('jira-workflow-action-handler/search-view-dialog', [
                     optionLabel : this.optionLabel,
                     useFindInput : this.useFindInput,
                     items : this.items,
-                    checkedItems : this.checkedItems
+                    selectedItems : this.selectedItems
                 });
             return html;
         }
 
         register(){
+
+            AJS.$(document).off('change', '#'+this.optionId+'-dropdown');
             AJS.$(document).on('change', '#'+this.optionId+'-dropdown', e => {
                 let isChecked = e.target.hasAttribute('checked');
                 let val = e.target.getAttribute('value');
@@ -43,26 +40,25 @@ define('jira-workflow-action-handler/search-view-dialog', [
                 console.log('isChecked :',  isChecked);
                 console.log('val :',val);
 
-                if(searchOptionSelected)
-
                 if (isChecked) {
-                    this.selected.add(val);
+                    this.selectedItems[val] = true;
                 } else {
-                    this.selected.delete(val);
+                    delete this.selectedItems[val];
                 }
 
-                console.log('selected  : ', this.selected);
+                console.log('optionId', this.optionId, 'selectedItems  : ', this.selectedItems);
 
                 let selectedOptionText = this.optionLabel;
-                if(this.selected.size > 0){
-                    selectedOptionText = truncateString(Array.from(this.selected).join(','), 15);
+                if(this.selectedItems.size > 0){
+                    selectedOptionText = truncateString(Array.from(this.selectedItems).join(','), 15);
                 }
 
                 //
-                console.log('text : ', selectedOptionText);
+                console.log('selectedOptionText : ', selectedOptionText);
                 jQuery('#'+this.optionId+'-button').text(selectedOptionText);
             });
             if(this.useFindInput){
+                AJS.$(document).off('input', '#searcher-'+this.optionId+'-input');
                 AJS.$(document).on('input', '#searcher-'+this.optionId+'-input', e => {
                     let val = e.target.value
                     console.log( 'find value ', val);
@@ -102,21 +98,28 @@ define('jira-workflow-action-handler/search-view-dialog', [
     var searchOptionTransitionIds = new Set([]);
     var searchOptionTransitionNames = new Set([]);
 
-    var searchResult = {
+    Variables.searchResult = {
         "isDraft" : false
         , "name" : ""
         , "actions" : []
     };
 
+    function _arrayFrom(items, defaultVal){
+        if( items === undefined || !items ){
+            return defaultVal;
+        }
+
+        return Array.from(Object.keys(items));
+    }
 
     function _getSearchActionOption() {
 
         let containerOptions = jQuery("#workflow-action-handler-dialog");
-
+        let optionMap = JIRA.WorkflowActionHandler.Variables.searchOptionSelected;
         return {
-            actionName: Array.from(actionNameOptionClass.selected)
-            ,actionType: Array.from(searchOptionActionTypes)
-            ,actionClassType: Array.from(searchOptionActionClassTypes)
+            actionName: _arrayFrom(optionMap?.get('action-name')?.selectedItems, [])
+            ,actionType: _arrayFrom(optionMap?.get('action-type')?.selectedItems, [])
+            ,actionClassType: _arrayFrom(optionMap?.get('action-class-type')?.selectedItems, [])
             ,actionClass: []
             ,transitionId: Array.from(searchOptionTransitionIds)
             ,transitionName: Array.from(searchOptionTransitionNames)
@@ -133,7 +136,7 @@ define('jira-workflow-action-handler/search-view-dialog', [
 
     function searchResultProcess(){
 
-        let searchOption = _getSearchActionOption();
+//        let searchOption = _getSearchActionOption();
 
         // search option action name
 //        let htmlActionNameList = Templates.searchOptionActionName({
@@ -146,26 +149,15 @@ define('jira-workflow-action-handler/search-view-dialog', [
 //        nameItems.empty();
 //        nameItems.append(htmlActionNameList);
 
-        let searchOptionContainer = AJS.$('#container-workflow-action-handler-searchbar .search-option');
-        searchOptionContainer.empty();
-
-        //---------------------------------------------------------
-        //--------------------- < action name > -------------------
-
-        let names = {'Validator' : 'Validator', 'Condition' : 'Condition', 'PostFunction' : 'PostFunction'}
-        let namesChecked = {'Validator' : true }
-        var actionNameOptionClass = new SearchOptionClass('action-name', 'ActionName', true, names, namesChecked);
-        let html = actionNameOptionClass.getHtml();
-        console.log('----> actionNameOptionClass html : ', html)
-        searchOptionContainer.append(html);
-        actionNameOptionClass.register();
+        // search options
+        _setupSearchOption();
 
         // action list
         let htmlActionList = Templates.actionList({
             title: "Action List",
-            isDraft : searchResult.isDraft,
-            workflowName : searchResult.name,
-            actions : searchResult.actions
+            isDraft : Variables.searchResult.isDraft,
+            workflowName : Variables.searchResult.name,
+            actions : Variables.searchResult.actions
         });
         let containerActionList = jQuery('#container-workflow-action-handler-actions');
         containerActionList.empty();
@@ -199,7 +191,7 @@ define('jira-workflow-action-handler/search-view-dialog', [
                 , dataType: 'json'
                 , data : jQuery.param(data)
                 , success: function(result, textStatus, jqXHR) {
-                    searchResult = result;
+                    Variables.searchResult = result;
                     searchResultProcess();
                     resolve({result, textStatus, jqXHR});
                   }
@@ -233,142 +225,79 @@ define('jira-workflow-action-handler/search-view-dialog', [
 
 
 
+  // options selected (checkItems)
+  function _setupSearchOption(){
+      if(Variables.searchOptionSelected == undefined){
+          Variables.searchOptionSelected = new Map();
+      }
 
-    //--------------------------------------------------------- 
-    //--------------------- < action type > -------------------
-    function _eventSearchOption_atype(e){  
-        let isChecked = e.target.hasAttribute('checked');
-        let val = e.target.getAttribute('value')
-        if (isChecked) {
-            searchOptionActionTypes.add(val);
-          } else {
-            searchOptionActionTypes.delete(val);
+      // Variables.searchResult
+
+      let searchOptionContainer = AJS.$('#container-workflow-action-handler-searchbar ul');
+      searchOptionContainer.find('.search-option').empty();
+      // reverse ( prepend )
+      //
+    {
+          let optionId = 'action-class-type';
+          let searchOptionClass = Variables.searchOptionSelected.get(optionId);
+          if( searchOptionClass == undefined){
+              let items = {
+                                  'Default' : 'Default',
+                                  'JiraBase' : 'JiraBase',
+                                  'Custom' : 'Custom',
+                          };
+              let itemsChecked = {
+                'JiraBase': true,
+                'Custom': true,
+              };
+
+              searchOptionClass = new SearchOptionClass(optionId, 'ActionClassType', false, items, itemsChecked);
+              Variables.searchOptionSelected.set(optionId, searchOptionClass);
           }
-        
-        console.log('searchOptionActionTypes : ', searchOptionActionTypes);
-  
-        // 
-        let text = "Type : All";
-        if(searchOptionActionTypes.size > 0){
-          text = truncateString(Array.from(searchOptionActionTypes).join(','), 15);
-        } 
-        
-        // 
-        console.log('text : ', text);
-        jQuery('#action-type-button').text(text);
-        
+          let html = searchOptionClass.getHtml();
+          searchOptionContainer.prepend(html);
+          searchOptionClass.register();
       }
-      
-    AJS.$(document).on('change', '#action-type-dropdown', _eventSearchOption_atype);
-      
-      
-    function _eventSearchOption_atype_find(e){
-    let val = e.target.value
-    console.log( 'find value ', val);
-
-    let items = AJS.$('#action-type-dropdown  aui-item-checkbox')
-
-    for(let item of items){
-      console.log('item text : ', item.textContent);
-      if(val=="" || item.textContent.includes(val) ){
-        item.style.visibility = "visible";
-      }else {
-        item.style.visibility = "hidden";
-      }
-    }
-
-  }
-    AJS.$(document).on('input', '#searcher-atype-input', _eventSearchOption_atype_find);
-
-
-  //---------------------------------------------------------
-  //--------------------- < action class type > -------------------
-  function _eventSearchOption_aclasstype(e){
-      let isChecked = e.target.hasAttribute('checked');
-      let val = e.target.getAttribute('value')
-      if (isChecked) {
-          searchOptionActionClassTypes.add(val);
-        } else {
-          searchOptionActionClassTypes.delete(val);
-        }
-
-      console.log('searchOptionActionClassTypes : ', searchOptionActionClassTypes);
-
       //
-      let text = "ClassType : All";
-      if(searchOptionActionClassTypes.size > 0){
-        text = truncateString(Array.from(searchOptionActionClassTypes).join(','), 15);
-      }
+      {
+            let optionId = 'action-type';
+            let searchOptionClass = Variables.searchOptionSelected.get(optionId);
+            if( searchOptionClass == undefined){
+                let items = {
+                                    'Validator' : 'Validator',
+                                    'Condition' : 'Condition',
+                                    'PostFunction' : 'PostFunction',
+                            };
+                let itemsChecked = {
+                  'Validator': true,
+                };
 
-      //
-      console.log('text : ', text);
-      jQuery('#action-class-type-button').text(text);
-
-    }
-  AJS.$(document).on('change', '#action-class-type-dropdown', _eventSearchOption_aclasstype);
-
-  function _eventSearchOption_aclasstype_find(e){
-      let val = e.target.value
-      console.log( 'find value ', val);
-
-      let items = AJS.$('#action-class-type-dropdown  aui-item-checkbox')
-
-      for(let item of items){
-        console.log('item text : ', item.textContent);
-        if(val=="" || item.textContent.includes(val) ){
-          item.style.visibility = "visible";
-        }else {
-          item.style.visibility = "hidden";
+                searchOptionClass = new SearchOptionClass(optionId, 'ActionType', false, items, itemsChecked);
+                Variables.searchOptionSelected.set(optionId, searchOptionClass);
+            }
+            let html = searchOptionClass.getHtml();
+            searchOptionContainer.prepend(html);
+            searchOptionClass.register();
         }
+      //
+      {
+          let optionId = 'action-name';
+          let searchOptionClass = Variables.searchOptionSelected.get(optionId);
+          if( searchOptionClass == undefined){
+              let items = {};
+              let itemsChecked = {};
+
+              searchOptionClass = new SearchOptionClass(optionId, 'ActionName', true, items, itemsChecked);
+              Variables.searchOptionSelected.set(optionId, searchOptionClass);
+          }
+          let html = searchOptionClass.getHtml();
+          searchOptionContainer.prepend(html);
+          searchOptionClass.register();
       }
-
-    }
-  AJS.$(document).on('input', '#searcher-aclasstype-input', _eventSearchOption_aclasstype_find);
-
-
-  //---------------------------------------------------------
-  //--------------------- < transition id > -------------------
-  function _eventSearchOption_transitionId(e){
-    let isChecked = e.target.hasAttribute('checked');
-    let val = e.target.getAttribute('value')
-    if (isChecked) {
-        searchOptionTransitionIds.add(val);
-      } else {
-        searchOptionTransitionIds.delete(val);
-      }
-
-    console.log('searchOptionTransitionIds : ', searchOptionTransitionIds);
-
-    //
-    let text = "Transition : All";
-    if(searchOptionTransitionIds.size > 0){
-      text = truncateString(Array.from(searchOptionTransitionIds).join(','), 15);
-    }
-
-    //
-    console.log('text : ', text);
-    jQuery('#transition-id-button').text(text);
-
   }
-  AJS.$(document).on('change', '#transition-id-dropdown', _eventSearchOption_transitionId);
 
-  function _eventSearchOption_transitionId_find(e){
-    let val = e.target.value
-    console.log( 'find value ', val);
-
-    let items = AJS.$('#transition-id-dropdown  aui-item-checkbox')
-
-    for(let item of items){
-      console.log('item text : ', item.textContent);
-      if(val=="" || item.textContent.includes(val) ){
-        item.style.visibility = "visible";
-      }else {
-        item.style.visibility = "hidden";
-      }
-    }
-  }
-  AJS.$(document).on('input', '#searcher-transition-id-input', _eventSearchOption_transitionId_find);
-
+  //
+  _setupSearchOption();
 
   //--------------- end search options ----------- ---
   AJS.namespace("JIRA.WorkflowActionHandler.SearchViewDialog");

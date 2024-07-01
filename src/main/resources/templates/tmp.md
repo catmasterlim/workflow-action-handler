@@ -6,6 +6,73 @@
 {/if}           
 
 
+/**
+* Action Args
+* @param action action of workflow
+  */
+  {template .actionArgs}
+  {let $args : $action['args']/}
+  {foreach $key in keys($args)}
+  {$key} :{$args[$key]}
+  {/foreach}
+  {/template}
+
+
+/**
+* Action List
+* @param isDraft isDraft
+* @param workflowName name of workflow
+* @param actions name of workflow
+* @param transitionMap map of transitions
+  */
+  {template .actionList}
+<div class="results-panel navigator-item">
+<div class="navigator-content" >
+<table class="aui aui-table-sortable">
+    <h2 class="hidden" > {$workflowName} {$isDraft} </h2>
+    <thead>
+        <tr>
+            <th id="alist-action-name" class="aui-table-column-issue-key" >Action Name</th>
+            <th id="alist-type">Type</th>
+            <th id="alist-order">Order</th>
+            <th id="alist-class-name">Class Name</th>
+            <th id="alist-class-full">Class Full name</th>
+            <th id="alist-args">Args</th>
+            <th id="alist-transition-id">TransitionId</th>
+            <th id="alist-transition-name">TransitionName</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $a in $actions}
+            {if not $a.isFiltered}
+            <tr>
+                <td headers="alist-action-name" value="{$a['name']}" >{$a['name']}</td>
+                <th id="alist-type" value="{$a['type']}" >{$a['type']}</th>
+                <th id="alist-order" value={$a['order']} >{$a['order']}</th>
+                <th id="alist-class-name" value="{$a['classSimpleName']}" >{$a['classSimpleName']}</th>
+                <th id="alist-class-full" value={$a['className']} >{$a['className']}</th>
+                <th id="alist-args">
+                </th>
+                <th id="alist-transition-id" value={$a['transitionId']} >{$a['transitionId']}</th>
+                {let $transition : $transitionMap[$a['transitionId']] /}
+                <th id="alist-transition-name" value={$transition['name']} >{$transition['name']}</th>
+            </tr>
+            {/if}
+        </tr>
+        {ifempty}
+	        is Empty
+        {/foreach} 
+    </tbody>
+</table>
+<div class="aui-item">
+    <span class="results-count-text">
+        Showing results : {length($actions)} actions of {length(keys($transitionMap))} transitons
+    </span>
+</div>
+</div>
+</div>
+{/template}
+
 <aui-section label="">
                 <li class="check-list-group-actions"><a class="clear-all" href="#">Clear selected items</a></li>
             </aui-section>

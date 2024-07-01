@@ -153,10 +153,31 @@
 
 
 /**
+* Action Args
+* @param action action of workflow
+  */
+{template .actionArgs}
+  {let $args : $action['args']/}
+  {foreach $key in keys($args)}
+    {$key} :{$args[$key]}
+  {/foreach}
+  {switch $action['className']}
+    {case 'Male'}
+      Hello Sir
+    {case 'Female'}
+      Hello Madam
+    {default}
+      Hello Human
+  {/switch}
+{/template}
+
+
+/**
  * Action List
  * @param isDraft isDraft
  * @param workflowName name of workflow
  * @param actions name of workflow
+ * @param transitionMap map of transition
  */
 {template .actionList}
 <div class="results-panel navigator-item">
@@ -170,6 +191,7 @@
             <th id="alist-order">Order</th>
             <th id="alist-class-name">Class Name</th>
             <th id="alist-class-full">Class Full name</th>
+            <th id="alist-alist-args">Value</th>
             <th id="alist-transition-id">TransitionId</th>
             <th id="alist-transition-name">TransitionName</th>
         </tr>
@@ -183,8 +205,14 @@
                 <th id="alist-order" value={$a['order']} >{$a['order']}</th>
                 <th id="alist-class-name" value="{$a['classSimpleName']}" >{$a['classSimpleName']}</th>
                 <th id="alist-class-full" value={$a['className']} >{$a['className']}</th>
+                <th id="alist-args">
+                    {call .actionArgs}
+                        {param action: $a /}
+                    {/call}
+                </th>
                 <th id="alist-transition-id" value={$a['transitionId']} >{$a['transitionId']}</th>
-                <th id="alist-transition-name" value={$a['transitionName']} >{$a['transitionName']}</th>
+                {let $transition : $transitionMap[$a['transitionId']] /}
+                <th id="alist-transition-name" value={$transition['name']} >{$transition['name']}</th>
             </tr>
             {/if}
         </tr>
@@ -193,6 +221,12 @@
         {/foreach} 
     </tbody>
 </table>
+<div class="aui-item">
+    <span class="results-count-text">
+        Showing results : {length($actions)} actions of {length(keys($transitionMap))} transitons
+    </span>
+</div>
+
 </div>
 </div>
 {/template}

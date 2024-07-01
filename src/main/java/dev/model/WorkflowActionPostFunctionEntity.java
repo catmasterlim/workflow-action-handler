@@ -46,6 +46,9 @@ public class WorkflowActionPostFunctionEntity {
     @XmlElement(name = "args")
     public Map args;
 
+    @XmlElement(name = "argsClass")
+    public String argsClass;
+
     @XmlElement(name = "asXML")
     public String asXML;
 
@@ -71,7 +74,7 @@ public class WorkflowActionPostFunctionEntity {
         this.isFiltered = false;
 
         this.classType = ClassTypeFactory.create(this.className);
-
+        this.argsClass = this.args.getClass().toString();
     }
 
 

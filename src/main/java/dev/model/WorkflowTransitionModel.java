@@ -48,6 +48,12 @@ public class WorkflowTransitionModel {
     }
 
     public WorkflowTransitionEntity getTransitionEntity(Integer id){
-        return transitionMap.get(id);
+        return this.transitionMap.get(id);
     }
+
+    public Map<Integer, WorkflowTransitionEntity> getTransitionMap(){
+        return this.transitionMap;
+    }
+
+
 }

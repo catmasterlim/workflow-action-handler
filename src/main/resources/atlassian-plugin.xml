@@ -86,7 +86,8 @@
     </transformation>
     <!--  -->  
     <resource name="Application.js" type="download" location="js/wah-application.js"/>  
-    <resource name="search-view-dialog.js" type="download" location="js/search-view-dialog.js" />    
+    <resource name="search-view-dialog.js" type="download" location="js/search-view-dialog.js" />
+    <resource type="download" name="search-view-dialog.css" location="/css/search-view-dialog.css"/>
   </web-resource> 
  
   <rest name="Workflow Action Handler Rest" i18n-name-key="workflow-action-handler-rest.name" key="workflow-action-handler-rest" path="/workflowactionhandler" version="1.0"> 

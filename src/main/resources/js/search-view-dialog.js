@@ -229,7 +229,8 @@ define('jira-workflow-action-handler/search-view-dialog', [
             title: "Action List",
             isDraft : Variables.searchResult.isDraft,
             workflowName : Variables.searchResult.name,
-            actions : Variables.searchResult.actions
+            actions : Variables.searchResult.actions,
+            transitionMap : Variables.searchResult.transitionMap
         });
         let containerActionList = jQuery('#container-workflow-action-handler-actions');
         containerActionList.empty();
@@ -306,8 +307,10 @@ define('jira-workflow-action-handler/search-view-dialog', [
         //
         {
             let items = {}
-            for(let a of Variables.searchResult.actions){
-              items[a.transitionName] = a.transitionName;
+            let transitionMap = Variables.searchResult.transitionMap;
+            for(let key in transitionMap){
+                let transition = transitionMap[key];
+                items[transition['name']] = transition['name'];
             }
             let searchOptionClass = getInstSearchOptionClass('transition-name', 'TransitionName', true, items, {}, true);
             let html = searchOptionClass.getHtml();

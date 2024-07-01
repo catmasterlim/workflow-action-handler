@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -40,6 +41,10 @@ public class WorkflowActionModel {
     @XmlElement(name = "actions")
     public List actions;
 
+    @XmlElement(name = "transitionMap")
+    public Map transitionMap;
+
+
 
     public WorkflowActionModel() {
     }
@@ -49,6 +54,10 @@ public class WorkflowActionModel {
         this.name = workflow.getName();
         this.isDraft = isDraft;
         this.description = workflow.getDescription();
+
+        //
+        WorkflowTransitionModel transitionModel = new WorkflowTransitionModel(workflow, isDraft);
+        this.transitionMap = transitionModel.getTransitionMap();
 
         WorkflowActionItemEntityFactory factory = new WorkflowActionItemEntityFactory(workflow, isDraft, filer);
 

@@ -56,6 +56,7 @@ public class WorkflowActionConditionEntity  {
     @XmlElement(name = "isNegate")
     public boolean isNegate;
 
+
     public WorkflowActionConditionEntity(ConditionDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
 
         this.id= descriptor.getId();

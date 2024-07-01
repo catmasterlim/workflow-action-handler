@@ -16,6 +16,46 @@ define('jira-workflow-action-handler/search-view-dialog', [
         }
         return Variables.searchOptionSelected;
     }
+    function _isFilteredAction(trAction){
+        let optionMap = getInstSearchOptionSelected();
+
+        let filterNames = ['action-name', 'action-type', 'action-class-type', 'action-class', 'action-class-simple', 'transition-id', 'transition-name'];
+        for(let filterName of filterNames){
+            let val = jQuery(trAction).find('#'+filterName).attr('value');
+            if( optionMap.get(filterName)?.isFiltered(val)) {
+                console.log( '_isFilteredAction true => ',  ' filterName : ', filterName, ',val : ', val);
+                return true;
+            }
+        }
+
+//        console.log( '_isFilteredAction false => ',  ' filterNames : ', filterNames);
+        return false;
+    }
+    function changeShowActionBySearchOption(){
+         let actionList = jQuery('#container-workflow-action-handler-actions tbody tr');
+         let countShowAction = 0;
+         let countHideAction = 0;
+         for(let trAction of actionList ){
+//            console.log(' trAction _isFilteredAction : ', _isFilteredAction(trAction), ' trAction : ' , trAction);
+            if(_isFilteredAction(trAction)){
+                jQuery(trAction).addClass('hidden');
+                countHideAction++;
+            }else{
+                jQuery(trAction).removeClass('hidden');
+                countShowAction++;
+            }
+         }
+
+         // results-count-text
+         let htmlActionCount = Templates.actionResultCount({
+                 actionCount : countShowAction,
+                 transitionCount : 0,
+         });
+         let containerActionCount = jQuery('.results-count-text');
+         containerActionCount.empty();
+         containerActionCount.append(htmlActionCount);
+
+    }
     //  singletone - SearchOptionClass
     function getInstSearchOptionClass(optionId, optionLabel, useFindInput, items, selectedItems, forceRefreshItems=false){
 
@@ -68,6 +108,26 @@ define('jira-workflow-action-handler/search-view-dialog', [
             }
 
             this.selectedItems = newSelected;
+        }
+
+        isFiltered(val){
+            if( val == undefined ){
+                console.error(' isFitlered val is undefined' );
+                return false;
+            }
+
+            if(  Object.keys(this.selectedItems).length == 0 ){
+                return false;
+            }
+
+            if( ! this.selectedItems[val] ) {
+                return true;
+            }
+
+            return false;
+        }
+        isNotFiltered(val){
+            return ! this.isFiltered(val);
         }
 
         regEvent(){
@@ -151,8 +211,11 @@ define('jira-workflow-action-handler/search-view-dialog', [
                 } else {
                     elContainer.append(jQuery(elSelected).detach());
                 }
-
             }
+
+            //
+            changeShowActionBySearchOption();
+
         }
 
         _eventSearchOption_find(e){
@@ -197,19 +260,6 @@ define('jira-workflow-action-handler/search-view-dialog', [
             return Array.from(Object.keys(items));
         }
 
-    function _getSearchActionOption() {
-
-        let containerOptions = jQuery("#workflow-action-handler-dialog");
-        let optionMap = getInstSearchOptionSelected();
-        return {
-            actionName: _arrayFromKeys(optionMap?.get('action-name')?.selectedItems, [])
-            ,actionType: _arrayFromKeys(optionMap?.get('action-type')?.selectedItems, [])
-            ,actionClassType: _arrayFromKeys(optionMap?.get('action-class-type')?.selectedItems, [])
-            ,actionClass: _arrayFromKeys(optionMap?.get('class-type')?.selectedItems, [])
-            ,transitionId: _arrayFromKeys(optionMap?.get('transition-id')?.selectedItems, [])
-            ,transitionName: _arrayFromKeys(optionMap?.get('transition-name')?.selectedItems, [])
-        };
-    }
 
     //
     function truncateString(str, maxLength) {
@@ -219,10 +269,9 @@ define('jira-workflow-action-handler/search-view-dialog', [
         return str;
     }
 
-    function searchResultProcess(){
 
-        // search options
-        _setupSearchOption();
+
+    function _showActionList(){
 
         // action list
         let htmlActionList = Templates.actionList({
@@ -238,21 +287,27 @@ define('jira-workflow-action-handler/search-view-dialog', [
 
         // sorted table
         AJS.tablessortable.setTableSortable(AJS.$(".aui-table-sortable"));
+
+        //
+        changeShowActionBySearchOption();
+    }
+
+    function searchResultProcess(){
+
+        // search options
+        _setupSearchOption();
+
+        //
+        _showActionList();
+
     }
     
     async function search(){
         let classThis = JIRA.WorkflowActionHandler.Variables.Application;
-        let searchOption = _getSearchActionOption();
-        console.log('----> search options', searchOption);
 
         let data = {
             "isDraft" : classThis._workflowData.isDraft
             , "workflowName" : classThis._workflowData.name
-            , "actionName" : searchOption.actionName
-            , "actionType" : searchOption.actionType
-            , "actionClassType" : searchOption.actionClassType
-            , "transitionId" : searchOption.transitionId
-            , "transitionName" : searchOption.transitionName
         };
         console.log(classThis._workflowData);
         console.log(data);

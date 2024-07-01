@@ -56,6 +56,7 @@ define("jira-workflow-action-handler/Application", [
         _eventShow(e){
             e.preventDefault();
             let classThis = JIRA.WorkflowActionHandler.Variables.Application;
+            AJS.$('#workflow-action-handler-search-button').trigger('click');
             AJS.dialog2(classThis._workflowView).show();
         }
         _setupActionLink(){

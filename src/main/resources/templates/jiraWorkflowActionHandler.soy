@@ -9,12 +9,13 @@
 {template .searchDialog}
 <section
     id="workflow-action-handler-dialog"
-    class="aui-dialog2 aui-dialog2-xlarge aui-layer"
+    class="aui-dialog2 aui-dialog2-xlarge aui-layer "
     role="dialog"
     tabindex="-1"
     aria-modal="true"
     aria-labelledby="dialog-show-button--heading"
     aria-describedby="dialog-show-button--description"
+    style="width: 90%;height: 90%;"
     hidden
 >
     <header class="aui-dialog2-header">
@@ -182,51 +183,59 @@
 {template .actionList}
 <div class="results-panel navigator-item">
 <div class="navigator-content" >
+<div class="aui aui-item">
+    <span class="results-count-text">
+    </span>
+</div>
 <table class="aui aui-table-sortable">
     <h2 class="hidden" > {$workflowName} {$isDraft} </h2>
     <thead>
         <tr>
-            <th id="alist-action-name" class="aui-table-column-issue-key" >Action Name</th>
-            <th id="alist-type">Type</th>
-            <th id="alist-order">Order</th>
-            <th id="alist-class-name">Class Name</th>
-            <th id="alist-class-full">Class Full name</th>
-            <th id="alist-alist-args">Value</th>
-            <th id="alist-transition-id">TransitionId</th>
-            <th id="alist-transition-name">TransitionName</th>
+            <th id="action-name" class="aui-table-column-issue-key" >Action Name</th>
+            <th id="action-type">Type</th>
+            <th id="action-order">Order</th>
+            <th id="action-class-type">Class Name</th>
+            <th id="action-class-simple">Class Simple name</th>
+            <th id="action-class">Class name</th>
+            <th id="action-args">Value</th>
+            <th id="transition-id">TransitionId</th>
+            <th id="transition-name">TransitionName</th>
         </tr>
     </thead>
     <tbody>
         {foreach $a in $actions}
-            {if not $a.isFiltered}
-            <tr>
-                <td headers="alist-action-name" value="{$a['name']}" >{$a['name']}</td>
-                <th id="alist-type" value="{$a['type']}" >{$a['type']}</th>
-                <th id="alist-order" value={$a['order']} >{$a['order']}</th>
-                <th id="alist-class-name" value="{$a['classSimpleName']}" >{$a['classSimpleName']}</th>
-                <th id="alist-class-full" value={$a['className']} >{$a['className']}</th>
-                <th id="alist-args">
+            <tr class='hidden' >
+                <td id="action-name" value="{$a['name']}" >{$a['name']}</td>
+                <th id="action-type" value="{$a['type']}" >{$a['type']}</th>
+                <th id="action-order" value={$a['order']} >{$a['order']}</th>
+                <th id="action-class-type" value="{$a['classType']}" >{$a['classType']}</th>
+                <th id="action-class-simple" value={$a['classSimpleName']} >{$a['classSimpleName']}</th>
+                <th id="action-class" value={$a['className']} >{$a['className']}</th>
+                <th id="action-args">
                     {call .actionArgs}
                         {param action: $a /}
                     {/call}
                 </th>
-                <th id="alist-transition-id" value={$a['transitionId']} >{$a['transitionId']}</th>
+                <th id="transition-id" value={$a['transitionId']} >{$a['transitionId']}</th>
                 {let $transition : $transitionMap[$a['transitionId']] /}
-                <th id="alist-transition-name" value={$transition['name']} >{$transition['name']}</th>
+                <th id="transition-name" value={$transition['name']} >{$transition['name']}</th>
             </tr>
-            {/if}
         </tr>
         {ifempty}
 	        is Empty
         {/foreach} 
     </tbody>
 </table>
-<div class="aui-item">
-    <span class="results-count-text">
-        Showing results : {length($actions)} actions of {length(keys($transitionMap))} transitons
-    </span>
-</div>
 
 </div>
 </div>
+{/template}
+
+/**
+ * Action List
+ * @param actionCount count of action
+ * @param transitionCount count of transition
+ */
+{template .actionResultCount}
+    Showing results : {$actionCount} actions of {$transitionCount} transitons
 {/template}

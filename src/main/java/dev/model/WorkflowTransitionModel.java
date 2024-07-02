@@ -39,6 +39,9 @@ public class WorkflowTransitionModel {
         this.description = workflow.getDescription();
 
         for(ActionDescriptor transition :  workflow.getAllActions()){
+            if(workflow.isInitialAction(transition)){
+                continue;
+            }
             WorkflowTransitionEntity entity = new WorkflowTransitionEntity(transition, workflow);
             this.transitionMap.put(entity.id,  entity);
             this.transitions.add(entity);

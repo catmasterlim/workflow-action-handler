@@ -63,6 +63,11 @@ public class WorkflowActionModel {
 
         this.actions = new ArrayList<>();
         for(ActionDescriptor transition :  workflow.getAllActions()){
+
+            if(workflow.isInitialAction(transition)){
+                continue;
+            }
+
             WorkflowTransitionEntity transitionEntity = new WorkflowTransitionEntity(transition, workflow);
 
             // log.warn("test trid : {}, actionType : {},  isFiltered : {} " , transitionEntity.id, WorkflowActionType.Condition, filterModel.isFilteredActionType(WorkflowActionType.Condition));

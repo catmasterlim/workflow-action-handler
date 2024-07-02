@@ -1,0 +1,43 @@
+
+/**
+ * Transition Link
+ * /secure/admin/workflows/ViewWorkflowTransition.jspa?
+ * workflowMode=draft&workflowName=TEST%3A+Project+Management+Workflow&descriptorTab=conditions&workflowStep=1&workflowTransition=11
+ * @param isDraft isDraft
+ * @param workflowName name of workflow
+ * @param transition transition of workflow
+ *
+ */
+{template .transitionLink}
+    {let $workflowMode : $isDraft ? 'draft' : 'live' /}
+    {let $transitionId : $transition['id'] /}
+    {let $workflowSteps : $transition['steps'] /}
+    {let $descriptorTab : 'conditions' /}
+
+    {let $workflowStep : $workflowSteps[0] /}
+    {let $workflowStepId : $workflowStep['id'] /}
+
+  <a href="ViewWorkflowTransition.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}" title="" id="edit_action_{$workflowStepId}_{$workflowTransition}">${$transition['name']</a>
+  <span class="smallgrey">({$transitionId})</span>
+{/template}
+
+
+/**
+ * Transition Link
+ * @param isDraft isDraft
+ * @param workflowName name of workflow
+ * @param transition transition of workflow
+ *
+ */
+{template .transitionLink}
+    {let $workflowMode : $isDraft ? 'draft' : 'live' /}
+    {let $transitionId : $transition['id'] /}
+    {let $workflowSteps : $transition['steps'] /}
+    {let $descriptorTab : 'conditions' /}
+
+    {let $workflowStep : $workflowSteps[0] /}
+    {let $workflowStepId : $workflowStep['id'] /}
+
+  <a href="ViewWorkflowTransition.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}" title="" id="edit_action_{$workflowStepId}_{$workflowTransition}">${$transition['name']}</a>
+  <span class="smallgrey">({$transitionId})</span>
+{/template}

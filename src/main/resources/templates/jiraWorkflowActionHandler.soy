@@ -64,9 +64,6 @@
         {let $tempMap: ['Validator' : 'Validator', 'Condition' : 'Condition', 'PostFunction' : 'PostFunction'] /}
         {let $tempList: ['Condition' : true, 'PostFunction' : false] /}
 
-
-
-
         <li>
             <button id="workflow-action-handler-search-button" class="aui-button aui-button-primary search-button"> Search Action </button>
         </li>
@@ -152,26 +149,83 @@
  </li>
 {/template}
 
-
 /**
-* Action Args
+* Action Condition Args
+* @param isDraft isDraft
+* @param workflowName name of workflow
+* @param hasMultiConditionInTransition has multi condition of transition
 * @param action action of workflow
-  */
-{template .actionArgs}
-  {let $args : $action['args']/}
-  {foreach $key in keys($args)}
-    {$key} :{$args[$key]}
-  {/foreach}
-  {switch $action['className']}
-    {case 'Male'}
-      Hello Sir
-    {case 'Female'}
-      Hello Madam
-    {default}
-      Hello Human
-  {/switch}
+*/
+{template .actionConditionArgs}
+    {let $workflowMode : $isDraft ? 'draft' : 'live' /}
+    {let $workflowStep : 1 /}
+    {let $workflowTransition : $action['transitionId'] /}
+    {let $count : $action['order']  /}
+    {let $descriptorTab : 'conditions' /}
+    {let $args : $action['args']/}
+    {let $className : $args['class.name'] /}
+
+    {switch $className}
+          {case 'com.atlassian.jira.workflow.condition.PermissionCondition'}
+          <li class="criteria-item" style="border-top: 0px;list-style-type: none;">
+          {if $isDraft}
+              <div class="aui-buttons">
+              <a class="aui-button aui-button-link criteria-condition-add-grouped"  {if not $hasMultiConditionInTransition}  aria-disabled="true"  {/if}
+                href="AddWorkflowTransitionCondition!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStep}&amp;workflowTransition={$workflowTransition}&amp;count={$count}&amp;nested=true" title="Add grouped condition" resolved="">
+              <span class="aui-icon aui-icon-small aui-iconfont-devtools-fork">
+              Add grouped condition
+              </span>
+              </a>
+              <a class="aui-button aui-button-link criteria-condition-edit" href="EditWorkflowTransitionConditionParams!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStep}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
+              <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
+              </a>
+
+                <a class="aui-button aui-button-link criteria-condition-delete" href="DeleteWorkflowTransitionCondition.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStep}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+                <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
+                </a>
+                </div>
+            {/if}
+                Only users with <b>{$args['permissionKey']}</b> permission can execute this transition.
+            </li>
+
+          {default}
+            <b>Hello Human</b>
+    {/switch}
+
 {/template}
 
+
+/**
+ * Action List
+ * @param actionCount count of action
+ * @param transitionCount count of transition
+ */
+{template .actionResultCount}
+    Showing results : {$actionCount} actions of {$transitionCount} transitons
+{/template}
+
+
+/**
+ * Transition Link
+ * /secure/admin/workflows/ViewWorkflowTransition.jspa?
+ * workflowMode=draft&workflowName=TEST%3A+Project+Management+Workflow&descriptorTab=conditions&workflowStep=1&workflowTransition=11
+ * @param isDraft isDraft
+ * @param workflowName name of workflow
+ * @param transition transition of workflow
+ *
+ */
+{template .transitionLink}
+    {let $workflowMode : $isDraft ? 'draft' : 'live' /}
+    {let $workflowTransition : $transition['id'] /}
+    {let $workflowSteps : $transition['steps'] /}
+    {let $descriptorTab : 'conditions' /}
+
+    {let $workflowStep : $workflowSteps[0] /}
+    {let $workflowStepId : $workflowStep['id'] /}
+
+  <a href="ViewWorkflowTransition.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}" title="" id="edit_action_{$workflowStepId}_{$workflowTransition}">{$transition['name']}</a>
+  <span class="smallgrey">({$workflowTransition})</span>
+{/template}
 
 /**
  * Action List
@@ -204,6 +258,7 @@
     </thead>
     <tbody>
         {foreach $a in $actions}
+            {let $transition : $transitionMap[$a['transitionId']] /}
             <tr class='hidden' >
                 <td id="action-name" value="{$a['name']}" >{$a['name']}</td>
                 <th id="action-type" value="{$a['type']}" >{$a['type']}</th>
@@ -212,12 +267,20 @@
                 <th id="action-class-simple" value={$a['classSimpleName']} >{$a['classSimpleName']}</th>
                 <th id="action-class" value={$a['className']} >{$a['className']}</th>
                 <th id="action-args">
-                    {call .actionArgs}
+                    {call .actionConditionArgs}
+                        {param isDraft: $isDraft /}
+                        {param workflowName: $workflowName /}
+                        {param hasMultiConditionInTransition: $transition['countCondition'] > 1 /}
                         {param action: $a /}
                     {/call}
                 </th>
-                <th id="transition-id" value={$a['transitionId']} >{$a['transitionId']}</th>
-                {let $transition : $transitionMap[$a['transitionId']] /}
+                <th id="transition-id" value={$a['transitionId']} >
+                    {call .transitionLink}
+                        {param isDraft: $isDraft /}
+                        {param workflowName: $workflowName /}
+                        {param transition: $transition /}
+                    {/call}
+                </th>
                 <th id="transition-name" value={$transition['name']} >{$transition['name']}</th>
             </tr>
         </tr>
@@ -229,13 +292,4 @@
 
 </div>
 </div>
-{/template}
-
-/**
- * Action List
- * @param actionCount count of action
- * @param transitionCount count of transition
- */
-{template .actionResultCount}
-    Showing results : {$actionCount} actions of {$transitionCount} transitons
 {/template}

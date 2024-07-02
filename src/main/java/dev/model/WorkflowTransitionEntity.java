@@ -3,10 +3,8 @@ package dev.model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.*;
 
@@ -69,6 +67,9 @@ public class WorkflowTransitionEntity {
     @XmlElement(name = "isOrdinaryAction")
     public boolean isOrdinaryAction;
 
+    @XmlElement(name = "steps")
+    public List<WorkflowStepEntity> steps;
+
 
     public WorkflowTransitionEntity(ActionDescriptor transition, JiraWorkflow workflow){
 
@@ -95,6 +96,11 @@ public class WorkflowTransitionEntity {
         this.isGlobal = workflow.isGlobalAction(transition);
         this.isInitialAction = workflow.isInitialAction(transition);
         this.isOrdinaryAction = workflow.isOrdinaryAction(transition);
+
+        Collection<StepDescriptor> stepDescriptors = workflow.getStepsForTransition(transition);
+
+        this.steps = stepDescriptors.stream().map(step -> new WorkflowStepEntity(step, workflow)).collect(Collectors.toList());
+
     }
 
 

@@ -17,43 +17,11 @@ import com.opensymphony.workflow.loader.ValidatorDescriptor;
 
 @XmlRootElement(name = "Validator")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class WorkflowActionValidatorEntity {
-
-    @XmlElement(name = "id")
-    private int id;
-
-    @XmlElement(name = "name")
-    public String name;
-
-    @XmlElement(name = "className")
-    public String className;
-
-    @XmlElement(name = "classSimpleName")
-    public String classSimpleName;
-
-    @XmlElement(name = "classType")
-    public String classType;
-
-    @XmlElement(name = "type")
-    public final WorkflowActionType type = WorkflowActionType.Validator;
-
-    @XmlElement(name = "order")
-    public int order;
-
-    @XmlElement(name = "transitionId")
-    public int transitionId;
-
-    @XmlElement(name = "args")
-    public Map args;
-
-    @XmlElement(name = "asXML")
-    public String asXML;
-
-    @XmlElement(name = "isFiltered")
-    public boolean isFiltered;
-
+public class WorkflowActionValidatorEntity extends  WorkflowActionEntity{
 
     public WorkflowActionValidatorEntity(ValidatorDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
+
+        super(WorkflowActionType.Validator);
 
         this.id= descriptor.getId();
         this.className = (String)descriptor.getArgs().get("class.name");
@@ -61,16 +29,12 @@ public class WorkflowActionValidatorEntity {
         this.name = descriptor.getName();
         this.order = order;
         this.transitionId = transitionId;
-
-        if(this.name.isEmpty()){
-            this.name = this.classSimpleName;
-        }
-
         this.args = descriptor.getArgs();
+        this.countArgs = this.args.size();
         this.asXML = descriptor.asXML();
-
         this.isFiltered = false;
-        this.classType = ClassTypeFactory.create(this.className);
+
+        Const.injectPredefinedTypeInfo(this);
     }
 
 

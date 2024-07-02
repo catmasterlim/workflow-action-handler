@@ -149,51 +149,104 @@
  </li>
 {/template}
 
+
+
 /**
 * Action Condition Args
 * @param isDraft isDraft
 * @param workflowName name of workflow
+* @param transition transtion of workflow
 * @param hasMultiConditionInTransition has multi condition of transition
 * @param action action of workflow
 */
 {template .actionConditionArgs}
+    {let $descriptorTab : 'conditions' /}
+
     {let $workflowMode : $isDraft ? 'draft' : 'live' /}
-    {let $workflowStep : 1 /}
     {let $workflowTransition : $action['transitionId'] /}
     {let $count : $action['order']  /}
-    {let $descriptorTab : 'conditions' /}
-    {let $args : $action['args']/}
+    {let $args : $action['args'] /}
+    {let $countArgs : $action['countArgs'] /}
     {let $className : $args['class.name'] /}
 
-    {switch $className}
-          {case 'com.atlassian.jira.workflow.condition.PermissionCondition'}
-          <li class="criteria-item" style="border-top: 0px;list-style-type: none;">
-          {if $isDraft}
-              <div class="aui-buttons">
-              <a class="aui-button aui-button-link criteria-condition-add-grouped"  {if not $hasMultiConditionInTransition}  aria-disabled="true"  {/if}
-                href="AddWorkflowTransitionCondition!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStep}&amp;workflowTransition={$workflowTransition}&amp;count={$count}&amp;nested=true" title="Add grouped condition" resolved="">
-              <span class="aui-icon aui-icon-small aui-iconfont-devtools-fork">
-              Add grouped condition
-              </span>
-              </a>
-              <a class="aui-button aui-button-link criteria-condition-edit" href="EditWorkflowTransitionConditionParams!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStep}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
-              <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
-              </a>
+    {let $workflowSteps : $transition['steps'] /}
+    {let $workflowStep : $workflowSteps[0] /}
+    {let $workflowStepId : $workflowStep['id'] /}
 
-                <a class="aui-button aui-button-link criteria-condition-delete" href="DeleteWorkflowTransitionCondition.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStep}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
-                <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
-                </a>
-                </div>
-            {/if}
-                Only users with <b>{$args['permissionKey']}</b> permission can execute this transition.
-            </li>
+    <li class="criteria-item" style="border-top: 0px;list-style-type: none;">
+        {if $isDraft}
+        <div class="aui-buttons">
+            <a class="aui-button aui-button-link criteria-condition-add-grouped"  {if not $hasMultiConditionInTransition}  aria-disabled="true"  {/if}
+            href="AddWorkflowTransitionCondition!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}&amp;nested=true" title="Add grouped condition" resolved="">
+            <span class="aui-icon aui-icon-small aui-iconfont-devtools-fork">
+            Add grouped condition
+            </span>
+            </a>
+            <a class="aui-button aui-button-link criteria-condition-edit" {if $countArgs < 2} aria-disabled="true" {/if} href="EditWorkflowTransitionConditionParams!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
+            <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
+            </a>
 
-          {default}
-            <b>Hello Human</b>
-    {/switch}
+            <a class="aui-button aui-button-link criteria-condition-delete" href="DeleteWorkflowTransitionCondition.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+            <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
+            </a>
+        </div>
+        {/if}
+
+       {switch $className}
+            {case 'com.atlassian.jira.workflow.condition.PermissionCondition'}
+                {let $value : $args['permissionKey'] ? $args['permissionKey'] : $args['permission'] /}
+
+                Only users with <b>{$value}</b> permission can execute this transition.
+
+            {case 'com.atlassian.jira.workflow.condition.AlwaysFalseCondition'}
+                Condition to hide a transition from the user. The transition can only be triggered from a workflow function.
+
+            {default}
+               <b> Not Define </b>
+
+        {/switch}
+     </li>
+
 
 {/template}
 
+
+
+/**
+* Action Args
+* @param isDraft isDraft
+* @param workflowName name of workflow
+* @param transition transtion of workflow
+* @param action action of workflow
+*/
+{template .actionArgs}
+    {let $workflowMode : $isDraft ? 'draft' : 'live' /}
+    {let $workflowTransition : $action['transitionId'] /}
+    {let $count : $action['order']  /}
+    {let $args : $action['args']/}
+    {let $className : $args['class.name'] /}
+
+    {let $workflowSteps : $transition['steps'] /}
+    {let $workflowStep : $workflowSteps[0] /}
+    {let $workflowStepId : $workflowStep['id'] /}
+
+    {let $actionType : $action['type'] /}
+    {switch $actionType }
+        {case 'Condition'}
+            {call .actionConditionArgs}
+                {param isDraft: $isDraft /}
+                {param workflowName: $workflowName /}
+                {param transition: $transition /}
+                {param hasMultiConditionInTransition: $transition['countCondition'] > 1 /}
+                {param action: $action /}
+            {/call}
+        {case 'Validator'}
+        {case 'PostFunction'}
+        {default}
+            <h2> Error action has no action-type : $actionType </h2>
+    {/switch}
+
+{/template}
 
 /**
  * Action List
@@ -217,9 +270,9 @@
 {template .transitionLink}
     {let $workflowMode : $isDraft ? 'draft' : 'live' /}
     {let $workflowTransition : $transition['id'] /}
-    {let $workflowSteps : $transition['steps'] /}
     {let $descriptorTab : 'conditions' /}
 
+    {let $workflowSteps : $transition['steps'] /}
     {let $workflowStep : $workflowSteps[0] /}
     {let $workflowStepId : $workflowStep['id'] /}
 
@@ -245,7 +298,7 @@
     <h2 class="hidden" > {$workflowName} {$isDraft} </h2>
     <thead>
         <tr>
-            <th id="action-name" class="aui-table-column-issue-key" >Action Name</th>
+            <th id="action-name" >Action Name</th>
             <th id="action-type">Type</th>
             <th id="action-order">Order</th>
             <th id="action-class-type">Class Name</th>
@@ -260,17 +313,17 @@
         {foreach $a in $actions}
             {let $transition : $transitionMap[$a['transitionId']] /}
             <tr class='hidden' >
-                <td id="action-name" value="{$a['name']}" >{$a['name']}</td>
+                <td id="action-name" value="{$a['name']}" alt="{$a['description']}">{$a['name']}</td>
                 <th id="action-type" value="{$a['type']}" >{$a['type']}</th>
                 <th id="action-order" value={$a['order']} >{$a['order']}</th>
                 <th id="action-class-type" value="{$a['classType']}" >{$a['classType']}</th>
                 <th id="action-class-simple" value={$a['classSimpleName']} >{$a['classSimpleName']}</th>
                 <th id="action-class" value={$a['className']} >{$a['className']}</th>
                 <th id="action-args">
-                    {call .actionConditionArgs}
+                    {call .actionArgs}
                         {param isDraft: $isDraft /}
                         {param workflowName: $workflowName /}
-                        {param hasMultiConditionInTransition: $transition['countCondition'] > 1 /}
+                        {param transition: $transition /}
                         {param action: $a /}
                     {/call}
                 </th>

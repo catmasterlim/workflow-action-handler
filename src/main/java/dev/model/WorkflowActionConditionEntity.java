@@ -18,34 +18,13 @@ import com.opensymphony.workflow.loader.ConditionDescriptor;
 
 @XmlRootElement(name = "Condition")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class WorkflowActionConditionEntity  {
-
-    @XmlElement(name = "id")
-    private int id;
-
-    @XmlElement(name = "name")
-    public String name;
-
-    @XmlElement(name = "className")
-    public String className;
-
-    @XmlElement(name = "classSimpleName")
-    public String classSimpleName;
-
-    @XmlElement(name = "classType")
-    public String classType;
-
-    @XmlElement(name = "type")
-    public final WorkflowActionType type = WorkflowActionType.Condition;
-
-    @XmlElement(name = "order")
-    public int order;
-
-    @XmlElement(name = "transitionId")
-    public int transitionId;
+public class WorkflowActionConditionEntity extends WorkflowActionEntity  {
 
     @XmlElement(name = "args")
     public Map args;
+
+    @XmlElement(name = "countArgs")
+    public int countArgs;
 
     @XmlElement(name = "asXML")
     public String asXML;
@@ -56,8 +35,8 @@ public class WorkflowActionConditionEntity  {
     @XmlElement(name = "isNegate")
     public boolean isNegate;
 
-
     public WorkflowActionConditionEntity(ConditionDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
+        super(WorkflowActionType.Condition);
 
         this.id= descriptor.getId();
         this.className = (String)descriptor.getArgs().get("class.name");
@@ -65,17 +44,12 @@ public class WorkflowActionConditionEntity  {
         this.name = descriptor.getName();
         this.order = order;
         this.transitionId = transitionId;
-
-        if(this.name.isEmpty()){
-            this.name = this.classSimpleName;
-        }
-
         this.args = descriptor.getArgs();
+        this.countArgs = this.args.size();
         this.asXML = descriptor.asXML();
-
         this.isFiltered = false;
-
         this.isNegate = descriptor.isNegate();
-        this.classType = ClassTypeFactory.create(this.className);
+
+        Const.injectPredefinedTypeInfo(this);
     }
 }

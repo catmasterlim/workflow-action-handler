@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.*;
 
@@ -17,26 +18,48 @@ import com.opensymphony.workflow.loader.FunctionDescriptor;
 public class WorkflowActionEntity {
 
     @XmlElement(name = "id")
-    private int id;
+    public int id;
 
     @XmlElement(name = "name")
     public String name;
 
+    @XmlElement(name = "description")
+    public String description;
+
     @XmlElement(name = "className")
     public String className;
 
-    @XmlElement(name = "transition")
-    public WorkflowTransitionEntity transitionEntity;
+    @XmlElement(name = "classSimpleName")
+    public String classSimpleName;
+
+    @XmlElement(name = "classType")
+    public String classType;
+
+    @XmlElement(name = "type")
+    public final WorkflowActionType type;
+
+    @XmlElement(name = "order")
+    public int order;
+
+    @XmlElement(name = "transitionId")
+    public int transitionId;
+
+    @XmlElement(name = "args")
+    public Map args;
+
+    @XmlElement(name = "countArgs")
+    public int countArgs;
+
+    @XmlElement(name = "asXML")
+    public String asXML;
 
 
-    public WorkflowActionEntity(WorkflowTransitionEntity transitionEntity){
+    @XmlElement(name = "isFiltered")
+    public boolean isFiltered;
 
-        // this.id= transition.getId();
-        // this.name = transition.getName();
-        // this.className = transition.getClass().getName();
 
-        this.transitionEntity = transitionEntity;
-
+    public WorkflowActionEntity(WorkflowActionType type){
+        this.type = type;
     }
 
 }

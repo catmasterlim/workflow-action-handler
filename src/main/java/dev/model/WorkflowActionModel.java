@@ -1,5 +1,7 @@
 package dev.model;
 
+import com.atlassian.jira.config.ConstantsManager;
+import com.atlassian.jira.config.StatusCategoryManager;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.StepDescriptor;
@@ -8,10 +10,7 @@ import com.opensymphony.workflow.loader.ValidatorDescriptor;
 import com.opensymphony.workflow.loader.ConditionDescriptor;
 
 import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -39,31 +38,44 @@ public class WorkflowActionModel {
     public boolean isActive;
 
     @XmlElement(name = "actions")
-    public List actions;
+    public final List actions = new ArrayList<>();
 
-    @XmlElement(name = "transitionMap")
-    public Map transitionMap;
+    @XmlElement(name = "maps")
+    public final Map maps = new HashMap();
 
-
+    // maps
+    public Map transitionMap = new HashMap();
+    public Map statusMap = new HashMap<>();
+    public Map statusCategoryMap = new HashMap<>();
 
     public WorkflowActionModel() {
     }
 
-    public WorkflowActionModel(boolean includedFiltered, JiraWorkflow workflow, boolean isDraft, WorkflowActionFilterModel filer ) {
+    public WorkflowActionModel(ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager, boolean includedFiltered, JiraWorkflow workflow, boolean isDraft, WorkflowActionFilterModel filer ) {
 
         this.name = workflow.getName();
         this.isDraft = isDraft;
         this.description = workflow.getDescription();
 
-        //
+        // maps
+
+        // transition
         WorkflowTransitionModel transitionModel = new WorkflowTransitionModel(workflow, isDraft);
         this.transitionMap = transitionModel.getTransitionMap();
+        this.maps.put("transitionMap", this.transitionMap);
+        // status
+        constantsManager.getStatuses().forEach(el -> this.statusMap.put( el.getId(), new WorkflowStatusEntity(el, workflow) ));
+        this.maps.put("statusMap", this.statusMap);
+        // status category
+        statusCategoryManager.getStatusCategories().forEach(el -> this.statusCategoryMap.put( el.getId(), new WorkflowStatusCategoryEntity(el, workflow) ));
+        this.maps.put("statusCategoryMap", this.statusCategoryMap);
 
         WorkflowActionItemEntityFactory factory = new WorkflowActionItemEntityFactory(workflow, isDraft, filer);
 
-        this.actions = new ArrayList<>();
+
         for(ActionDescriptor transition :  workflow.getAllActions()){
 
+            // create 같은 transition 제외
             if(workflow.isInitialAction(transition)){
                 continue;
             }
@@ -120,6 +132,7 @@ public class WorkflowActionModel {
             }
             
         }
+
 
 
     }

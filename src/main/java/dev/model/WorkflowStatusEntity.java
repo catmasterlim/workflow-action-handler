@@ -24,30 +24,29 @@ public class WorkflowStatusEntity {
     @XmlElement(name = "name")
     public String name;
 
+    @XmlElement(name = "translatedName")
+    public String translatedName;
+
     @XmlElement(name = "description")
     public String description;
 
     @XmlElement(name = "iconUrl")
     public String iconUrl;
 
-
-
-//    @XmlElement(name = "simpleStatus")
-//    public SimpleStatus simpleStatus;
-
-    @XmlElement(name = "statusCategory")
-    public WorkflowStatusCategoryEntity statusCategory;
+    @XmlElement(name = "statusCategoryId")
+    public long statusCategoryId;
 
 
     public WorkflowStatusEntity(Status status, JiraWorkflow workflow){
 
         this.id = status.getId();
         this.name = status.getName();
+        this.translatedName = status.getNameTranslation();
 
         this.description = status.getSimpleStatus().getDescription();
         this.iconUrl = status.getSimpleStatus().getIconUrl();
 
-        this.statusCategory = new WorkflowStatusCategoryEntity(status.getStatusCategory(), workflow);
+        this.statusCategoryId = status.getStatusCategory().getId();
     }
 
 

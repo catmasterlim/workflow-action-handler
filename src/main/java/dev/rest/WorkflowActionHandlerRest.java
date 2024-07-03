@@ -1,11 +1,13 @@
 package dev.rest;
 
+import com.atlassian.jira.config.StatusCategoryManager;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.json.JSONObject;
 import com.atlassian.jira.util.json.JsonUtil;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.jira.workflow.WorkflowManager;
+import com.atlassian.jira.config.ConstantsManager;
 
 
 import org.slf4j.Logger;
@@ -34,9 +36,17 @@ public class WorkflowActionHandlerRest {
     @JiraImport
     private final JiraAuthenticationContext jiraAuthenticationContext;
 
-    public WorkflowActionHandlerRest( WorkflowManager workflowManager, JiraAuthenticationContext jiraAuthenticationContext) {
+    @JiraImport
+    private final ConstantsManager constantsManager;
+
+    @JiraImport
+    private final StatusCategoryManager statusCategoryManager;
+
+    public WorkflowActionHandlerRest(WorkflowManager workflowManager, JiraAuthenticationContext jiraAuthenticationContext, ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager) {
         this.workflowManager = workflowManager;
         this.jiraAuthenticationContext = jiraAuthenticationContext;
+        this.constantsManager = constantsManager;
+        this.statusCategoryManager = statusCategoryManager;
     }
 
 
@@ -138,6 +148,6 @@ public class WorkflowActionHandlerRest {
             workflow = this.workflowManager.getDraftWorkflow(workflowName);
         }
 
-        return Response.ok(new WorkflowActionModel(includedFiltered, workflow, isDraft, filterModel)).build();
+        return Response.ok(new WorkflowActionModel(constantsManager, statusCategoryManager, includedFiltered, workflow, isDraft, filterModel)).build();
     }
 }

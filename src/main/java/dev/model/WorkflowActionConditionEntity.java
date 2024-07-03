@@ -45,6 +45,10 @@ public class WorkflowActionConditionEntity extends WorkflowActionEntity  {
         this.order = order;
         this.transitionId = transitionId;
         this.args = descriptor.getArgs();
+        if(this.args.get("statuses") != null){
+            String str = (String)this.args.get("statuses");
+            this.args.put("statuses", str.split(","));
+        }
         this.countArgs = this.args.size();
         this.asXML = descriptor.asXML();
         this.isFiltered = false;

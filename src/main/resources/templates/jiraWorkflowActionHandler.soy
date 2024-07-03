@@ -152,15 +152,44 @@
 
 
 /**
+* statusIds
+* @param ids is of status - array
+* @param statusMap map of status
+* @param statusCategoryMap map of statusCategory
+*/
+{template .status}
+
+    {foreach $id in $ids}
+        {let $status : $statusMap[$id] /}
+        {let $statusCategory : $statusCategoryMap[$status.statusCategoryId] /}
+
+        {if not isFirst($id) and isLast($id)}
+            or
+        {/if}
+
+        {call JIRA.Template.Util.Issue.Status.statusLozenge}
+            {param name: $status.translatedName /}
+            {param categoryKey: $statusCategory.key /}
+            {param colorName: $statusCategory.colorName /}
+            {param isCompact: false /}
+        {/call}
+    {/foreach}
+
+{/template}
+/**
 * Action Condition Args
 * @param isDraft isDraft
 * @param workflowName name of workflow
+* @param maps map of all
 * @param transition transtion of workflow
 * @param hasMultiConditionInTransition has multi condition of transition
 * @param action action of workflow
 */
 {template .actionConditionArgs}
     {let $descriptorTab : 'conditions' /}
+
+    {let $statusMap : $maps['statusMap'] /}
+    {let $statusCategoryMap : $maps['statusCategoryMap'] /}
 
     {let $workflowMode : $isDraft ? 'draft' : 'live' /}
     {let $workflowTransition : $action['transitionId'] /}
@@ -197,13 +226,24 @@
                 {let $value : $args['permissionKey'] ? $args['permissionKey'] : $args['permission'] /}
 
                 Only users with <b>{$value}</b> permission can execute this transition.
-
-            {case 'com.atlassian.jira.workflow.condition.AlwaysFalseCondition'}
-                Condition to hide a transition from the user. The transition can only be triggered from a workflow function.
-
+            {case 'com.atlassian.jira.workflow.condition.SubTaskBlockingCondition'}
+                {let $status : $args['statuses'] /}
+                All sub-tasks must have one of the following statuses to allow parent issue transitions:
+                {call .status}
+                    {param ids : $status /}
+                    {param statusMap : $statusMap /}
+                    {param statusCategoryMap : $statusCategoryMap /}
+                {/call}
             {default}
-               <b> Not Define </b>
-
+                {let $desc : $action['description'] /}
+                {if $countArgs < 2 and isNonnull($desc) }
+                    {$desc}
+                {else}
+                    <b> Not Define </b>
+                    {foreach $arg in $args}
+                        {$arg} : {$args[$arg]}
+                    {/foreach}
+                {/if}
         {/switch}
      </li>
 
@@ -216,6 +256,7 @@
 * Action Args
 * @param isDraft isDraft
 * @param workflowName name of workflow
+* @param maps map of all
 * @param transition transtion of workflow
 * @param action action of workflow
 */
@@ -236,6 +277,7 @@
             {call .actionConditionArgs}
                 {param isDraft: $isDraft /}
                 {param workflowName: $workflowName /}
+                {param maps: $maps /}
                 {param transition: $transition /}
                 {param hasMultiConditionInTransition: $transition['countCondition'] > 1 /}
                 {param action: $action /}
@@ -285,7 +327,7 @@
  * @param isDraft isDraft
  * @param workflowName name of workflow
  * @param actions name of workflow
- * @param transitionMap map of transition
+ * @param maps map of all
  */
 {template .actionList}
 <div class="results-panel navigator-item">
@@ -310,6 +352,7 @@
         </tr>
     </thead>
     <tbody>
+    {let $transitionMap : $maps['transitionMap']/}
         {foreach $a in $actions}
             {let $transition : $transitionMap[$a['transitionId']] /}
             <tr class='hidden' >
@@ -323,6 +366,7 @@
                     {call .actionArgs}
                         {param isDraft: $isDraft /}
                         {param workflowName: $workflowName /}
+                        {param maps : $maps /}
                         {param transition: $transition /}
                         {param action: $a /}
                     {/call}

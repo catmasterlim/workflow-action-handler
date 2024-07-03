@@ -22,6 +22,9 @@ public class WorkflowStatusCategoryEntity {
     @XmlElement(name = "name")
     public String name;
 
+    @XmlElement(name = "key")
+    public String key;
+
     @XmlElement(name = "aliases")
     public List<String> aliases;
 
@@ -39,12 +42,10 @@ public class WorkflowStatusCategoryEntity {
 
         this.id = statusCategory.getId();
         this.name = statusCategory.getName();
-
+        this.key = statusCategory.getKey();
         this.aliases = statusCategory.getAliases();
         this.colorName = statusCategory.getColorName();
-
         this.translatedName = statusCategory.getTranslatedName();
-
         this.sequence = statusCategory.getSequence();
     }
 

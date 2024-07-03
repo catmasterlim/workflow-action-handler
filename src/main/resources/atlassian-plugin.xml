@@ -53,11 +53,13 @@
   <web-resource key="jira-workflow-action-handler-search-view"> 
     <context>jira.workflow.view</context>
 <!--    <context>atl.general</context>  -->
+    <dependency>jira.webresources:jira-global</dependency>
+    <dependency>jira.webresources:set-focus</dependency>
+
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
-    <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:i18n</dependency>  
-    <dependency>jira.webresources:jira-global</dependency>  
-    <dependency>jira.webresources:set-focus</dependency>  
-    <dependency>com.atlassian.auiplugin:ajs</dependency>  
+    <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:i18n</dependency>
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <dependency>com.atlassian.auiplugin:aui-core</dependency>
     <dependency>com.atlassian.auiplugin:aui-forms</dependency>  
     <dependency>com.atlassian.auiplugin:aui-button</dependency>  
     <dependency>com.atlassian.auiplugin:aui-select2</dependency>  
@@ -67,6 +69,7 @@
     <dependency>com.atlassian.auiplugin:inline-dialog</dependency>  
     <dependency>com.atlassian.auiplugin:aui-dialog2</dependency>
     <dependency>com.atlassian.auiplugin:soy </dependency>
+    <dependency>com.atlassian.plugins.issue-status-plugin:issue-status-resources</dependency>
 
 
     <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-loader</dependency>  

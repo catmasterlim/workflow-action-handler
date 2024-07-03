@@ -27,15 +27,15 @@ public class WorkflowStepEntity {
     @XmlElement(name = "name")
     public String name;
 
-    @XmlElement(name = "linkStatus")
-    public WorkflowStatusEntity linkStatus;
+    @XmlElement(name = "linkStatusId")
+    public String linkStatusId;
 
     public WorkflowStepEntity(StepDescriptor descriptor, JiraWorkflow workflow){
 
         this.id= descriptor.getId();
         this.name = descriptor.getName();
         Status status = workflow.getLinkedStatus(descriptor);
-        this.linkStatus = new WorkflowStatusEntity(status, workflow);
+        this.linkStatusId = workflow.getLinkedStatus(descriptor).getId();
     }
 
 

@@ -236,14 +236,6 @@ define('jira-workflow-action-handler/search-view-dialog', [
             }
     }
 
-    var searchOptionTransitionIds = new Set([]);
-    var searchOptionTransitionNames = new Set([]);
-
-    Variables.searchResult = {
-        "isDraft" : false
-        , "name" : ""
-        , "actions" : []
-    };
 
     function _arrayFromKeys(items, defaultVal){
         if( items === undefined || !items ){
@@ -279,7 +271,7 @@ define('jira-workflow-action-handler/search-view-dialog', [
             isDraft : Variables.searchResult.isDraft,
             workflowName : Variables.searchResult.name,
             actions : Variables.searchResult.actions,
-            transitionMap : Variables.searchResult.transitionMap
+            maps : Variables.searchResult.maps
         });
         let containerActionList = jQuery('#container-workflow-action-handler-actions');
         containerActionList.empty();
@@ -356,13 +348,27 @@ define('jira-workflow-action-handler/search-view-dialog', [
   // options selected (checkItems)
   function _setupSearchOption(){
 
+        if( Variables.searchResult == undefined ){
+            Variables.searchResult = {
+                    "isDraft" : false
+                    , "name" : ""
+                    , "actions" : []
+                    , "maps" : {
+                        "transitionMap" : {}
+                        , "statusMap" : {}
+                        , "statusCategoryMap" : {}
+                    }
+                };
+            console.log('Variables.searchResult : ', Variables.searchResult);
+        }
+
         let searchOptionContainer = AJS.$('#container-workflow-action-handler-searchbar ul');
         searchOptionContainer.find('.search-option').empty();
         // reverse ( prepend )
         //
         {
             let items = {}
-            let transitionMap = Variables.searchResult.transitionMap;
+            let transitionMap = Variables.searchResult.maps.transitionMap;
             for(let key in transitionMap){
                 let transition = transitionMap[key];
                 items[transition['name']] = transition['name'];
@@ -397,7 +403,7 @@ define('jira-workflow-action-handler/search-view-dialog', [
         {
             let optionId = 'action-type';
             let items = {'Validator' : 'Validator','Condition' : 'Condition','PostFunction' : 'PostFunction', };
-            let itemsChecked = {'Validator': true,};
+            let itemsChecked = {'Condition': true,};
             let searchOptionClass = getInstSearchOptionClass(optionId, 'ActionType', false, items, itemsChecked);
             let html = searchOptionClass.getHtml();
             searchOptionContainer.prepend(html);

@@ -49,7 +49,7 @@ public class WorkflowPluginEntity {
     }
     public static  WorkflowPluginEntity CreateJiraPluginEntity(){
         WorkflowPluginEntity entity = new WorkflowPluginEntity();
-        entity.key = "com.atlassian.jira";
+        entity.key = "com.atlassian.jira.plugin.system";
         entity.name = "BundledPlugin";
         entity.isBundledPlugin = true;
         return  entity;

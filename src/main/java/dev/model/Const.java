@@ -40,7 +40,7 @@ public class Const {
 
     private static com.atlassian.plugin.PluginAccessor pluginAccessor;
 
-    private static List<String> defaultClassList = Arrays.asList(
+    private static List<String> systemClassList = Arrays.asList(
             "com.atlassian.jira.workflow.function.issue.IssueCreateFunction"
             , "com.atlassian.jira.workflow.function.issue.IssueReindexFunction"
             , "com.atlassian.jira.workflow.function.event.FireIssueEventFunction"
@@ -49,16 +49,16 @@ public class Const {
             , "com.atlassian.jira.workflow.function.issue.GenerateChangeHistoryFunction"
             , "com.atlassian.jira.workflow.function.misc.CreateCommentFunction"
     );
-    public static boolean isDefaultClassType(String classFullName){
+    public static boolean isSystemClassType(String classFullName){
         if(classFullName == null || classFullName.isEmpty() ){
             return false;
         }
-        if( defaultClassList.contains(classFullName) ) {
+        if( systemClassList.contains(classFullName) ) {
             return true;
         }
         return false;
     }
-    public static boolean isJiraBaseClassType(String classFullName){
+    public static boolean isBundledClassType(String classFullName){
         if(classFullName == null || classFullName.isEmpty() ){
             return false;
         }
@@ -69,12 +69,12 @@ public class Const {
     }
     public static String getClassType(String classFullName){
 
-        if( isDefaultClassType(classFullName) ) {
-            return "Default";
+        if( isSystemClassType(classFullName) ) {
+            return "System";
         }
 
-        if( isJiraBaseClassType(classFullName)){
-            return "JiraBase";
+        if( isBundledClassType(classFullName)){
+            return "Bundled";
         }
 
         // TODO - com.atlassian.jira.plugin.JiraPluginManager
@@ -162,11 +162,60 @@ public class Const {
 
     }
 
+    private static final Map<String, PredefinedInfo > mapPredefinedPostFunctionInfo ;
+    static {
+        mapPredefinedPostFunctionInfo = new HashMap<>();
+        PredefinedInfo predefinedInfo = null;
+
+        predefinedInfo = new PredefinedInfo(
+                "com.atlassian.jira.workflow.function.issue.AssignToCurrentUserFunction"
+                ,"Assign to Current User"
+                , "Assigns the issue to the current user if the current user has the 'Assignable User' permission."
+        );
+        mapPredefinedPostFunctionInfo.put(predefinedInfo.className, predefinedInfo);
+
+        predefinedInfo = new PredefinedInfo(
+                "com.atlassian.jira.workflow.function.issue.AssignToLeadFunction"
+                ,"Assign to Lead Developer"
+                , "Assigns the issue to the project/component lead developer."
+        );
+        mapPredefinedPostFunctionInfo.put(predefinedInfo.className, predefinedInfo);
+
+        predefinedInfo = new PredefinedInfo(
+                "com.atlassian.jira.workflow.function.issue.AssignToReporterFunction"
+                ,"Assign to Reporterr"
+                , "Assigns the issue to the reporter"
+        );
+        mapPredefinedPostFunctionInfo.put(predefinedInfo.className, predefinedInfo);
+
+
+        predefinedInfo = new PredefinedInfo(
+                "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
+                ,"Update Issue Field"
+                , "Updates a simple issue field to a given value."
+        );
+        mapPredefinedPostFunctionInfo.put(predefinedInfo.className, predefinedInfo);
+
+
+        /**
+
+         Assign to Current User 	Assigns the issue to the current user if the current user has the 'Assignable User' permission.
+         Assign to Lead Developer 	Assigns the issue to the project/component lead developer
+         Assign to Reporter 	Assigns the issue to the reporter
+         Trigger a Webhook 	If this post-function is executed, Jira will post the issue content in JSON format to the URL specified.
+         Update Issue Field 	Updates a simple issue field to a given value.
+
+         */
+
+    }
+
     private static PredefinedInfo getPredefinedInfo(WorkflowActionEntity entity ){
         WorkflowActionType actionType = entity.type;
         switch (actionType){
             case Condition:
                 return mapPredefinedConditionInfo.get(entity.className);
+            case PostFunction:
+                return mapPredefinedPostFunctionInfo.get(entity.className);
         }
 
         return null;
@@ -189,7 +238,14 @@ public class Const {
         if(pluginAccessor != null){
             Collection<Plugin> plugins = pluginAccessor.getPlugins();
 
-            Optional<Plugin> plugin = plugins.stream().filter(p ->  entity.className.startsWith(p.getKey())).findFirst();
+            log.info("entity : {]   ", entity.className);
+
+            String fullmodulekey = entity.args == null ? "" : (String)entity.args.get("full.module.key");
+            if ( entity.className == null ){
+                entity.className = "";
+            }
+            final String entityModuleKey =  (String)( fullmodulekey == null || fullmodulekey.isEmpty() ? entity.className : fullmodulekey) ;
+            Optional<Plugin> plugin = plugins.stream().filter(p ->  entityModuleKey.startsWith(p.getKey())).findFirst();
             if (plugin.isPresent()) {
                 entity.plugin = new WorkflowPluginEntity(plugin.get());;
             } else {

@@ -330,6 +330,80 @@
 
 
 /**
+* Action PostFunction Args
+* @param isDraft isDraft
+* @param workflowName name of workflow
+* @param maps map of all
+* @param transition transtion of workflow
+* @param action action of workflow
+*/
+{template .actionPostFunctionArgs}
+    {let $descriptorTab : 'postfunctions' /}
+
+    {let $statusMap : $maps['statusMap'] /}
+    {let $statusCategoryMap : $maps['statusCategoryMap'] /}
+
+    {let $workflowMode : $isDraft ? 'draft' : 'live' /}
+    {let $workflowTransition : $action['transitionId'] /}
+    {let $count : $action['order']  /}
+    {let $args : $action['args'] /}
+    {let $countArgs : $action['countArgs'] /}
+    {let $className : $args['class.name'] /}
+
+    {let $workflowSteps : $transition['steps'] /}
+    {let $workflowStep : $workflowSteps[0] /}
+    {let $workflowStepId : $workflowStep['id'] /}
+
+
+    {let $canDelete :  $action['classType'] != 'System' /}
+
+    <li class="criteria-item" style="border-top: 0px;list-style-type: none;">
+        {if $isDraft}
+        <div class="aui-buttons">
+            <!--
+               {$workflowName}
+               canDelete : {if $canDelete} true {else} false {/if}
+               classtype: {$action['classType']}
+            <a class="aui-button aui-button-link criteria-move-up" href="MoveWorkflowFunctionUp.jspa?atl_token=BWP3-NZB2-6EDY-6C7K_ce3f086ec78e7f0513ade9140f1c9b60b6c8bec4_lin&amp;workflowMode=draft&amp;workflowName=TEST%3A+Project+Management+Workflow&amp;descriptorTab=postfunctions&amp;workflowStep=1&amp;workflowTransition=11&amp;up=1" title="Move up" resolved=""><span>Move up</span></a>
+            <a class="aui-button aui-button-link criteria-move-down" href="MoveWorkflowFunctionDown.jspa?atl_token=BWP3-NZB2-6EDY-6C7K_ce3f086ec78e7f0513ade9140f1c9b60b6c8bec4_lin&amp;workflowMode=draft&amp;workflowName=TEST%3A+Project+Management+Workflow&amp;descriptorTab=postfunctions&amp;workflowStep=1&amp;workflowTransition=11&amp;down=1" title="Move down" resolved=""><span>Move down</span></a>
+             -->
+            <a {if $countArgs < 3} aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-edit" href="EditWorkflowTransitionPostFunctionParams!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition=11&amp;count={$count}" title="Edit" resolved="">
+                <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
+            </a>
+            <a {if not $canDelete } aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-delete" href="DeleteWorkflowTransitionPostFunction.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+                <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
+            </a>
+        </div>
+
+        {/if}
+
+       {switch $className}
+            {case 'com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction'}
+                {let $fieldName : $args['field.name']  /}
+                {let $fieldValue : $args['field.value'] == '' ? 'clear' : $args['field.value']  /}
+
+                The <b>{$fieldName}</b> of the issue will be <b>{$fieldValue}</b>
+            {case 'com.atlassian.jira.workflow.function.event.FireIssueEventFunction'}
+                {let $value : $args['eventTypeId']  /}
+
+                Fire a <b>{$value}</b> event that can be processed by the listeners.
+
+            {default}
+                {let $desc : $action['description'] /}
+                {if $countArgs < 3 and isNonnull($desc) }
+                    {$desc}
+                {else}
+                    <b> Not Define </b>
+                    {foreach $arg in $args}
+                        {$arg} : {$args[$arg]}
+                    {/foreach}
+                {/if}
+        {/switch}
+     </li>
+{/template}
+
+
+/**
 * Action Args
 * @param isDraft isDraft
 * @param workflowName name of workflow
@@ -368,6 +442,13 @@
                 {param action: $action /}
             {/call}
         {case 'PostFunction'}
+            {call .actionPostFunctionArgs}
+                {param isDraft: $isDraft /}
+                {param workflowName: $workflowName /}
+                {param maps: $maps /}
+                {param transition: $transition /}
+                {param action: $action /}
+            {/call}
         {default}
             <h2> Error action has no action-type : $actionType </h2>
     {/switch}

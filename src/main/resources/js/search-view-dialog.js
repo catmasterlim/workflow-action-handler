@@ -392,8 +392,8 @@ define('jira-workflow-action-handler/search-view-dialog', [
         //
         {
             let optionId = 'action-class-type';
-            let items = {'Default' : 'Default', 'JiraBase' : 'JiraBase', 'Custom' : 'Custom',};
-            let itemsChecked = {'JiraBase': true,'Custom': true,};
+            let items = {'System' : 'System', 'Bundled' : 'Bundled', 'Custom' : 'Custom',};
+            let itemsChecked = {'Bundled': true,'Custom': true,};
             let searchOptionClass = getInstSearchOptionClass(optionId, 'ActionClassType', false, items, itemsChecked);
             let html = searchOptionClass.getHtml();
             searchOptionContainer.prepend(html);

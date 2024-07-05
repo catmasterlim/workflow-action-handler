@@ -8,6 +8,7 @@ import com.atlassian.jira.util.json.JsonUtil;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.jira.workflow.WorkflowManager;
 import com.atlassian.jira.config.ConstantsManager;
+//import com.atlassian.jira.component.ComponentAccessor;
 
 
 import org.slf4j.Logger;
@@ -42,11 +43,18 @@ public class WorkflowActionHandlerRest {
     @JiraImport
     private final StatusCategoryManager statusCategoryManager;
 
-    public WorkflowActionHandlerRest(WorkflowManager workflowManager, JiraAuthenticationContext jiraAuthenticationContext, ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager) {
+    @JiraImport
+    private final  com.atlassian.plugin.PluginAccessor pluginAccessor;
+
+
+    public WorkflowActionHandlerRest(WorkflowManager workflowManager, JiraAuthenticationContext jiraAuthenticationContext, ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager, com.atlassian.plugin.PluginAccessor pluginAccessor) {
         this.workflowManager = workflowManager;
         this.jiraAuthenticationContext = jiraAuthenticationContext;
         this.constantsManager = constantsManager;
         this.statusCategoryManager = statusCategoryManager;
+        this.pluginAccessor = pluginAccessor;
+
+        Const.setPluginAccessor(this.pluginAccessor);
     }
 
 
@@ -123,6 +131,7 @@ public class WorkflowActionHandlerRest {
         log.info("params - actionClassType : {}", actionClassType);
         log.info("params - transitionId : {}", transitionId);
         log.info("params - transitionName : {}", transitionName);
+
 
         // filter 
         WorkflowActionFilterModel filterModel = new WorkflowActionFilterModel();

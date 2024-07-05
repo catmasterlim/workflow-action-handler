@@ -57,6 +57,9 @@ public class WorkflowActionEntity {
     @XmlElement(name = "isFiltered")
     public boolean isFiltered;
 
+    @XmlElement(name = "plugin")
+    public WorkflowPluginEntity plugin;
+
 
     public WorkflowActionEntity(WorkflowActionType type){
         this.type = type;

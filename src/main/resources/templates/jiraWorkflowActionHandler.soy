@@ -309,10 +309,9 @@
 /**
  * Action List
  * @param actionCount count of action
- * @param transitionCount count of transition
  */
 {template .actionResultCount}
-    Showing results : {$actionCount} actions of {$transitionCount} transitons
+    Showing results : {$actionCount} actions
 {/template}
 
 
@@ -362,6 +361,7 @@
             <th id="action-class-type">Class Name</th>
             <th id="action-class-simple">Class Simple name</th>
             <th id="action-class">Class name</th>
+            <th id="action-plugin">Plugin</th>
             <th id="action-args">Value</th>
             <th id="transition-id">TransitionId</th>
             <th id="transition-name">TransitionName</th>
@@ -378,6 +378,9 @@
                 <th id="action-class-type" value="{$a['classType']}" >{$a['classType']}</th>
                 <th id="action-class-simple" value="{$a['classSimpleName']}" >{$a['classSimpleName']}</th>
                 <th id="action-class" value="{$a['className']}" >{$a['className']}</th>
+
+                {let $plugin : $a['plugin'] /}
+                <th id="action-plugin" value="{$plugin['key']}" >{$plugin['name']}</th>
                 <th id="action-args">
                     {call .actionArgs}
                         {param isDraft: $isDraft /}

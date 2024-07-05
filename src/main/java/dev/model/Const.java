@@ -1,9 +1,13 @@
 package dev.model;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.plugin.Plugin;
+import com.atlassian.plugin.PluginAccessor;
+import dev.rest.WorkflowActionHandlerRest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public class Const {
 
@@ -26,6 +30,15 @@ public class Const {
         }
 
     }
+
+    private static final Logger log = LoggerFactory.getLogger(Const.class);
+
+
+    public static void setPluginAccessor(PluginAccessor pluginAccessor) {
+        Const.pluginAccessor = pluginAccessor;
+    }
+
+    private static com.atlassian.plugin.PluginAccessor pluginAccessor;
 
     private static List<String> defaultClassList = Arrays.asList(
             "com.atlassian.jira.workflow.function.issue.IssueCreateFunction"
@@ -172,18 +185,27 @@ public class Const {
 
     public static void injectPredefinedTypeInfo(WorkflowActionEntity entity){
 
+        // plugin info
+        if(pluginAccessor != null){
+            Collection<Plugin> plugins = pluginAccessor.getPlugins();
+
+            Optional<Plugin> plugin = plugins.stream().filter(p ->  entity.className.startsWith(p.getKey())).findFirst();
+            if (plugin.isPresent()) {
+                entity.plugin = new WorkflowPluginEntity(plugin.get());;
+            } else {
+                if(entity.className.startsWith("com.atlassian.jira.")){
+                    entity.plugin = WorkflowPluginEntity.CreateJiraPluginEntity();
+                } else {
+                    entity.plugin = WorkflowPluginEntity.CreateUnknownPluginEntity();
+                }
+            }
+        }
+
+        // predefined
         PredefinedInfo predefinedInfo = getPredefinedInfo(entity);
         if( predefinedInfo == null ){
-            if(entity.name == null || entity.name.isEmpty()){
-                entity.name = entity.classSimpleName;
-            }
-            if(entity.description == null || entity.description.isEmpty()){
-                entity.description = "";
-            }
-            if(entity.classType == null || entity.classType.isEmpty()){
-                entity.classType = getClassType(entity.className);
-            }
-            return ;
+            //String className, String name, String description
+            predefinedInfo = new PredefinedInfo(entity.className, entity.classSimpleName, "");
         }
 
         entity.name = predefinedInfo.name;
@@ -192,6 +214,6 @@ public class Const {
             entity.classType = getClassType(entity.className);
         }
 
-
     }
+
 }

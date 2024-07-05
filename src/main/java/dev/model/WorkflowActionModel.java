@@ -105,7 +105,7 @@ public class WorkflowActionModel {
             for( Object obj : transition.getValidators()){
                 validatorOrder++;
                 ValidatorDescriptor descriptor = (ValidatorDescriptor)obj;                
-                WorkflowActionValidatorEntity entity = factory.createValidatorEntity(descriptor, conditionOrder, transitionEntity.id );
+                WorkflowActionValidatorEntity entity = factory.createValidatorEntity(descriptor, validatorOrder, transitionEntity.id );
                 if(entity == null ){
                     continue;
                 }

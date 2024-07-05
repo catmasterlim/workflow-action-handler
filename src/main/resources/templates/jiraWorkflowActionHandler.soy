@@ -224,8 +224,24 @@
        {switch $className}
             {case 'com.atlassian.jira.workflow.condition.PermissionCondition'}
                 {let $value : $args['permissionKey'] ? $args['permissionKey'] : $args['permission'] /}
-
                 Only users with <b>{$value}</b> permission can execute this transition.
+
+            {case 'com.atlassian.jira.workflow.condition.UserInGroupCondition'}
+                {let $value : $args['group']  /}
+                Only users in group <b>{$value}</b> can execute this transition.
+
+            {case 'com.atlassian.jira.workflow.condition.UserInGroupCondition'}
+                {let $value : $args['groupcf']  /}
+                Only users in group(s) specified by custom field <b>{$value}</b> can execute this transition.
+
+            {case 'com.atlassian.jira.workflow.condition.InGroupCFCondition'}
+                {let $value : $args['groupcf']  /}
+                Only users in group(s) specified by custom field <b>{$value}</b> can execute this transition.
+
+            {case 'com.atlassian.jira.workflow.condition.InProjectRoleCondition'}
+                {let $value : $args['jira.projectrole.id']  /}
+                Only users in project role <b>{$value}</b> can execute this transition.
+
             {case 'com.atlassian.jira.workflow.condition.SubTaskBlockingCondition'}
                 {let $status : $args['statuses'] /}
                 All sub-tasks must have one of the following statuses to allow parent issue transitions:
@@ -360,8 +376,8 @@
                 <th id="action-type" value="{$a['type']}" >{$a['type']}</th>
                 <th id="action-order" value={$a['order']} >{$a['order']}</th>
                 <th id="action-class-type" value="{$a['classType']}" >{$a['classType']}</th>
-                <th id="action-class-simple" value={$a['classSimpleName']} >{$a['classSimpleName']}</th>
-                <th id="action-class" value={$a['className']} >{$a['className']}</th>
+                <th id="action-class-simple" value="{$a['classSimpleName']}" >{$a['classSimpleName']}</th>
+                <th id="action-class" value="{$a['className']}" >{$a['className']}</th>
                 <th id="action-args">
                     {call .actionArgs}
                         {param isDraft: $isDraft /}
@@ -371,14 +387,14 @@
                         {param action: $a /}
                     {/call}
                 </th>
-                <th id="transition-id" value={$a['transitionId']} >
+                <th id="transition-id" value="{$a['transitionId']}" >
                     {call .transitionLink}
                         {param isDraft: $isDraft /}
                         {param workflowName: $workflowName /}
                         {param transition: $transition /}
                     {/call}
                 </th>
-                <th id="transition-name" value={$transition['name']} >{$transition['name']}</th>
+                <th id="transition-name" value="{$transition['name']}"" >{$transition['name']}</th>
             </tr>
         </tr>
         {ifempty}

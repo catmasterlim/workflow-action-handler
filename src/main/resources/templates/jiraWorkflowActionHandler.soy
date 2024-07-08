@@ -388,6 +388,11 @@
 
                 Fire a <b>{$value}</b> event that can be processed by the listeners.
 
+            {case 'com.atlassian.jira.plugins.webhooks.workflow.TriggerWebhookFunction'}
+
+                {let $value : $args['field.webhookId']  /}
+                Send transition to webhook: <b>{$value}</b>
+
             {default}
                 {let $desc : $action['description'] /}
                 {if $countArgs < 3 and isNonnull($desc) }

@@ -12,7 +12,7 @@
         <name>Example Company</name>
         <url>http://www.example.com/</url>
     </organization>
-    <name>jiraWorkflowActionHandler</name>
+    <name>Jira Workflow Action Handler</name>
     <description>This is the dev:jiraWorkflowActionHandler plugin for Atlassian JIRA.</description>
     <packaging>atlassian-plugin</packaging>
 
@@ -158,7 +158,7 @@
 
     <properties>
         <jira.version>9.12.0-QR-20230811014358</jira.version>
-        <amps.version>8.14.3</amps.version>
+        <amps.version>8.1.2</amps.version>
         <plugin.testrunner.version>2.0.5</plugin.testrunner.version>
         <atlassian.spring.scanner.version>4.0.0</atlassian.spring.scanner.version>
         <!-- This property ensures consistency between the key in atlassian-plugin.xml and the OSGi bundle's key. -->

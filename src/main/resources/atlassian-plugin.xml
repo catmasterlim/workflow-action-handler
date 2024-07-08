@@ -95,6 +95,7 @@
  
   <rest name="Workflow Action Handler Rest" i18n-name-key="workflow-action-handler-rest.name" key="workflow-action-handler-rest" path="/workflowactionhandler" version="1.0"> 
     <description key="workflow-action-handler-rest.description">The Workflow Action Handler Rest Plugin</description>
-  </rest> 
+  </rest>
+
 
 </atlassian-plugin>

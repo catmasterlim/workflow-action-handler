@@ -23,7 +23,7 @@
     </header>
     <div class="aui-dialog2-content" id="dialog-show-button--description">
         <h2>
-                <span class="workflow-name">{$workflowName}</span>
+                <span class="">{$workflowName}</span>
                 <span class=""> isDraft : {$isDraft} </span>
         </h2>
 
@@ -389,7 +389,6 @@
                 Fire a <b>{$value}</b> event that can be processed by the listeners.
 
             {case 'com.atlassian.jira.plugins.webhooks.workflow.TriggerWebhookFunction'}
-
                 {let $value : $args['field.webhookId']  /}
                 Send transition to webhook: <b>{$value}</b>
 

@@ -95,7 +95,7 @@ define("jira-workflow-action-handler/Application", [
             let classThis = JIRA.WorkflowActionHandler.Variables.Application;
             AJS.dialog2(classThis._dialog._id).hide();
         }
-        _setupDialog(){
+        _setupSearchView(){
             this._dialog = {};
             this._dialog._id = jQuery("#workflow-action-handler-dialog");
 
@@ -147,7 +147,7 @@ define("jira-workflow-action-handler/Application", [
             this._workflowData = this._getWorkflowData();
             this._workflowLinkContainer = jQuery("#workflow-links");
             this._workflowActionLink = this._setupActionLink();
-            this._workflowView = this._setupDialog();
+            this._workflowView = this._setupSearchView();
         }
     }
 
@@ -173,3 +173,4 @@ require([
 });
 
 AJS.namespace("JIRA.WorkflowActionHandler.Application", null, require("jira-workflow-action-handler/Application"));
+

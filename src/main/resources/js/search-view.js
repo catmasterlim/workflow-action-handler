@@ -1,6 +1,6 @@
-define('jira-workflow-action-handler/search-view-dialog', [
+define('jira-workflow-action-handler/search-view', [
     "jquery",
-    "jira-workflow-action-handler/Application", 
+    "jira-workflow-action-handler/Application",
     "jira-workflow-action-handler/templates",
     "jira-workflow-action-handler/variables"
 ], function (
@@ -293,7 +293,7 @@ define('jira-workflow-action-handler/search-view-dialog', [
         _showActionList();
 
     }
-    
+
     async function search(){
         let classThis = JIRA.WorkflowActionHandler.Variables.Application;
 
@@ -317,16 +317,16 @@ define('jira-workflow-action-handler/search-view-dialog', [
                   }
                 , error: function(jqXHR, textStatus, error) {
                     console.error("error occurred");
-                    reject(error); 
+                    reject(error);
                   }
             });
         });
-        
+
     }
 
     function _eventSearch(e){
         e.preventDefault();
-        
+
         var that = this;
 
         console.log('---> search actions');
@@ -334,7 +334,7 @@ define('jira-workflow-action-handler/search-view-dialog', [
 
         if (!that.isBusy()) {
             that.busy();
-            search().finally( () => that.idle() );    
+            search().finally( () => that.idle() );
         }
     }
 
@@ -427,8 +427,8 @@ define('jira-workflow-action-handler/search-view-dialog', [
   _setupSearchOption();
 
   //--------------- end search options ----------- ---
-  AJS.namespace("JIRA.WorkflowActionHandler.SearchViewDialog");
-  return JIRA.WorkflowActionHandler.SearchViewDialog;
+  AJS.namespace("JIRA.WorkflowActionHandler.SearchView");
+  return JIRA.WorkflowActionHandler.SearchView;
 });
 
-AJS.namespace("JIRA.WorkflowActionHandler.SearchViewDialog", null, require("jira-workflow-action-handler/search-view-dialog"));
+AJS.namespace("JIRA.WorkflowActionHandler.SearchView", null, require("jira-workflow-action-handler/search-view"));

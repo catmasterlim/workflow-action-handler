@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <groupId>dev</groupId>
     <artifactId>jira-workflow-action-handler</artifactId>
     <version>1.0-SNAPSHOT</version>
-
     <organization>
         <name>Example Company</name>
         <url>http://www.example.com/</url>
@@ -15,8 +12,7 @@
     <name>Jira Workflow Action Handler</name>
     <description>This is the dev:jiraWorkflowActionHandler plugin for Atlassian JIRA.</description>
     <packaging>atlassian-plugin</packaging>
-
-  <dependencies>
+    <dependencies>
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-api</artifactId>
@@ -25,21 +21,18 @@
         </dependency>
         <!-- Add dependency on jira-core if you want access to JIRA implementation classes as well as the sanctioned API. -->
         <!-- This is not normally recommended, but may be required eg when migrating a plugin originally developed against JIRA 4.x -->
-        
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-core</artifactId>
             <version>${jira.version}</version>
             <scope>provided</scope>
         </dependency>
-       
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.atlassian.plugin</groupId>
             <artifactId>atlassian-spring-scanner-annotation</artifactId>
@@ -52,7 +45,6 @@
             <version>1</version>
             <scope>provided</scope>
         </dependency>
-
         <!-- WIRED TEST RUNNER DEPENDENCIES -->
         <dependency>
             <groupId>com.atlassian.plugins</groupId>
@@ -73,7 +65,6 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-
         <!-- Uncomment to use TestKit in your project. Details at https://bitbucket.org/atlassian/jira-testkit -->
         <!-- You can read more about TestKit at https://developer.atlassian.com/display/JIRADEV/Plugin+Tutorial+-+Smarter+integration+testing+with+TestKit -->
         <!-- <dependency>
@@ -87,12 +78,20 @@
             <artifactId>jira-func-tests</artifactId>
             <version>${testkit.version}</version>
         </dependency> -->
-
-       
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.6</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
-
-
-      <build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
@@ -103,7 +102,6 @@
                     <productVersion>${jira.version}</productVersion>
                     <productDataVersion>${jira.version}</productDataVersion>
                     <!-- Uncomment to install TestKit backdoor in JIRA. -->
-                    
                     <!-- <pluginArtifacts>
                         <pluginArtifact>
                             <groupId>com.atlassian.jira.tests</groupId>
@@ -111,26 +109,15 @@
                             <version>${testkit.version}</version>
                         </pluginArtifact>
                     </pluginArtifacts> -->
-                   
                     <enableQuickReload>true</enableQuickReload>
-
                     <!-- See here for an explanation of default instructions: -->
                     <!-- https://developer.atlassian.com/docs/advanced-topics/configuration-of-instructions-in-atlassian-plugins -->
                     <instructions>
                         <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
-
                         <!-- Add package to export here -->
-                        <Export-Package>
-                            dev.api,
-                        </Export-Package>
-
+                        <Export-Package>dev.api,</Export-Package>
                         <!-- Add package import here -->
-                        <Import-Package>
-                            org.springframework.osgi.*;resolution:="optional",
-                            org.eclipse.gemini.blueprint.*;resolution:="optional",
-                            *
-                        </Import-Package>
-
+                        <Import-Package>org.springframework.osgi.*;resolution:="optional", org.eclipse.gemini.blueprint.*;resolution:="optional", *</Import-Package>
                         <!-- Ensure plugin is spring powered -->
                         <Spring-Context>*</Spring-Context>
                     </instructions>
@@ -154,8 +141,6 @@
             </plugin>
         </plugins>
     </build>
-
-
     <properties>
         <jira.version>9.12.0-QR-20230811014358</jira.version>
         <amps.version>8.1.2</amps.version>
@@ -169,5 +154,4 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-
 </project>

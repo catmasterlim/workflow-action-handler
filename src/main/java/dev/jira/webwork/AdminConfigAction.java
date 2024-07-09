@@ -14,6 +14,6 @@ public class AdminConfigAction extends JiraWebActionSupport
     @Override
     public String execute() throws Exception {
 
-        return super.execute(); //returns SUCCESS
+        return SUCCESS; //returns SUCCESS
     }
 }

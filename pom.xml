@@ -6,11 +6,11 @@
     <artifactId>jira-workflow-action-handler</artifactId>
     <version>1.0-SNAPSHOT</version>
     <organization>
-        <name>Example Company</name>
-        <url>http://www.example.com/</url>
+        <name>KndSolution.co</name>
+        <url>http://kndsolution.co.kr/</url>
     </organization>
     <name>Jira Workflow Action Handler</name>
-    <description>This is the dev:jiraWorkflowActionHandler plugin for Atlassian JIRA.</description>
+    <description>This is the Jira Workflow Action Handler plugin for JIRA.</description>
     <packaging>atlassian-plugin</packaging>
     <dependencies>
         <dependency>

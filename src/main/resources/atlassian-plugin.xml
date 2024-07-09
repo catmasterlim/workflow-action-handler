@@ -5,7 +5,7 @@
     <description>${project.description}</description>  
     <version>${project.version}</version>  
     <vendor name="${project.organization.name}" url="${project.organization.url}"/>  
-    <param name="plugin-icon">images/pluginIcon.png</param>  
+    <param name="plugin-icon">images/pluginLogo.png</param>
     <param name="plugin-logo">images/pluginLogo.png</param> 
   </plugin-info>  
   <!-- add our i18n resource -->  
@@ -23,36 +23,46 @@
     <description key="workflow-actin-handler-admin-config-section.description">The WorkflowActinHandlerAdminConfigSection Plugin</description>  
     <label key="workflow-actin-handler-admin-config-section.label"/> 
   </web-section>  
-  <webwork1 key="admin-config" name="AdminConfig" i18n-name-key="admin-config.name"> 
+  <webwork1 key="admin-config" name="AdminConfig" i18n-name-key="admin-config.name" alias="workflowActionHandler">
     <description key="admin-config.description">The AdminConfig Plugin</description>  
     <actions> 
-      <action name="dev.jira.webwork.AdminConfigAction" alias="AdminConfigAction"> 
+      <action name="dev.jira.webwork.AdminConfigAction" alias="adminConfig">
         <view name="success">/templates/admin-config/success.vm</view>  
         <view name="input">/templates/admin-config/input.vm</view>  
         <view name="error">/templates/admin-config/error.vm</view> 
-      </action> 
+      </action>
+
+      <action name="dev.jira.webwork.WorkflowActionSearchAction" alias="workflowActionSearch">
+        <view name="success">/templates/workflow-action-search/success.vm</view>
+        <view name="input">/templates/workflow-action-search/input.vm</view>
+        <view name="error">/templates/workflow-action-search/error.vm</view>
+        <view name="notloggedin">/templates/workflow-action-search/notloggedin.vm</view>
+        <view name="nopermission">/templates/workflow-action-search/nopermission.vm</view>
+        <view name="invalidworkflowname">/templates/workflow-action-search/invalidworkflowname.vm</view>
+      </action>
+
     </actions> 
   </webwork1>  
   <web-item name="AdminConfigWebItem" i18n-name-key="admin-config-web-item.name" key="admin-config-web-item" section="admin_plugins_menu/workflow-actin-handler-admin-config-section" weight="1000"> 
     <description key="admin-config-web-item.description">The AdminConfigWebItem Plugin</description>  
     <label key="admin-config-web-item.label"/>  
-    <link linkId="admin-config-web-item-link">/secure/AdminConfigAction!default.jspa</link> 
-  </web-item>  
+    <link linkId="admin-config-web-item-link">/secure/workflowActionHandler/adminConfig!default.jspa</link>
+  </web-item>
   <!--  -->  
   <web-resource key="jira-workflow-action-handler-loader"> 
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
-    <resource location="/js/loader.js" name="loader.js" type="download"/> 
+    <resource location="/js/wah-loader.js" name="loader.js" type="download"/>
   </web-resource>  
   <web-resource key="jira-workflow-action-handler-templates"> 
-    <resource location="/js/templates-amd.js" name="templates.js" type="download"/> 
+    <resource location="/js/wah-templates-amd.js" name="templates.js" type="download"/>
   </web-resource>  
   <web-resource key="jira-workflow-action-handler-variables"> 
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
-    <resource location="/js/variables.js" name="variables.js" type="download"/> 
+    <resource location="/js/wah-variables.js" name="variables.js" type="download"/>
   </web-resource>
   <web-resource key="jira-workflow-action-handler-application">
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>
-    <resource name="Application.js" type="download" location="/js/application.js"/>
+    <resource name="Application.js" type="download" location="/js/wah-application.js"/>
   </web-resource>
 
   <web-resource key="jira-workflow-action-handler-main">
@@ -72,7 +82,8 @@
     <dependency>com.atlassian.auiplugin:aui-table-sortable</dependency>  
     <dependency>com.atlassian.auiplugin:inline-dialog</dependency>  
     <dependency>com.atlassian.auiplugin:aui-dialog2</dependency>  
-    <dependency>com.atlassian.auiplugin:soy</dependency>  
+    <dependency>com.atlassian.auiplugin:soy</dependency>
+    <dependency>jira.webresources:workflow-transition-properties</dependency>
 
     <resource type="soy" name="jiraWorkflowActionHandler" location="/templates/jiraWorkflowActionHandler.soy"/>  
     <resource type="download" name="jiraWorkflowActionHandler.soy.js" location="/templates/jiraWorkflowActionHandler.soy"/>  
@@ -92,22 +103,18 @@
     <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-variables</dependency>
     <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-application</dependency>
 
-    <resource name="search-view-dialog.js" type="download" location="/js/search-view.js"/>
-    <resource type="download" name="search-view-dialog.css" location="/css/search-view.css"/>
+    <resource name="search-view-dialog.js" type="download" location="/js/wah-search-view.js"/>
+    <resource type="download" name="search-view-dialog.css" location="/css/wah-search-view.css"/>
 
 
   </web-resource>  
   <rest name="Workflow Action Handler Rest" i18n-name-key="workflow-action-handler-rest.name" key="workflow-action-handler-rest" path="/workflowactionhandler" version="1.0"> 
     <description key="workflow-action-handler-rest.description">The Workflow Action Handler Rest Plugin</description> 
   </rest>  
-  <webwork1 key="workflow-action-search" name="WorkflowActionSearch" i18n-name-key="workflow-action-search.name"> 
-    <description key="workflow-action-search.description">The WorkflowActionSearch Plugin</description>  
-    <actions> 
-      <action name="dev.jira.webwork.WorkflowActionSearchAction" alias="WorkflowActionSearchAction"> 
-        <view name="success">/templates/workflow-action-search/success.vm</view>  
-        <view name="input">/templates/workflow-action-search/input.vm</view>  
-        <view name="error">/templates/workflow-action-search/error.vm</view> 
-      </action> 
-    </actions> 
-  </webwork1>
+<!--  <webwork1 key="workflow-action-search" name="WorkflowActionSearch" i18n-name-key="workflow-action-search.name"> -->
+<!--    <description key="workflow-action-search.description">The WorkflowActionSearch Plugin</description>  -->
+<!--    <actions> -->
+<!--      -->
+<!--    </actions> -->
+<!--  </webwork1>-->
 </atlassian-plugin>

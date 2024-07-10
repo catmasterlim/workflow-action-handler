@@ -15,7 +15,7 @@
     aria-modal="true"
     aria-labelledby="dialog-show-button--heading"
     aria-describedby="dialog-show-button--description"
-    style="width: 90%;height: 90%;"
+    style="width: 90%;"
     hidden
 >
     <header class="aui-dialog2-header">
@@ -65,7 +65,7 @@
         {let $tempList: ['Condition' : true, 'PostFunction' : false] /}
 
         <li>
-            <button id="workflow-action-handler-search-button" class="aui-button aui-button-primary search-button"> Search Action </button>
+            <a id="workflow-action-handler-search-button" class="aui-button aui-button-primary search-button"> Search Action </a>
         </li>
    </ui>
 </div>
@@ -516,8 +516,7 @@
             <th id="action-class">Class name</th>
             <th id="action-plugin">Plugin</th>
             <th id="action-args">Value</th>
-            <th id="transition-id">TransitionId</th>
-            <th id="transition-name">TransitionName</th>
+            <th id="transition-id">Transition</th>
         </tr>
     </thead>
     <tbody>
@@ -550,7 +549,6 @@
                         {param transition: $transition /}
                     {/call}
                 </th>
-                <th id="transition-name" value="{$transition['name']}"" >{$transition['name']}</th>
             </tr>
         </tr>
         {ifempty}

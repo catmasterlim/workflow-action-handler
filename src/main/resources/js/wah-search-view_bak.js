@@ -194,15 +194,14 @@ define('jira-workflow-action-handler/search-view', [
         }
         _isFilteredAction(trAction){
             let optionMap = this._getInstSearchOptionSelected();
-//            let filterNames = ['action-name', 'action-type', 'action-class-type', 'action-class', 'action-class-simple', 'transition-id'];
-            let filterNames = optionMap.keys();
+
+            let filterNames = ['action-name', 'action-type', 'action-class-type', 'action-class', 'action-class-simple', 'transition-id', 'transition-name'];
             for(let filterName of filterNames){
                 let val = jQuery(trAction).find('#'+filterName).attr('value');
-                let option = optionMap.get(filterName);
-                if(  option instanceof SearchOptionClass && option.isFiltered(val)) {
+                if( optionMap.get(filterName)?.isFiltered(val)) {
+                    console.log( '_isFilteredAction true => ',  ' filterName : ', filterName, ',val : ', val);
                     return true;
                 }
-
             }
             return false;
         }
@@ -239,10 +238,12 @@ define('jira-workflow-action-handler/search-view', [
                 searchOptionClass = new SearchOptionClass(this, optionId, optionLabel, useFindInput, items, selectedItems);
                 this._getInstSearchOptionSelected().set(optionId, searchOptionClass);
             }
+
             if(forceRefreshItems){
                 searchOptionClass.items = items;
                 searchOptionClass.removeSelectedNotIn();
             }
+
             return searchOptionClass;
         }
 
@@ -339,10 +340,26 @@ define('jira-workflow-action-handler/search-view', [
                 console.log('--> search then ok ');
                  Variables.searchResult = result;
                 this.searchResultProcess();
+                resolve(result);
             })
             ;
 
         }
+
+        _eventSearch(e){
+            e.preventDefault();
+
+            var that = this;
+
+            console.log('---> search actions');
+            console.log(that);
+
+            if (!that.isBusy()) {
+                that.busy();
+                search().finally( () => that.idle() );
+            }
+        }
+
 
       // options selected (checkItems)
       _setupSearchOption(){
@@ -356,7 +373,6 @@ define('jira-workflow-action-handler/search-view', [
             if(searchButton.length != 1){
                 console.error('---> _setupSearchOption : searchButton - not exists #workflow-action-handler-search-button');
             }
-
             searchButton.off('click');
             searchButton.on('click', e => {
                 e.preventDefault();
@@ -385,13 +401,25 @@ define('jira-workflow-action-handler/search-view', [
 
             let searchOptionContainer = AJS.$('#container-workflow-action-handler-searchbar ul');
             searchOptionContainer.find('.search-option').empty();
-            // reverse ( prepend ) - 아래 순서의 역순으로 option 등록
+            // reverse ( prepend )
+            //
             {
                 let items = {}
                 let transitionMap = Variables.searchResult.maps.transitionMap;
+                for(let key in transitionMap){
+                    let transition = transitionMap[key];
+                    items[transition['name']] = transition['name'];
+                }
+                let searchOptionClass = this.getInstSearchOptionClass('transition-name', 'TransitionName', true, items, {}, true);
+                let html = searchOptionClass.getHtml();
+                searchOptionContainer.prepend(html);
+                searchOptionClass.regEvent();
+            }
+            //
+            {
+                let items = {}
                 for(let a of Variables.searchResult.actions){
-                    let transition = transitionMap[a.transitionId];
-                    items[a.transitionId] = transition['name'] + '(' + a.transitionId + ')';
+                  items[a.transitionId] = a.transitionId;
                 }
                 let searchOptionClass = this.getInstSearchOptionClass('transition-id', 'TransitionId', true, items, {}, true);
                 let html = searchOptionClass.getHtml();
@@ -412,8 +440,7 @@ define('jira-workflow-action-handler/search-view', [
             {
                 let optionId = 'action-type';
                 let items = {'Validator' : 'Validator','Condition' : 'Condition','PostFunction' : 'PostFunction', };
-//                let itemsChecked = {'Condition': true,};
-                let itemsChecked = {};
+                let itemsChecked = {'Condition': true,};
                 let searchOptionClass = this.getInstSearchOptionClass(optionId, 'ActionType', false, items, itemsChecked);
                 let html = searchOptionClass.getHtml();
                 searchOptionContainer.prepend(html);

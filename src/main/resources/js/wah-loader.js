@@ -8,6 +8,9 @@ define("jira-workflow-action-handler/loader", [
     jQuery,
     require,
 ) {
+
+    console.log('----> jira-workflow-action-handler/loader');
+
     return {
         /**
          * Load the resources required , then execute a callback.

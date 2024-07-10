@@ -15,7 +15,7 @@
     <dependency>com.atlassian.auiplugin:ajs</dependency>  
     <resource type="download" name="jiraWorkflowActionHandler.css" location="/css/jiraWorkflowActionHandler.css"/>  
     <resource type="download" name="jiraWorkflowActionHandler.js" location="/js/jiraWorkflowActionHandler.js"/>  
-    <resource type="download" name="images/" location="/images"/>  
+    <resource type="download" name="images/" location="/images"/>
     <context>jiraWorkflowActionHandler</context> 
   </web-resource>  
   <!-- Admin Config -->  
@@ -49,20 +49,24 @@
     <link linkId="admin-config-web-item-link">/secure/workflowActionHandler/adminConfig!default.jspa</link>
   </web-item>
   <!--  -->  
-  <web-resource key="jira-workflow-action-handler-loader"> 
+  <web-resource key="loader">
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
     <resource location="/js/wah-loader.js" name="loader.js" type="download"/>
   </web-resource>  
-  <web-resource key="jira-workflow-action-handler-templates"> 
+  <web-resource key="templates">
     <resource location="/js/wah-templates-amd.js" name="templates.js" type="download"/>
-  </web-resource>  
-  <web-resource key="jira-workflow-action-handler-variables"> 
+  </web-resource>
+  <web-resource key="variables">
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
     <resource location="/js/wah-variables.js" name="variables.js" type="download"/>
   </web-resource>
-  <web-resource key="jira-workflow-action-handler-application">
+  <web-resource key="search-view">
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>
-    <resource name="Application.js" type="download" location="/js/wah-application.js"/>
+    <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-templates</dependency>
+    <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-variables</dependency>
+
+    <resource type="download" name="search-view.js" location="/js/wah-search-view.js"/>
+<!--    <resource type="download" name="search-view.css" location="/css/wah-search-view.css"/>-->
   </web-resource>
 
   <web-resource key="jira-workflow-action-handler-main">
@@ -71,7 +75,9 @@
     <dependency>jira.webresources:jira-global</dependency>  
     <dependency>jira.webresources:set-focus</dependency>  
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
-    <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:i18n</dependency>  
+    <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:i18n</dependency>
+    <dependency>com.atlassian.plugins.issue-status-plugin:issue-status-resources</dependency>
+
     <dependency>com.atlassian.auiplugin:ajs</dependency>  
     <dependency>com.atlassian.auiplugin:aui-core</dependency>  
     <dependency>com.atlassian.auiplugin:aui-forms</dependency>  
@@ -83,7 +89,7 @@
     <dependency>com.atlassian.auiplugin:inline-dialog</dependency>  
     <dependency>com.atlassian.auiplugin:aui-dialog2</dependency>  
     <dependency>com.atlassian.auiplugin:soy</dependency>
-    <dependency>jira.webresources:workflow-transition-properties</dependency>
+
 
     <resource type="soy" name="jiraWorkflowActionHandler" location="/templates/jiraWorkflowActionHandler.soy"/>  
     <resource type="download" name="jiraWorkflowActionHandler.soy.js" location="/templates/jiraWorkflowActionHandler.soy"/>  
@@ -97,15 +103,12 @@
       <transformer key="soyTransformer"/> 
     </transformation>  
     <!--  -->
-    <dependency>com.atlassian.plugins.issue-status-plugin:issue-status-resources</dependency>
-    <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-loader</dependency>
-    <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-templates</dependency>
-    <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-variables</dependency>
-    <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-application</dependency>
+    <dependency>dev.jira-workflow-action-handler:loader</dependency>
+    <dependency>dev.jira-workflow-action-handler:templates</dependency>
+    <dependency>dev.jira-workflow-action-handler:variables</dependency>
+    <dependency>dev.jira-workflow-action-handler:search-view</dependency>
 
-    <resource name="search-view-dialog.js" type="download" location="/js/wah-search-view.js"/>
-    <resource type="download" name="search-view-dialog.css" location="/css/wah-search-view.css"/>
-
+    <resource type="download" name="Application.js" location="/js/wah-application.js"/>
 
   </web-resource>  
   <rest name="Workflow Action Handler Rest" i18n-name-key="workflow-action-handler-rest.name" key="workflow-action-handler-rest" path="/workflowactionhandler" version="1.0"> 

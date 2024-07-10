@@ -4,14 +4,16 @@ define("jira-workflow-action-handler/Application", [
     "jquery",
     "require",
     "jira-workflow-action-handler/templates",
-    "jira-workflow-action-handler/variables"
+    "jira-workflow-action-handler/variables",
+    "jira-workflow-action-handler/search-view",
 ], function(
     wrmRequire,
     WRMData,
     jQuery,
     require,
     Templates,
-    Variables
+    Variables,
+    SearchView
 ) {
 
     class ApplicationWorkflowActionHandler {
@@ -20,8 +22,6 @@ define("jira-workflow-action-handler/Application", [
         }
         //
         execute(){
-            console.log(Variables);
-
             this._setupPage();
            /* //
             console.log("this._workflowView.length : " + this._workflowView.length);
@@ -108,14 +108,15 @@ define("jira-workflow-action-handler/Application", [
             if( insertEl && insertEl.length > 0 ){
                 let tt = this._getSearchView();
                 insertEl.after(tt);
+                SearchView.init();
             }
 
             this._dialog._id = jQuery("#workflow-action-handler-dialog");
             this._dialog._btn_hide = jQuery('#workflow-action-handler-dialog-submit-button');
             // this._dialog._btn_search = jQuery('#workflow-action-handler-search-button');
 
-            AJS.$("#search-item-action-name").auiSelect2();
-            AJS.$("#search-item-action-type").auiSelect2();
+//            AJS.$("#search-item-action-name").auiSelect2();
+//            AJS.$("#search-item-action-type").auiSelect2();
             // AJS.$(this._dialog._btn_search).auiButton2();
 
             // this._dialog._btn_hide.on('click', this._eventHide.bind(this));
@@ -142,7 +143,7 @@ define("jira-workflow-action-handler/Application", [
 
         _setupPage() {
 
-            console.log('---> setup');
+            console.log('---> _setupPage');
 
             this._workflowData = this._getWorkflowData();
             this._workflowLinkContainer = jQuery("#workflow-links");
@@ -151,26 +152,31 @@ define("jira-workflow-action-handler/Application", [
         }
     }
 
+    console.log('----> jira-workflow-action-handler/Application');
+    AJS.namespace("JIRA.WorkflowActionHandler.Application");
+
     let app = new ApplicationWorkflowActionHandler();
     Variables.Application = app;
     return app;
 });
 
+AJS.namespace("JIRA.WorkflowActionHandler.Application", null, require("jira-workflow-action-handler/Application"));
 
+AJS.toInit(function() {
+    require([
+        "jira-workflow-action-handler/Application",
+        "jquery"
+    ], function(
+        Application,
+        jQuery
+    ) {
+        jQuery(function () {
+            Application.execute();
+        });
 
-
-require([
-    "jira-workflow-action-handler/Application",
-    "jquery"
-], function(
-    Application,
-    jQuery
-) {
-    jQuery(function () {
-        Application.execute();
     });
 
 });
 
-AJS.namespace("JIRA.WorkflowActionHandler.Application", null, require("jira-workflow-action-handler/Application"));
+
 

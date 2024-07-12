@@ -511,9 +511,11 @@
             <th id="action-name" >Action Name</th>
             <th id="action-type">Type</th>
             <th id="action-order">Order</th>
-            <th id="action-class-type">Class Name</th>
-            <th id="action-class-simple">Class Simple name</th>
-            <th id="action-class">Class name</th>
+            <!--
+            <th id="action-class-type" hidden>Class Type</th>
+            <th id="action-class-simple" hidden>Class Simple name</th>
+            <th id="action-class" hidden>Class name</th>
+            -->
             <th id="action-plugin">Plugin</th>
             <th id="action-args">Value</th>
             <th id="transition-id">Transition</th>
@@ -527,9 +529,11 @@
                 <td id="action-name" value="{$a['name']}" alt="{$a['description']}">{$a['name']}</td>
                 <th id="action-type" value="{$a['type']}" >{$a['type']}</th>
                 <th id="action-order" value={$a['order']} >{$a['order']}</th>
+                <!--
                 <th id="action-class-type" value="{$a['classType']}" >{$a['classType']}</th>
                 <th id="action-class-simple" value="{$a['classSimpleName']}" >{$a['classSimpleName']}</th>
                 <th id="action-class" value="{$a['className']}" >{$a['className']}</th>
+                -->
 
                 {let $plugin : $a['plugin'] /}
                 <th id="action-plugin" value="{$plugin['key']}" >{$plugin['name']}</th>

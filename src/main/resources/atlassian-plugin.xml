@@ -60,13 +60,18 @@
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
     <resource location="/js/wah-variables.js" name="variables.js" type="download"/>
   </web-resource>
+  <web-resource key="utils">
+    <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>
+    <resource location="/js/wah-utils.js" name="utils.js" type="download"/>
+  </web-resource>
   <web-resource key="search-view">
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>
-    <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-templates</dependency>
-    <dependency>dev.jira-workflow-action-handler:jira-workflow-action-handler-variables</dependency>
-
+    <dependency>dev.jira-workflow-action-handler:templates</dependency>
+    <dependency>dev.jira-workflow-action-handler:variables</dependency>
+    <dependency>dev.jira-workflow-action-handler:utils</dependency>
+    <resource type="download" name="search-options.js" location="/js/wah-search-options.js"/>
     <resource type="download" name="search-view.js" location="/js/wah-search-view.js"/>
-<!--    <resource type="download" name="search-view.css" location="/css/wah-search-view.css"/>-->
+    <resource type="download" name="search-view.css" location="/css/wah-search-view.css"/>
   </web-resource>
 
   <web-resource key="jira-workflow-action-handler-main">
@@ -106,6 +111,7 @@
     <dependency>dev.jira-workflow-action-handler:loader</dependency>
     <dependency>dev.jira-workflow-action-handler:templates</dependency>
     <dependency>dev.jira-workflow-action-handler:variables</dependency>
+    <dependency>dev.jira-workflow-action-handler:utils</dependency>
     <dependency>dev.jira-workflow-action-handler:search-view</dependency>
 
     <resource type="download" name="Application.js" location="/js/wah-application.js"/>

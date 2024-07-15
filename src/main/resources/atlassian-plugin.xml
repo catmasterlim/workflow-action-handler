@@ -6,7 +6,10 @@
     <version>${project.version}</version>  
     <vendor name="${project.organization.name}" url="${project.organization.url}"/>  
     <param name="plugin-icon">images/pluginLogo.png</param>
-    <param name="plugin-logo">images/pluginLogo.png</param> 
+    <param name="plugin-logo">images/pluginLogo.png</param>
+    <param name="plugin-type">data-center</param>
+    <param name="atlassian-data-center-status">compatible</param>
+    <param name="atlassian-data-center-compatible">true</param>
   </plugin-info>  
   <!-- add our i18n resource -->  
   <resource type="i18n" name="i18n" location="jiraWorkflowActionHandler"/>  

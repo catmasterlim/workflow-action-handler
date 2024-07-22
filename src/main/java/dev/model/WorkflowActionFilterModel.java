@@ -81,35 +81,6 @@ public class WorkflowActionFilterModel {
         }
     }
 
-    public boolean isFilteredActionClassType(String at){
-        if( this.actionClassType == null || this.actionClassType.isEmpty()){
-            return false;
-        }
-
-        for(String filterActionClassType: this.actionClassType){
-            if(filterActionClassType.contains(at)){
-                return false;
-            }
-        }
-
-        return true;
-    }
-    public void addFilterActionClassType(String at){
-        this.actionClassType.add(at);
-    }
-    public void addFilterActionClassTypeAll(List<String> list){
-        if(list==null){
-            return;
-        }
-        try{
-            for(String item : list){
-                this.addFilterActionClassType(item);
-            }
-        }catch(Exception ex){
-            log.warn("Action Class Type Filter : {}", list );
-        }
-    }
-
     public boolean isFilteredTransitionId(Integer at){
         if( this.transitionId == null || this.transitionId.isEmpty()){
             return false;

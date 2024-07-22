@@ -355,7 +355,7 @@
     {let $workflowStepId : $workflowStep['id'] /}
 
 
-    {let $canDelete :  $action['classType'] != 'System' /}
+    {let $canDelete :  $action['plugin']['isSystemPlugin'] != 'System' /}
 
     <li class="criteria-item" style="border-top: 0px;list-style-type: none;">
         {if $isDraft}

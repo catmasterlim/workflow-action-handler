@@ -34,9 +34,6 @@ public class WorkflowActionItemEntityFactory {
         if ( this.filter.isFilteredActionName(entity.name)){
             entity.isFiltered = true;
         }
-        if ( this.filter.isFilteredActionClassType(entity.classType)){
-            entity.isFiltered = true;
-        }
         if ( this.filter.isFilteredTransitionId(entity.transitionId)){
             entity.isFiltered = true;
         }
@@ -58,9 +55,7 @@ public class WorkflowActionItemEntityFactory {
         if ( this.filter.isFilteredActionName(entity.name)){
             entity.isFiltered = true;
         }
-        if ( this.filter.isFilteredActionClassType(entity.classType)){
-            entity.isFiltered = true;
-        }
+
         if ( this.filter.isFilteredTransitionId(entity.transitionId)){
             entity.isFiltered = true;
         }
@@ -80,9 +75,6 @@ public class WorkflowActionItemEntityFactory {
             entity.isFiltered = true;
         }
         if ( this.filter.isFilteredActionName(entity.name)){
-            entity.isFiltered = true;
-        }
-        if ( this.filter.isFilteredActionClassType(entity.classType)){
             entity.isFiltered = true;
         }
         if ( this.filter.isFilteredTransitionId(entity.transitionId)){

@@ -1,9 +1,7 @@
 package dev.model;
 
-import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.plugin.Plugin;
 import com.atlassian.plugin.PluginAccessor;
-import dev.rest.WorkflowActionHandlerRest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +24,6 @@ public class Const {
             this.className = className;
             this.name = name;
             this.description = description;
-            this.classType = getClassType(this.className);
         }
 
     }
@@ -47,39 +44,27 @@ public class Const {
             , "com.atlassian.jira.workflow.function.issue.UpdateIssueStatusFunction"
             , "com.atlassian.jira.workflow.function.misc.CreateCommentFunction"
             , "com.atlassian.jira.workflow.function.issue.GenerateChangeHistoryFunction"
-            , "com.atlassian.jira.workflow.function.misc.CreateCommentFunction"
+    );
+    private static List<String> bundledClassList = Arrays.asList(
+             "com.atlassian.jira.workflow.condition.PermissionCondition"
+            , "com.atlassian.jira.workflow.function.issue.AssignToCurrentUserFunction"
+            , "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
+            , "com.atlassian.jira.workflow.function.issue.AssignToLeadFunctio"
+            , "com.atlassian.jira.workflow.function.issue.AssignToReporterFunction"
+            , "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
+            , "com.atlassian.jira.plugins.webhooks.workflow.TriggerWebhookFunction"
     );
     public static boolean isSystemClassType(String classFullName){
         if(classFullName == null || classFullName.isEmpty() ){
             return false;
         }
-        if( systemClassList.contains(classFullName) ) {
-            return true;
-        }
-        return false;
+        return systemClassList.contains(classFullName);
     }
     public static boolean isBundledClassType(String classFullName){
         if(classFullName == null || classFullName.isEmpty() ){
             return false;
         }
-        if( classFullName.startsWith("com.atlassian.jira.workflow.")) {
-            return true;
-        }
-        return false;
-    }
-    public static String getClassType(String classFullName){
-
-        if( isSystemClassType(classFullName) ) {
-            return "System";
-        }
-
-        if( isBundledClassType(classFullName)){
-            return "Bundled";
-        }
-
-        // TODO - com.atlassian.jira.plugin.JiraPluginManager
-
-        return "Custom";
+        return bundledClassList.contains(classFullName);
     }
 
     private static final Map<String, PredefinedInfo > mapPredefinedConditionInfo ;
@@ -183,7 +168,7 @@ public class Const {
 
         predefinedInfo = new PredefinedInfo(
                 "com.atlassian.jira.workflow.function.issue.AssignToReporterFunction"
-                ,"Assign to Reporterr"
+                ,"Assign to Reporter"
                 , "Assigns the issue to the reporter"
         );
         mapPredefinedPostFunctionInfo.put(predefinedInfo.className, predefinedInfo);
@@ -238,22 +223,22 @@ public class Const {
         if(pluginAccessor != null){
             Collection<Plugin> plugins = pluginAccessor.getPlugins();
 
-            log.info("entity : {]   ", entity.className);
+            log.trace("injectPredefinedTypeInfo - entity className : {} ", entity.className);
 
-            String fullmodulekey = entity.args == null ? "" : (String)entity.args.get("full.module.key");
-            if ( entity.className == null ){
-                entity.className = "";
-            }
+            String fullmodulekey = entity.getModuleKey();
             final String entityModuleKey =  (String)( fullmodulekey == null || fullmodulekey.isEmpty() ? entity.className : fullmodulekey) ;
             Optional<Plugin> plugin = plugins.stream().filter(p ->  entityModuleKey.startsWith(p.getKey())).findFirst();
             if (plugin.isPresent()) {
                 entity.plugin = new WorkflowPluginEntity(plugin.get());;
-            } else {
-                if(entity.className.startsWith("com.atlassian.jira.")){
-                    entity.plugin = WorkflowPluginEntity.CreateJiraPluginEntity();
-                } else {
-                    entity.plugin = WorkflowPluginEntity.CreateUnknownPluginEntity();
-                }
+            }
+            if(Const.isSystemClassType(entity.className)){
+                entity.plugin = WorkflowPluginEntity.CreateJiraSystemEntity(entity.plugin);
+            } else if (Const.isBundledClassType(entity.className)){
+                entity.plugin = WorkflowPluginEntity.CreateJiraBundlePluginEntity(entity.plugin);
+            }
+
+            if(entity.plugin == null){
+                entity.plugin = WorkflowPluginEntity.CreateUnknownPluginEntity();
             }
         }
 
@@ -266,9 +251,7 @@ public class Const {
 
         entity.name = predefinedInfo.name;
         entity.description = predefinedInfo.description;
-        if(entity.classType == null|| entity.classType.isEmpty()){
-            entity.classType = getClassType(entity.className);
-        }
+
 
     }
 

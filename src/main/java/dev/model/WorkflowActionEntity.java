@@ -32,9 +32,6 @@ public class WorkflowActionEntity {
     @XmlElement(name = "classSimpleName")
     public String classSimpleName;
 
-    @XmlElement(name = "classType")
-    public String classType;
-
     @XmlElement(name = "type")
     public final WorkflowActionType type;
 
@@ -63,6 +60,21 @@ public class WorkflowActionEntity {
 
     public WorkflowActionEntity(WorkflowActionType type){
         this.type = type;
+    }
+
+    public String getModuleKey(){
+
+        if( this.args == null ){
+            return "";
+        }
+
+        String modeulKey = (String)this.args.get("full.module.key");
+        if( modeulKey == null){
+            return "";
+        }
+
+        return modeulKey;
+
     }
 
 }

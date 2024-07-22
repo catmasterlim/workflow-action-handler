@@ -51,7 +51,7 @@ public class WorkflowActionModel {
     public WorkflowActionModel() {
     }
 
-    public WorkflowActionModel(ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager, boolean includedFiltered, JiraWorkflow workflow, boolean isDraft, WorkflowActionFilterModel filer ) {
+    public WorkflowActionModel(ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager, boolean includedSystem, boolean includedFiltered, JiraWorkflow workflow, boolean isDraft, WorkflowActionFilterModel filer ) {
 
         this.name = workflow.getName();
         this.isDraft = isDraft;
@@ -93,7 +93,10 @@ public class WorkflowActionModel {
                 if(entity == null ){
                     continue;
                 }
-                if(includedFiltered == false && entity.isFiltered == false) {
+                if(includedSystem == false && Const.isSystemClassType(entity.className) ){
+                    continue;
+                }
+                if(includedFiltered == false && entity.isFiltered == true) {
                     continue;
                 }
                 actions.add(entity);                
@@ -109,7 +112,10 @@ public class WorkflowActionModel {
                 if(entity == null ){
                     continue;
                 }
-                if(includedFiltered == false && entity.isFiltered == false) {
+                if(includedSystem == false && Const.isSystemClassType(entity.className) ){
+                    continue;
+                }
+                if(includedFiltered == false && entity.isFiltered == true) {
                     continue;
                 }
                 actions.add(entity);
@@ -125,9 +131,13 @@ public class WorkflowActionModel {
                 if(entity == null ){
                     continue;
                 }
-                if(includedFiltered == false && entity.isFiltered == false) {
+                if(includedSystem == false && Const.isSystemClassType(entity.className) ){
                     continue;
                 }
+                if(includedFiltered == false && entity.isFiltered == true) {
+                    continue;
+                }
+
                 actions.add(entity);
             }
             

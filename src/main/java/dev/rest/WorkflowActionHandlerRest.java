@@ -58,47 +58,6 @@ public class WorkflowActionHandlerRest {
     }
 
 
-    @GET
-    @Path("/test")
-    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public Response getTest(
-            @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft,
-            @QueryParam("workflowName") String workflowName) {
-
-        try {
-            
-            JSONObject obj = new JSONObject();
-            obj.put("workflowName", workflowName);
-            
-            return Response.ok(
-                obj.toString()
-            ).build();
-        }catch(Exception ex){
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex).build();
-        }
-    }
-
-    @GET
-    @Path("/transitions")
-    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public Response getTransitions(
-            @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft,
-            @QueryParam("workflowName") String workflowName) {
-
-        JiraWorkflow workflow = this.workflowManager.getWorkflow(workflowName);
-        // TODO : 권한 체크
-
-        // TODO : draft 가 없을 경우 에러 처리 
-        if(isDraft && !workflow.hasDraftWorkflow()){
-            return Response.ok( ErrorFactory.CreateNoDraftError() ).status(Status.BAD_REQUEST).build();
-        }
-        
-        if(isDraft){
-            workflow = this.workflowManager.getDraftWorkflow(workflowName);
-        }
-
-        return Response.ok( new WorkflowTransitionModel(workflow, isDraft)).build();
-    }
 
     /**
      * getActions
@@ -113,22 +72,22 @@ public class WorkflowActionHandlerRest {
     @Path("/actions")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response getActions(
-            @DefaultValue("true") @QueryParam("includedFiltered") Boolean includedFiltered
+            @DefaultValue("false") @QueryParam("includedSystem") Boolean includedSystem
+            , @DefaultValue("true") @QueryParam("includedFiltered") Boolean includedFiltered
             , @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft
             , @QueryParam("workflowName") String workflowName
             , @QueryParam("actionName") List<String> actionName
             , @QueryParam("actionType") List<String> actionType
-            , @QueryParam("actionClassType") List<String> actionClassType
             , @QueryParam("transitionId") List<Integer> transitionId
             , @QueryParam("transitionName") List<String> transitionName
            ) {
 
+        log.info("params - includedSystem : {}", includedSystem);
         log.info("params - includedFiltered : {}", includedFiltered);
         log.info("params - isDraft : {}", isDraft);
         log.info("params - workflowName : {}", workflowName);
         log.info("params - actionName : {}", actionName);
         log.info("params - actionType : {}", actionType);
-        log.info("params - actionClassType : {}", actionClassType);
         log.info("params - transitionId : {}", transitionId);
         log.info("params - transitionName : {}", transitionName);
 
@@ -137,7 +96,6 @@ public class WorkflowActionHandlerRest {
         WorkflowActionFilterModel filterModel = new WorkflowActionFilterModel();
         filterModel.addFilterActionNameAll(actionName);
         filterModel.addFilterActionTypeAll(actionType);
-        filterModel.addFilterActionClassTypeAll(actionClassType);
         filterModel.addFilterTransitionIdAll(transitionId);
         filterModel.addFilterTransitionNameAll(transitionName);
 
@@ -157,6 +115,6 @@ public class WorkflowActionHandlerRest {
             workflow = this.workflowManager.getDraftWorkflow(workflowName);
         }
 
-        return Response.ok(new WorkflowActionModel(constantsManager, statusCategoryManager, includedFiltered, workflow, isDraft, filterModel)).build();
+        return Response.ok(new WorkflowActionModel(constantsManager, statusCategoryManager, includedSystem, includedFiltered, workflow, isDraft, filterModel)).build();
     }
 }

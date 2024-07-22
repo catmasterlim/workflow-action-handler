@@ -138,6 +138,7 @@ define('jira-workflow-action-handler/search-view', [
             let data = {
                 "isDraft" : workflowData.isDraft
                 , "workflowName" : workflowData.name
+                , "includedFiltered" : false
             };
 
             return  new Promise((resolve, reject) => {

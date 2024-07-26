@@ -11,7 +11,7 @@
     <param name="atlassian-data-center-status">compatible</param>
     <param name="atlassian-data-center-compatible">true</param>
   </plugin-info>  
-  <!-- add our i18n resource -->  
+  <!-- add our i18n resource -->
   <resource type="i18n" name="i18n" location="jiraWorkflowActionHandler"/>  
   <!-- add our web resources -->  
   <web-resource key="jiraWorkflowActionHandler-resources" name="jiraWorkflowActionHandler Web Resources"> 
@@ -123,10 +123,10 @@
   <rest name="Workflow Action Handler Rest" i18n-name-key="workflow-action-handler-rest.name" key="workflow-action-handler-rest" path="/workflowactionhandler" version="1.0"> 
     <description key="workflow-action-handler-rest.description">The Workflow Action Handler Rest Plugin</description> 
   </rest>  
-<!--  <webwork1 key="workflow-action-search" name="WorkflowActionSearch" i18n-name-key="workflow-action-search.name"> -->
-<!--    <description key="workflow-action-search.description">The WorkflowActionSearch Plugin</description>  -->
-<!--    <actions> -->
-<!--      -->
-<!--    </actions> -->
-<!--  </webwork1>-->
+
+
+<!--  <web-resource key="simple-web-resource">-->
+<!--    <data key="simple-data" class="dev.data.WorkflowActionHandlerAnalyticsDataProviderImpl" />-->
+<!--  </web-resource>-->
+
 </atlassian-plugin>

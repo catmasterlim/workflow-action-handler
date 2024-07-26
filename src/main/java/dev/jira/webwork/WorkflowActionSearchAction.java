@@ -1,13 +1,11 @@
 package dev.jira.webwork;
 
-import com.atlassian.config.bootstrap.AtlassianBootstrapManager;
 import com.atlassian.jira.config.properties.ApplicationProperties;
 import com.atlassian.jira.permission.GlobalPermissionKey;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.security.request.RequestMethod;
 import com.atlassian.jira.security.request.SupportedMethods;
 import com.atlassian.jira.user.ApplicationUser;
-import com.atlassian.jira.util.BaseUrl;
 import com.atlassian.jira.web.ExecutingHttpRequest;
 import com.atlassian.jira.web.component.WorkflowHeaderWebComponent;
 import com.atlassian.jira.workflow.WorkflowManager;
@@ -15,22 +13,13 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.sal.api.websudo.WebSudoRequired;
 import com.atlassian.webresource.api.assembler.WebResourceAssembler;
 //import dev.data.WorkflowActionHandlerAnalyticsDataProvider;
+import dev.api.WorkflowActionHandlerAnalyticsDataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
-import com.atlassian.jira.permission.GlobalPermissionKey;
-import com.atlassian.jira.security.JiraAuthenticationContext;
-import com.atlassian.jira.security.request.RequestMethod;
-import com.atlassian.jira.security.request.SupportedMethods;
-import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.util.JiraComponentFactory;
-import com.atlassian.jira.web.action.JiraWebActionSupport;
-import com.atlassian.jira.web.component.WorkflowHeaderWebComponent;
 import com.atlassian.jira.workflow.JiraWorkflow;
-import com.atlassian.jira.workflow.WorkflowManager;
-import com.atlassian.sal.api.websudo.WebSudoRequired;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
-import com.atlassian.webresource.api.assembler.WebResourceAssembler;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,19 +34,41 @@ public class WorkflowActionSearchAction extends JiraWebActionSupport
     private JiraWorkflow workflow;
     private Long project;
 
+    @JiraImport
     private final ApplicationProperties applicationProperties;
+
+    @JiraImport
     private final JiraAuthenticationContext jiraAuthenticationContext;
+
+    @JiraImport
     private final WorkflowManager workflowManager;
-//    private final WebResourceAssembler webResourceAssembler;
+
+//    @JiraImport
+//    private final PageBuilderService pageBuilderService;
+
+//    @JiraImport
+    private final WebResourceAssembler webResourceAssembler;
+
+    private final WorkflowHeaderWebComponent workflowHeaderWebComponent;
+//
+
+//    @Autowired
 //    private final WorkflowActionHandlerAnalyticsDataProvider workflowActionHandlerAnalyticsDataProvider;
 
-    @Autowired
-    public WorkflowActionSearchAction(  @JiraImport ApplicationProperties applicationProperties
+//    @Autowired
+    public WorkflowActionSearchAction(
+            ApplicationProperties applicationProperties
             , JiraAuthenticationContext jiraAuthenticationContext
-            , WorkflowManager workflowManager){
+            , WorkflowManager workflowManager
+            , @JiraImport PageBuilderService pageBuilderService
+
+    ){
         this.applicationProperties = applicationProperties;
         this.jiraAuthenticationContext = jiraAuthenticationContext;
         this.workflowManager = workflowManager;
+        this.webResourceAssembler = pageBuilderService.assembler();
+
+        this.workflowHeaderWebComponent = (WorkflowHeaderWebComponent)JiraComponentFactory.getInstance().createObject(WorkflowHeaderWebComponent.class);;
     }
 
     @SupportedMethods({RequestMethod.GET})
@@ -135,8 +146,8 @@ public class WorkflowActionSearchAction extends JiraWebActionSupport
     }
 
     public String getHeaderHtml() {
-//        return this.workflowHeaderWebComponent.getHtml(getWorkflow(), "workflow_designer", getProject());
-        return  "";
+        return this.workflowHeaderWebComponent.getHtml(getWorkflow(), "workflow_designer", getProject());
+//        return  "";
     }
 //
 //

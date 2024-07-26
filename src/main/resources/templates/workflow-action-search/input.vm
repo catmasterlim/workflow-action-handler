@@ -6,37 +6,7 @@
     <meta name="admin.active.tab" content="workflows"/>
 </head>
 <body id="jira">
-    <h1>input.vm</h1>
-
-    <header class="aui-page-header">
-        <div class="aui-page-header-inner">
-            <div class="aui-page-header-main">
-                <ul class="aui-nav aui-nav-breadcrumbs">
-                    <li><a id="workflows-link" href= "${action.getBaseUrl()}/secure/admin/workflows/ListWorkflows.jspa">Workflows</a></li>
-                    </ul>
-<h2>
-<span class="workflow-name">$action.getWfName()</span>
-<span id="loz-workflow-active" class="aui-lozenge status-active" title="An active workflow is a workflow currently assigned to at least one scheme which is associated with one or more projects.">Active</span>
-<span class="aui-lozenge used-by"><em>Used by <a href="#project-config-info-projects-shared" data-aui-trigger="" aria-controls="project-config-info-projects-shared" class="shared-projects-trigger shared-items-trigger" resolved="" aria-expanded="false" aria-haspopup="true">1 project</a><used-by-analytics resolved=""></used-by-analytics></em></span><aui-inline-dialog id="project-config-info-projects-shared" class="shared-items-target shared-projects-target aui-layer" alignment="bottom center" aria-label="View associated items" resolved="" tabindex="0" role="dialog"><div class="aui-inline-dialog-contents"><div class="shared-items-content"><h3>Project using this workflow:</h3><ul class="shared-items-list shared-projects-list"><li><a class="shared-item-name shared-project-name" href="/jira/plugins/servlet/project-config/TEST" data-project-id="10000" data-project-key="TEST" data-project-name="TEST"><img class="shared-project-icon" width="16" height="16" alt="" src="/jira/secure/projectavatar?size=small&amp;pid=10000&amp;avatarId=10324">TEST</a></li></ul></div></div></aui-inline-dialog>
-</h2>
-</div>
-<div class="aui-page-header-actions">
-<a class="aui-button" id="draft-workflow-trigger" href="/jira/secure/admin/workflows/EditWorkflowDispatcher.jspa?atl_token=BWP3-NZB2-6EDY-6C7K_34b1ba77d1af886835940c63323624f6e8fbaec0_lin&amp;wfName=TEST%3A+Project+Management+Workflow" resolved="">
-Edit
-</a>
-<a class="help-lnk" href="https://docs.atlassian.com/jira/jadm-docs-0912/Working+with+workflows" title="Get online help about Workflow" aria-label="Get online help about Workflow" data-helplink="online" target="_jirahelp" resolved=""><span class="aui-icon aui-icon-small aui-iconfont-help"></span></a>
-</div>
-</div>
-
-<div class="aui-page-header-inner">
-<div class="aui-page-header-main">
-
-                    <div class="aui-message aui-message-info last-edited">
-<p>This workflow was last edited by <strong>you</strong> at 02/Jul/24 4:38 AM.</p>
-</div>
-</div>
-        </div>
-    </header>
     $action.getHeaderHtml()
+
 </body>
 </html>

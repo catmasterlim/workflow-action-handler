@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>$action.getText("workflow.designer.edit.workflow.title", $action.htmlEncode($!action.wfName))</title>
+    <title>$action.getText("workflow.action.handler.edit.workflow.title", $action.htmlEncode($!action.wfName))</title>
     <meta name="decorator" content="atl.admin"/>
     <meta name="admin.active.section" content="admin_issues_menu/element_options_section/workflows_section"/>
     <meta name="admin.active.tab" content="workflows"/>
@@ -12,10 +12,9 @@
         $action.linksHtml
 
         <div class="workflow-view" id="workflow-view-action-handler">
-            <div id="workflow-action-handler"></div>
+            
 
-            ## Element with id 'jwd' must be present in order to save user mode preference. Check is performed by workflows.js in JIRA.
-            <div id="jwd"></div>
+
         </div>
     </div>
 

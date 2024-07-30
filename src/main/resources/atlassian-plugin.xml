@@ -36,8 +36,7 @@
       </action>
 
       <action name="dev.jira.webwork.WorkflowActionSearchAction" alias="workflowActionSearch">
-        <view name="success">/templates/workflow-action-search/success.vm</view>
-        <view name="input">/templates/workflow-action-search/input.vm</view>
+        <view name="success">/templates/workflow-action-search/main.vm</view>
         <view name="error">/templates/workflow-action-search/error.vm</view>
         <view name="notloggedin">/templates/workflow-action-search/notloggedin.vm</view>
         <view name="nopermission">/templates/workflow-action-search/nopermission.vm</view>

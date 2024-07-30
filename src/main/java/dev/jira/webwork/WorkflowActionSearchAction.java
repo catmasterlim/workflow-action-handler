@@ -99,9 +99,8 @@ public class WorkflowActionSearchAction extends JiraWebActionSupport
         {
             return "invalidworkflowname";
         }
-        return INPUT;
 
-//        return SUCCESS;
+        return SUCCESS;
     }
 
     public String getWfName() {
@@ -151,9 +150,9 @@ public class WorkflowActionSearchAction extends JiraWebActionSupport
     }
 //
 //
-//    public String getLinksHtml() {
-//        return this.workflowHeaderWebComponent.getLinksHtml(getWorkflow(), getProject(), "diagram", true);
-//    }
+    public String getLinksHtml() {
+        return this.workflowHeaderWebComponent.getLinksHtml(getWorkflow(), getProject(), "diagram", true);
+    }
 
 //    public String getContextPath(){
 //        return this.atlassianBootstrapManager.getApplicationHome();

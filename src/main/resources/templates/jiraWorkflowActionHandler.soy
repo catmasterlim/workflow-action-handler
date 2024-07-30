@@ -1,0 +1,566 @@
+{namespace JIRA.WorkflowActionHandler.Templates}
+
+/**
+ * action search dialog
+ * @param title the title of the dialog
+ * @param isDraft isDraft
+ * @param workflowName name of workflow
+ */
+{template .searchDialog}
+<section
+    id="workflow-action-handler-dialog"
+    class="aui-dialog2 aui-dialog2-xlarge aui-layer "
+    role="dialog"
+    tabindex="-1"
+    aria-modal="true"
+    aria-labelledby="dialog-show-button--heading"
+    aria-describedby="dialog-show-button--description"
+    style="width: 90%;"
+    hidden
+>
+    <header class="aui-dialog2-header">
+        <h1 class="aui-dialog2-header-main" id="dialog-show-button--heading">{$title}</h1>
+    </header>
+    <div class="aui-dialog2-content" id="dialog-show-button--description">
+        <h2>
+                <span class="">{$workflowName}</span>
+                <span class=""> isDraft : {$isDraft} </span>
+        </h2>
+
+
+        <div id="container-workflow-action-handler-searchbar" > 
+                {call .searchOptionsBar}
+                {/call}
+        </div>
+                                        
+        <div id="container-workflow-action-handler-actions" class="navigator-group">
+
+        </div>
+
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="workflow-action-handler-dialog-submit-button" class="aui-button aui-button-primary">Make it so</button>
+        </div>
+    </footer>
+</section>
+{/template}
+
+
+/**
+ * Search bar
+ *
+ */
+{template .searchOptionsBar}
+<form class="aui navigator-search query-component generic-styled">
+<div class="aui-group">
+<div class="aui-item search-wrap">
+<div class="search-container" data-mode="basic">
+<div class="search-field-container">
+<div class="search-criteria-container">
+<div class="search-criteria">     
+    <ul class="criteria-list" style="display: flex;">
+
+        {let $tempMap: ['Validator' : 'Validator', 'Condition' : 'Condition', 'PostFunction' : 'PostFunction'] /}
+        {let $tempList: ['Condition' : true, 'PostFunction' : false] /}
+
+        <li>
+            <a id="workflow-action-handler-search-button" class="aui-button aui-button-primary search-button"> Search Action </a>
+        </li>
+   </ui>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</form>
+
+{/template}
+
+/**
+ * add action bar
+ */
+{template .actionBarAdd}
+<div class="aui-buttons">
+    <a class="aui-button" id="add-status" >Add Statu</a>
+    <a class="aui-button" id="add-transition" >Add Transition</a>
+    <a class="aui-button" id="add-action" >Add Action</a>
+</div>
+{/template}
+
+{export extern ...}
+  {javaimpl class="dev.impl.SoyFunctions"
+      method="includes"
+      params="java.util.List, Object"
+      return="boolean" /}
+{/extern}
+
+
+
+/**
+ * Search Option
+ */
+{template .searchOption}
+    {@param optionId: string}   // id of option
+    {@param optionLabel: string} // label of option(display)
+    {@param useFindInput: ?}  // useFindInput find input - true, false
+    {@param? useShowSelectedOnTop: ?}  // useShowSelectedOnTop find input - true, false
+    {@param items: ?} // item of option map ( key, value )
+    {@param selectedItems: ? }
+
+    {let $hasSelected : length($selectedItems) > 0 /}
+<li data-id="{$optionId}" class="search-option">
+    <button id="{$optionId}-button" class="aui-button aui-dropdown2-trigger" aria-controls="{$optionId}-dropdown">
+        {$optionLabel} : All
+    </button>
+    <aui-dropdown-menu id="{$optionId}-dropdown">
+        {if $useFindInput}
+        <aui-section label="">
+            <div class="check-list-field-container">
+                <div class="assistive" aria-live="polite">1 result available. Type to search and press Tab to navigate through options.</div>
+                <input autocomplete="off" placeholder="Find ..." class="text" id="searcher-{$optionId}-input" >
+                <span class="icon-default aui-icon aui-icon-small aui-iconfont-search noloading"></span>
+            </div>
+        </aui-section>
+        {/if}
+        {if $useShowSelectedOnTop}
+        <aui-section label="" class="selected-items">
+            <button class="clear-all aui-button aui-button-link aui-button-link-icon-text"  {if not $hasSelected} style="display: none;" {/if} href="#" >Clear selected items</button>
+            {foreach $key in keys($items)}
+                {if $selectedItems?[$key]}
+                <aui-item-checkbox interactive checked value="{$key}" > {$items?[$key]} </aui-item-checkbox>
+                {/if}
+            {/foreach}
+        </aui-section>
+        {/if}
+        <aui-section label="{$optionLabel}" class="aui-list-truncate items">
+            {foreach $key in keys($items)}
+                {if $selectedItems?[$key]}
+                    {if not $useShowSelectedOnTop}
+                    <aui-item-checkbox interactive checked value="{$key}" > {$items?[$key]} </aui-item-checkbox>
+                    {/if}
+                {else}
+                <aui-item-checkbox interactive value="{$key}" > {$items?[$key]} </aui-item-checkbox>
+                {/if}
+            {/foreach}
+        </aui-section>
+    </aui-dropdown-menu>
+ </li>
+{/template}
+
+
+
+/**
+* statusIds
+* @param ids is of status - array
+* @param statusMap map of status
+* @param statusCategoryMap map of statusCategory
+*/
+{template .status}
+
+    {foreach $id in $ids}
+        {let $status : $statusMap[$id] /}
+        {let $statusCategory : $statusCategoryMap[$status.statusCategoryId] /}
+
+        {if not isFirst($id) and isLast($id)}
+            or
+        {/if}
+
+        {call JIRA.Template.Util.Issue.Status.statusLozenge}
+            {param name: $status.translatedName /}
+            {param categoryKey: $statusCategory.key /}
+            {param colorName: $statusCategory.colorName /}
+            {param isCompact: false /}
+        {/call}
+    {/foreach}
+
+{/template}
+
+
+/**
+* Action Condition Args
+* @param isDraft isDraft
+* @param workflowName name of workflow
+* @param maps map of all
+* @param transition transtion of workflow
+* @param hasMultiInTransition has multi action of transition
+* @param action action of workflow
+*/
+{template .actionConditionArgs}
+    {let $descriptorTab : 'conditions' /}
+
+    {let $statusMap : $maps['statusMap'] /}
+    {let $statusCategoryMap : $maps['statusCategoryMap'] /}
+
+    {let $workflowMode : $isDraft ? 'draft' : 'live' /}
+    {let $workflowTransition : $action['transitionId'] /}
+    {let $count : $action['order']  /}
+    {let $args : $action['args'] /}
+    {let $countArgs : $action['countArgs'] /}
+    {let $className : $args['class.name'] /}
+
+    {let $workflowSteps : $transition['steps'] /}
+    {let $workflowStep : $workflowSteps[0] /}
+    {let $workflowStepId : $workflowStep['id'] /}
+
+    <li class="criteria-item" style="border-top: 0px;list-style-type: none;">
+        {if $isDraft}
+        <div class="aui-buttons">
+            <a class="aui-button aui-button-link criteria-condition-add-grouped"  {if not $hasMultiInTransition}  aria-disabled="true"  {/if}
+            href="AddWorkflowTransitionCondition!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}&amp;nested=true" title="Add grouped condition" resolved="">
+            <span class="aui-icon aui-icon-small aui-iconfont-devtools-fork">
+            Add grouped condition
+            </span>
+            </a>
+            <a class="aui-button aui-button-link criteria-condition-edit" {if $countArgs < 2} aria-disabled="true" {/if} href="EditWorkflowTransitionConditionParams!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
+            <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
+            </a>
+
+            <a class="aui-button aui-button-link criteria-condition-delete" href="DeleteWorkflowTransitionCondition.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+            <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
+            </a>
+        </div>
+        {/if}
+
+       {switch $className}
+            {case 'com.atlassian.jira.workflow.condition.PermissionCondition'}
+                {let $value : $args['permissionKey'] ? $args['permissionKey'] : $args['permission'] /}
+                Only users with <b>{$value}</b> permission can execute this transition.
+
+            {case 'com.atlassian.jira.workflow.condition.UserInGroupCondition'}
+                {let $value : $args['group']  /}
+                Only users in group <b>{$value}</b> can execute this transition.
+
+            {case 'com.atlassian.jira.workflow.condition.UserInGroupCondition'}
+                {let $value : $args['groupcf']  /}
+                Only users in group(s) specified by custom field <b>{$value}</b> can execute this transition.
+
+            {case 'com.atlassian.jira.workflow.condition.InGroupCFCondition'}
+                {let $value : $args['groupcf']  /}
+                Only users in group(s) specified by custom field <b>{$value}</b> can execute this transition.
+
+            {case 'com.atlassian.jira.workflow.condition.InProjectRoleCondition'}
+                {let $value : $args['jira.projectrole.id']  /}
+                Only users in project role <b>{$value}</b> can execute this transition.
+
+            {case 'com.atlassian.jira.workflow.condition.SubTaskBlockingCondition'}
+                {let $status : $args['statuses'] /}
+                All sub-tasks must have one of the following statuses to allow parent issue transitions:
+                {call .status}
+                    {param ids : $status /}
+                    {param statusMap : $statusMap /}
+                    {param statusCategoryMap : $statusCategoryMap /}
+                {/call}
+            {default}
+                {let $desc : $action['description'] /}
+                {if $countArgs < 2 and isNonnull($desc) }
+                    {$desc}
+                {else}
+                    <b> Not Define </b>
+                    {foreach $arg in $args}
+                        {$arg} : {$args[$arg]}
+                    {/foreach}
+                {/if}
+        {/switch}
+     </li>
+{/template}
+
+
+/**
+* Action Validator Args
+* @param isDraft isDraft
+* @param workflowName name of workflow
+* @param maps map of all
+* @param transition transtion of workflow
+* @param action action of workflow
+*/
+{template .actionValidatorArgs}
+    {let $descriptorTab : 'validators' /}
+
+    {let $statusMap : $maps['statusMap'] /}
+    {let $statusCategoryMap : $maps['statusCategoryMap'] /}
+
+    {let $workflowMode : $isDraft ? 'draft' : 'live' /}
+    {let $workflowTransition : $action['transitionId'] /}
+    {let $count : $action['order']  /}
+    {let $args : $action['args'] /}
+    {let $countArgs : $action['countArgs'] /}
+    {let $className : $args['class.name'] /}
+
+    {let $workflowSteps : $transition['steps'] /}
+    {let $workflowStep : $workflowSteps[0] /}
+    {let $workflowStepId : $workflowStep['id'] /}
+
+    <li class="criteria-item" style="border-top: 0px;list-style-type: none;">
+        {if $isDraft}
+        <div class="aui-buttons">
+
+            <a {if $countArgs < 2} aria-disabled="true" {/if} class="aui-button aui-button-link criteria-validator-edit" href="EditWorkflowTransitionValidatorParams!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
+                <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
+            </a>
+            <a class="aui-button aui-button-link criteria-validator-delete" href="DeleteWorkflowTransitionValidator.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+                <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
+            </a>
+        </div>
+        {/if}
+
+       {switch $className}
+            {case 'com.atlassian.jira.workflow.validator.PermissionValidator'}
+                {let $value : $args['permissionKey'] ? $args['permissionKey'] : $args['permission'] /}
+                Only users with <b>{$value}</b> permission can execute this transition.
+
+            {case 'com.atlassian.jira.workflow.validator.UserPermissionValidator'}
+                {let $value1 : $args['vars.key']  /}
+                {let $value2 : $args['permissionKey'] ? $args['permissionKey'] : $args['permission']  /}
+                If a username is present as a '{$value1}' parameter in the context, the transition can be executed only if that user has the <b>{$value2}</b> permission. If the username is not found the transition will be allowed to execute.
+            {default}
+                {let $desc : $action['description'] /}
+                {if $countArgs < 2 and isNonnull($desc) }
+                    {$desc}
+                {else}
+                    <b> Not Define </b>
+                    {foreach $arg in $args}
+                        {$arg} : {$args[$arg]}
+                    {/foreach}
+                {/if}
+        {/switch}
+     </li>
+{/template}
+
+
+/**
+* Action PostFunction Args
+* @param isDraft isDraft
+* @param workflowName name of workflow
+* @param maps map of all
+* @param transition transtion of workflow
+* @param action action of workflow
+*/
+{template .actionPostFunctionArgs}
+    {let $descriptorTab : 'postfunctions' /}
+
+    {let $statusMap : $maps['statusMap'] /}
+    {let $statusCategoryMap : $maps['statusCategoryMap'] /}
+
+    {let $workflowMode : $isDraft ? 'draft' : 'live' /}
+    {let $workflowTransition : $action['transitionId'] /}
+    {let $count : $action['order']  /}
+    {let $args : $action['args'] /}
+    {let $countArgs : $action['countArgs'] /}
+    {let $className : $args['class.name'] /}
+
+    {let $workflowSteps : $transition['steps'] /}
+    {let $workflowStep : $workflowSteps[0] /}
+    {let $workflowStepId : $workflowStep['id'] /}
+
+
+    {let $canDelete :  $action['plugin']['isSystemPlugin'] != 'System' /}
+
+    <li class="criteria-item" style="border-top: 0px;list-style-type: none;">
+        {if $isDraft}
+        <div class="aui-buttons">
+            <!--
+               {$workflowName}
+               canDelete : {if $canDelete} true {else} false {/if}
+               classtype: {$action['classType']}
+            <a class="aui-button aui-button-link criteria-move-up" href="MoveWorkflowFunctionUp.jspa?atl_token=BWP3-NZB2-6EDY-6C7K_ce3f086ec78e7f0513ade9140f1c9b60b6c8bec4_lin&amp;workflowMode=draft&amp;workflowName=TEST%3A+Project+Management+Workflow&amp;descriptorTab=postfunctions&amp;workflowStep=1&amp;workflowTransition=11&amp;up=1" title="Move up" resolved=""><span>Move up</span></a>
+            <a class="aui-button aui-button-link criteria-move-down" href="MoveWorkflowFunctionDown.jspa?atl_token=BWP3-NZB2-6EDY-6C7K_ce3f086ec78e7f0513ade9140f1c9b60b6c8bec4_lin&amp;workflowMode=draft&amp;workflowName=TEST%3A+Project+Management+Workflow&amp;descriptorTab=postfunctions&amp;workflowStep=1&amp;workflowTransition=11&amp;down=1" title="Move down" resolved=""><span>Move down</span></a>
+             -->
+            <a {if $countArgs < 3} aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-edit" href="EditWorkflowTransitionPostFunctionParams!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition=11&amp;count={$count}" title="Edit" resolved="">
+                <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
+            </a>
+            <a {if not $canDelete } aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-delete" href="DeleteWorkflowTransitionPostFunction.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+                <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
+            </a>
+        </div>
+
+        {/if}
+
+       {switch $className}
+            {case 'com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction'}
+                {let $fieldName : $args['field.name']  /}
+                {let $fieldValue : $args['field.value'] == '' ? 'clear' : $args['field.value']  /}
+
+                The <b>{$fieldName}</b> of the issue will be <b>{$fieldValue}</b>
+            {case 'com.atlassian.jira.workflow.function.event.FireIssueEventFunction'}
+                {let $value : $args['eventTypeId']  /}
+
+                Fire a <b>{$value}</b> event that can be processed by the listeners.
+
+            {case 'com.atlassian.jira.plugins.webhooks.workflow.TriggerWebhookFunction'}
+                {let $value : $args['field.webhookId']  /}
+                Send transition to webhook: <b>{$value}</b>
+
+            {default}
+                {let $desc : $action['description'] /}
+                {if $countArgs < 3 and isNonnull($desc) }
+                    {$desc}
+                {else}
+                    <b> Not Define </b>
+                    {foreach $arg in $args}
+                        {$arg} : {$args[$arg]}
+                    {/foreach}
+                {/if}
+        {/switch}
+     </li>
+{/template}
+
+
+/**
+* Action Args
+* @param isDraft isDraft
+* @param workflowName name of workflow
+* @param maps map of all
+* @param transition transtion of workflow
+* @param action action of workflow
+*/
+{template .actionArgs}
+    {let $workflowMode : $isDraft ? 'draft' : 'live' /}
+    {let $workflowTransition : $action['transitionId'] /}
+    {let $count : $action['order']  /}
+    {let $args : $action['args']/}
+    {let $className : $args['class.name'] /}
+
+    {let $workflowSteps : $transition['steps'] /}
+    {let $workflowStep : $workflowSteps[0] /}
+    {let $workflowStepId : $workflowStep['id'] /}
+
+    {let $actionType : $action['type'] /}
+    {switch $actionType }
+        {case 'Condition'}
+            {call .actionConditionArgs}
+                {param isDraft: $isDraft /}
+                {param workflowName: $workflowName /}
+                {param maps: $maps /}
+                {param transition: $transition /}
+                {param hasMultiInTransition: $transition['countCondition'] > 1 /}
+                {param action: $action /}
+            {/call}
+        {case 'Validator'}
+            {call .actionValidatorArgs}
+                {param isDraft: $isDraft /}
+                {param workflowName: $workflowName /}
+                {param maps: $maps /}
+                {param transition: $transition /}
+                {param action: $action /}
+            {/call}
+        {case 'PostFunction'}
+            {call .actionPostFunctionArgs}
+                {param isDraft: $isDraft /}
+                {param workflowName: $workflowName /}
+                {param maps: $maps /}
+                {param transition: $transition /}
+                {param action: $action /}
+            {/call}
+        {default}
+            <h2> Error action has no action-type : $actionType </h2>
+    {/switch}
+
+{/template}
+
+/**
+ * Action List
+ * @param actionCount count of action
+ */
+{template .actionResultCount}
+    Showing results : {$actionCount} actions
+{/template}
+
+
+/**
+ * Transition Link
+ * /secure/admin/workflows/ViewWorkflowTransition.jspa?
+ * workflowMode=draft&workflowName=TEST%3A+Project+Management+Workflow&descriptorTab=conditions&workflowStep=1&workflowTransition=11
+ * @param isDraft isDraft
+ * @param workflowName name of workflow
+ * @param transition transition of workflow
+ *
+ */
+{template .transitionLink}
+    {let $workflowMode : $isDraft ? 'draft' : 'live' /}
+    {let $workflowTransition : $transition['id'] /}
+    {let $descriptorTab : 'conditions' /}
+
+    {let $workflowSteps : $transition['steps'] /}
+    {let $workflowStep : $workflowSteps[0] /}
+    {let $workflowStepId : $workflowStep['id'] /}
+
+  <a href="ViewWorkflowTransition.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}" title="" id="edit_action_{$workflowStepId}_{$workflowTransition}">{$transition['name']}</a>
+  <span class="smallgrey">({$workflowTransition})</span>
+{/template}
+
+/**
+ * Action List
+ * @param isDraft isDraft
+ * @param workflowName name of workflow
+ * @param actions name of workflow
+ * @param maps map of all
+ */
+{template .actionList}
+<div class="results-panel navigator-item">
+<div class="navigator-content" >
+<div class="aui aui-item">
+    <span class="results-count-text">
+    </span>
+</div>
+<table class="aui aui-table-sortable">
+    <h2 class="hidden" > {$workflowName} {$isDraft} </h2>
+    <thead>
+        <tr>
+            <th id="action-name" >Action Name</th>
+            <th id="action-type">Type</th>
+            <th id="action-order">Order</th>
+            <!--
+            <th id="action-class-type" hidden>Class Type</th>
+            <th id="action-class-simple" hidden>Class Simple name</th>
+            <th id="action-class" hidden>Class name</th>
+            -->
+            <th id="action-plugin">Plugin</th>
+            <th id="action-args">Value</th>
+            <th id="transition-id">Transition</th>
+        </tr>
+    </thead>
+    <tbody>
+    {let $transitionMap : $maps['transitionMap']/}
+        {foreach $a in $actions}
+            {let $transition : $transitionMap[$a['transitionId']] /}
+            <tr class='hidden' >
+                <td id="action-name" value="{$a['name']}" alt="{$a['description']}">{$a['name']}</td>
+                <th id="action-type" value="{$a['type']}" >{$a['type']}</th>
+                <th id="action-order" value={$a['order']} >{$a['order']}</th>
+                <!--
+                <th id="action-class-type" value="{$a['classType']}" >{$a['classType']}</th>
+                <th id="action-class-simple" value="{$a['classSimpleName']}" >{$a['classSimpleName']}</th>
+                <th id="action-class" value="{$a['className']}" >{$a['className']}</th>
+                -->
+
+                {let $plugin : $a['plugin'] /}
+                <th id="action-plugin" value="{$plugin['key']}" >{$plugin['name']}</th>
+                <th id="action-args">
+                    {call .actionArgs}
+                        {param isDraft: $isDraft /}
+                        {param workflowName: $workflowName /}
+                        {param maps : $maps /}
+                        {param transition: $transition /}
+                        {param action: $a /}
+                    {/call}
+                </th>
+                <th id="transition-id" value="{$a['transitionId']}" >
+                    {call .transitionLink}
+                        {param isDraft: $isDraft /}
+                        {param workflowName: $workflowName /}
+                        {param transition: $transition /}
+                    {/call}
+                </th>
+            </tr>
+        </tr>
+        {ifempty}
+	        is Empty
+        {/foreach} 
+    </tbody>
+</table>
+
+</div>
+</div>
+{/template}

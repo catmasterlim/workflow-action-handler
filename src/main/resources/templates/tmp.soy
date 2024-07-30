@@ -1,0 +1,27 @@
+{call JIRA.Template.Util.Issue.Status.statusLozenge}
+    {param name: $status.statusCategory.translatedName /}
+    {param categoryKey: $status.statusCategory.key /}
+    {param colorName: $status.statusCategory.colorName /}
+    {param isCompact: true /}
+{/call}
+
+
+{call JIRA.Template.Util.Issue.Status.statusLozenge}
+{param name: $status.statusCategory.translatedName /}
+{param categoryKey: $status.statusCategory.key /}
+{param colorName: $status.statusCategory.colorName /}
+{param isCompact: true /}
+{/call}
+                {call JIRA.Template.Util.Issue.Status.statusLozenge({'name': 'INPROGRESS', 'key' : 'new', 'colorName' : 'grey', 'isCompact': false})
+
+
+* @param statusMap map of status
+* @param statusCategoryMap map of statusCategory
+/**
+* split - str.split
+* @param str
+* @param sep
+*/
+{template .split}
+
+{/template}

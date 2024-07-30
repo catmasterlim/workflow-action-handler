@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>$action.getText("workflow.action.handler.edit.workflow.title", $action.htmlEncode($!action.wfName))</title>
+    <meta name="decorator" content="atl.admin"/>
+    <meta name="admin.active.section" content="admin_issues_menu/element_options_section/workflows_section"/>
+    <meta name="admin.active.tab" content="workflows"/>
+</head>
+<body id="jira">
+    $action.headerHtml
+
+    <div class="workflow-container">
+        $action.linksHtml
+
+        <div class="workflow-view" id="workflow-view-action-handler">
+            
+
+
+        </div>
+    </div>
+
+    #if( $action.project )
+        <fieldset class="hidden parameters">
+            <input type="hidden" id="workflow-action-handler-project" value="$action.project"/>
+        </fieldset>
+    #end
+</body>
+</html>

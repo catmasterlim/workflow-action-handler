@@ -1,0 +1,5 @@
+.search-option-button-menu {
+  --aui-btn-bg: var(--aui-button-subtle-bg-color,transparent);
+  --aui-btn-border: var(--aui-button-subtle-border-color,transparent);
+  --aui-btn-text: var(--aui-button-subtle-text-color,currentColor);
+}

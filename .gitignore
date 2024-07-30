@@ -23,8 +23,11 @@
 hs_err_pid*
 replay_pid*
 
-#vscode
+# vscode
 .vscode
+
+# intellj
+.idea
 
 #
 target

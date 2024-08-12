@@ -19,6 +19,12 @@ public class WorkflowPluginEntity {
     @XmlElement(name = "name")
     public String name;
 
+    @XmlElement(name = "in_key")
+    public String in_key;
+
+    @XmlElement(name = "in_name")
+    public String in_name;
+
     @XmlElement(name = "isSystemPlugin")
     public boolean isSystemPlugin;
 
@@ -48,28 +54,25 @@ public class WorkflowPluginEntity {
     }
     public static  WorkflowPluginEntity CreateJiraBundlePluginEntity(WorkflowPluginEntity pluginEntity){
         WorkflowPluginEntity entity = new WorkflowPluginEntity();
-        if( pluginEntity == null ) {
-            entity.key = "com.atlassian.jira.plugin.bundled";
-            entity.name = "Jira Bundled Plugin";
-        } else {
-            entity.key = pluginEntity.key;
-            entity.name = pluginEntity.name;
-        }
+
+        entity.key = "com.atlassian.jira.plugin.bundled";
         entity.name = "Jira Bundled Plugin";
+        if( pluginEntity != null ){
+            entity.in_key = pluginEntity.key;
+            entity.in_name = pluginEntity.name;
+        }
         entity.isSystemPlugin = false;
         entity.isBundledPlugin = true;
         return  entity;
     }
     public static  WorkflowPluginEntity CreateJiraSystemEntity(WorkflowPluginEntity pluginEntity){
         WorkflowPluginEntity entity = new WorkflowPluginEntity();
-        if( pluginEntity == null ) {
-            entity.key = "com.atlassian.jira.plugin.bundled";
-            entity.name = "Jira Bundled Plugin";
-        } else {
-            entity.key = pluginEntity.key;
-            entity.name = pluginEntity.name;
-        }
+        entity.key = "com.atlassian.jira.plugin.bundled";
         entity.name = "Jira Bundled Plugin";
+        if( pluginEntity != null ){
+            entity.in_key = pluginEntity.key;
+            entity.in_name = pluginEntity.name;
+        }
         entity.isSystemPlugin = true;
         entity.isBundledPlugin = true;
         return  entity;

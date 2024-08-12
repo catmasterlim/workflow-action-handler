@@ -3,3 +3,24 @@
   --aui-btn-border: var(--aui-button-subtle-border-color,transparent);
   --aui-btn-text: var(--aui-button-subtle-text-color,currentColor);
 }
+
+.criteria-list > .search-option  {
+      background-color: #fff0;
+}
+
+.criteria-list > .search-option {
+      background-color: var(--aui-btn-bg);
+}
+
+
+.criteria-list > .search-option > button {
+      background-color: #fff0;
+}
+
+.criteria-list > .search-option > button:hover{
+      background-color: var(--aui-btn-bg);
+}
+
+.criteria-list > .search-option > button.active{
+      background-color: var(--aui-btn-bg);
+}

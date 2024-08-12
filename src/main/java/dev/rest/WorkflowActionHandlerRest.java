@@ -1,5 +1,6 @@
 package dev.rest;
 
+import com.atlassian.jira.config.ResolutionManager;
 import com.atlassian.jira.config.StatusCategoryManager;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.security.JiraAuthenticationContext;
@@ -46,15 +47,20 @@ public class WorkflowActionHandlerRest {
     @JiraImport
     private final  com.atlassian.plugin.PluginAccessor pluginAccessor;
 
+    @JiraImport
+    private final ResolutionManager resolutionManager;
 
-    public WorkflowActionHandlerRest(WorkflowManager workflowManager, JiraAuthenticationContext jiraAuthenticationContext, ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager, com.atlassian.plugin.PluginAccessor pluginAccessor) {
+
+    public WorkflowActionHandlerRest(WorkflowManager workflowManager, JiraAuthenticationContext jiraAuthenticationContext, ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager, com.atlassian.plugin.PluginAccessor pluginAccessor, ResolutionManager resolutionManager) {
         this.workflowManager = workflowManager;
         this.jiraAuthenticationContext = jiraAuthenticationContext;
         this.constantsManager = constantsManager;
         this.statusCategoryManager = statusCategoryManager;
         this.pluginAccessor = pluginAccessor;
+        this.resolutionManager = resolutionManager;
 
         Const.setPluginAccessor(this.pluginAccessor);
+        Const.setResolutionManager(this.resolutionManager);
     }
 
 

@@ -2,6 +2,9 @@ package dev.rest;
 
 import com.atlassian.jira.config.ResolutionManager;
 import com.atlassian.jira.config.StatusCategoryManager;
+import com.atlassian.jira.permission.GlobalPermissionKey;
+import com.atlassian.jira.permission.ProjectPermission;
+import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.json.JSONObject;
@@ -12,6 +15,7 @@ import com.atlassian.jira.config.ConstantsManager;
 //import com.atlassian.jira.component.ComponentAccessor;
 
 
+import com.atlassian.sal.api.user.UserKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +43,9 @@ public class WorkflowActionHandlerRest {
     private final JiraAuthenticationContext jiraAuthenticationContext;
 
     @JiraImport
+    private final  com.atlassian.sal.api.user.UserManager userManager;
+
+    @JiraImport
     private final ConstantsManager constantsManager;
 
     @JiraImport
@@ -50,14 +57,19 @@ public class WorkflowActionHandlerRest {
     @JiraImport
     private final ResolutionManager resolutionManager;
 
+    @JiraImport
+    private final com.atlassian.jira.security.PermissionManager permissionManager;
 
-    public WorkflowActionHandlerRest(WorkflowManager workflowManager, JiraAuthenticationContext jiraAuthenticationContext, ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager, com.atlassian.plugin.PluginAccessor pluginAccessor, ResolutionManager resolutionManager) {
+
+    public WorkflowActionHandlerRest(WorkflowManager workflowManager, JiraAuthenticationContext jiraAuthenticationContext, com.atlassian.sal.api.user.UserManager userManager, ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager, com.atlassian.plugin.PluginAccessor pluginAccessor, ResolutionManager resolutionManager, com.atlassian.jira.security.PermissionManager permissionManager) {
         this.workflowManager = workflowManager;
         this.jiraAuthenticationContext = jiraAuthenticationContext;
+        this.userManager = userManager;
         this.constantsManager = constantsManager;
         this.statusCategoryManager = statusCategoryManager;
         this.pluginAccessor = pluginAccessor;
         this.resolutionManager = resolutionManager;
+        this.permissionManager = permissionManager;
 
         Const.setPluginAccessor(this.pluginAccessor);
         Const.setResolutionManager(this.resolutionManager);
@@ -68,7 +80,7 @@ public class WorkflowActionHandlerRest {
     /**
      * getActions
      * @param includedFiltered 필터된 action 결과에 포함여부, default : true
-     * @param isDraft 편집 모드
+     * @param workflowMode  live , draft
      * @param workflowName 워크프로우 이름
      * @param actionName 액션 이름 리스트 ( stirng [] )
      * @param actionType 액션 타입 리스트 ( stirng [] )
@@ -80,7 +92,7 @@ public class WorkflowActionHandlerRest {
     public Response getActions(
             @DefaultValue("false") @QueryParam("includedSystem") Boolean includedSystem
             , @DefaultValue("true") @QueryParam("includedFiltered") Boolean includedFiltered
-            , @DefaultValue("false") @QueryParam("isDraft") Boolean isDraft
+            , @DefaultValue("live") @QueryParam("workflowMode") String workflowMode
             , @QueryParam("workflowName") String workflowName
             , @QueryParam("actionName") List<String> actionName
             , @QueryParam("actionType") List<String> actionType
@@ -90,13 +102,30 @@ public class WorkflowActionHandlerRest {
 
         log.info("params - includedSystem : {}", includedSystem);
         log.info("params - includedFiltered : {}", includedFiltered);
-        log.info("params - isDraft : {}", isDraft);
+        log.info("params - workflowMode : {}", workflowMode);
         log.info("params - workflowName : {}", workflowName);
         log.info("params - actionName : {}", actionName);
         log.info("params - actionType : {}", actionType);
         log.info("params - transitionId : {}", transitionId);
         log.info("params - transitionName : {}", transitionName);
 
+
+        ApplicationUser user = this.jiraAuthenticationContext.getLoggedInUser();
+        if (user == null)
+        {
+            return Response.serverError()
+                    .status(Status.UNAUTHORIZED)
+                    .entity( ErrorFactory.CreatePermissionError() )
+                    .build();
+        }
+
+        UserKey userKey = new UserKey(user.getKey());
+        if( this.userManager.isAdmin(userKey) == false){
+            return Response.serverError()
+                    .status(Status.UNAUTHORIZED)
+                    .entity( ErrorFactory.CreatePermissionError() )
+                    .build();
+        }
 
         // filter 
         WorkflowActionFilterModel filterModel = new WorkflowActionFilterModel();
@@ -107,20 +136,23 @@ public class WorkflowActionHandlerRest {
 
         JiraWorkflow workflow = this.workflowManager.getWorkflow(workflowName);
         if(workflow == null){
-            return Response.ok( ErrorFactory.CreateNoWorkflowError(workflowName) ).status(Status.BAD_REQUEST).build();
+            return Response.serverError()
+                    .status(Status.BAD_REQUEST)
+                    .entity( ErrorFactory.CreateNoWorkflowError(workflowName) )
+                    .build();
         }
 
-        // TODO : 권한 체크
-
-        // TODO : draft 가 없을 경우 에러 처리 
-        if(isDraft && !workflow.hasDraftWorkflow()){
-            return Response.ok( ErrorFactory.CreateNoDraftError() ).status(Status.BAD_REQUEST).build();
+        if(!workflowMode.equals("live") && !workflow.hasDraftWorkflow()){
+            return Response.serverError()
+                    .status(Status.BAD_REQUEST)
+                    .entity( ErrorFactory.CreateNoDraftError() )
+                    .build();
         }
         
-        if(isDraft){
+        if(!workflowMode.equals("live")){
             workflow = this.workflowManager.getDraftWorkflow(workflowName);
         }
 
-        return Response.ok(new WorkflowActionModel(constantsManager, statusCategoryManager, includedSystem, includedFiltered, workflow, isDraft, filterModel)).build();
+        return Response.ok(new WorkflowActionModel(constantsManager, statusCategoryManager, includedSystem, includedFiltered, workflow, workflowMode, filterModel)).build();
     }
 }

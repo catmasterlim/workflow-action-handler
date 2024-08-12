@@ -48,6 +48,7 @@ define("jira-workflow-action-handler/Application", [
             return Templates.searchDialog({
                 title: "Action Search Dialog",
                 isDraft : this._workflowData.isDraft,
+                workflowMode : this._workflowData.isDraft ? "draft" : "live",
                 workflowName : this._workflowData.name,
                 actions : []
             });

@@ -93,7 +93,7 @@ define('jira-workflow-action-handler/search-view', [
             // action list
             let htmlActionList = Templates.actionList({
                 title: "Action List",
-                isDraft : Variables.searchResult.isDraft,
+                workflowMode : Variables.searchResult.workflowMode,
                 workflowName : Variables.searchResult.name,
                 actions : Variables.searchResult.actions,
                 maps : Variables.searchResult.maps
@@ -122,6 +122,7 @@ define('jira-workflow-action-handler/search-view', [
         _getWorkflowData() {
                 return {
                     isDraft: !!jQuery(".status-draft").length,
+                    workflowMode : !!jQuery(".status-draft").length ? "draft" : "live",
                     isEditable: !!jQuery("#edit-workflow-trigger").length,
                     isInactive: !!jQuery(".status-inactive").length,
                     name: jQuery(".workflow-name").text(),
@@ -136,7 +137,7 @@ define('jira-workflow-action-handler/search-view', [
             let workflowData = this._getWorkflowData();
             console.log('--> workflowData : ', workflowData);
             let data = {
-                "isDraft" : workflowData.isDraft
+                "workflowMode" : workflowData.isDraft ? "draft" : "live"
                 , "workflowName" : workflowData.name
                 , "includedFiltered" : false
             };

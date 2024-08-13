@@ -115,7 +115,7 @@ public class WorkflowActionHandlerRest {
         {
             return Response.serverError()
                     .status(Status.UNAUTHORIZED)
-                    .entity( ErrorFactory.CreatePermissionError() )
+                    .entity( ErrorFactory.CreateNoLoginError() )
                     .build();
         }
 

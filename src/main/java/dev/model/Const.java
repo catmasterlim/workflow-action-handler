@@ -80,15 +80,16 @@ public class Const {
             , "com.atlassian.jira.workflow.function.misc.CreateCommentFunction"
             , "com.atlassian.jira.workflow.function.issue.GenerateChangeHistoryFunction"
     );
-    private static List<String> bundledClassList = Arrays.asList(
-             "com.atlassian.jira.workflow.condition.PermissionCondition"
-            , "com.atlassian.jira.workflow.function.issue.AssignToCurrentUserFunction"
-            , "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
-            , "com.atlassian.jira.workflow.function.issue.AssignToLeadFunction"
-            , "com.atlassian.jira.workflow.function.issue.AssignToReporterFunction"
-            , "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
-            , "com.atlassian.jira.plugins.webhooks.workflow.TriggerWebhookFunction"
-    );
+//    private static List<String> bundledClassList = Arrays.asList(
+//             "com.atlassian.jira.workflow.condition.PermissionCondition"
+//            , "com.atlassian.jira.workflow.function.issue.AssignToCurrentUserFunction"
+//            , "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
+//            , "com.atlassian.jira.workflow.function.issue.AssignToLeadFunction"
+//            , "com.atlassian.jira.workflow.function.issue.AssignToReporterFunction"
+//            , "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
+//            , "com.atlassian.jira.plugins.webhooks.workflow.TriggerWebhookFunction"
+//            , ""
+//    );
     public static boolean isSystemClassType(String classFullName){
         if(classFullName == null || classFullName.isEmpty() ){
             return false;
@@ -99,7 +100,19 @@ public class Const {
         if(classFullName == null || classFullName.isEmpty() ){
             return false;
         }
-        return bundledClassList.contains(classFullName);
+
+        if( mapPredefinedConditionInfo.get(classFullName) != null ){
+            return true;
+        }
+        if( mapPredefinedValidatorInfo.get(classFullName) != null ){
+            return true;
+        }
+        if( mapPredefinedPostFunctionInfo.get(classFullName) != null ){
+            return true;
+        }
+
+        return false;
+
     }
 
     private static final Map<String, PredefinedInfo > mapPredefinedConditionInfo ;
@@ -184,6 +197,31 @@ public class Const {
 
     }
 
+    private static final Map<String, PredefinedInfo > mapPredefinedValidatorInfo ;
+    static {
+        mapPredefinedValidatorInfo = new HashMap<>();
+        PredefinedInfo predefinedInfo = null;
+        predefinedInfo = new PredefinedInfo(
+                "com.atlassian.jira.workflow.validator.PermissionValidator"
+                ,"Permission Validator"
+                , "Validates that the user has a permission."
+        );
+        mapPredefinedValidatorInfo.put(predefinedInfo.className, predefinedInfo);
+
+        predefinedInfo = new PredefinedInfo(
+                "com.atlassian.jira.workflow.validator.UserPermissionValidator"
+                ,"User Permission Validator"
+                , "Validates that the user has a permission, where the OSWorkflow variable holding the username is configurable. Obsolete. "
+        );
+        mapPredefinedValidatorInfo.put(predefinedInfo.className, predefinedInfo);
+
+        /**
+         Permission Validator 	Validates that the user has a permission.
+         User Permission Validator 	Validates that the user has a permission, where the OSWorkflow variable holding the username is configurable. Obsolete.
+         */
+
+    }
+
     private static final Map<String, PredefinedInfo > mapPredefinedPostFunctionInfo ;
     static {
         mapPredefinedPostFunctionInfo = new HashMap<>();
@@ -231,11 +269,13 @@ public class Const {
 
     }
 
-    private static PredefinedInfo getPredefinedInfo(WorkflowActionEntity entity ){
+    private static PredefinedInfo getPredefinedInfo(WorkflowActionEntity entity){
         WorkflowActionType actionType = entity.type;
         switch (actionType){
             case Condition:
                 return mapPredefinedConditionInfo.get(entity.className);
+            case Validator:
+                return mapPredefinedValidatorInfo.get(entity.className);
             case PostFunction:
                 return mapPredefinedPostFunctionInfo.get(entity.className);
         }
@@ -322,35 +362,22 @@ public class Const {
 
     public static void injectPredefinedTypeInfo(WorkflowActionEntity entity){
 
-        // plugin info
-        if(pluginAccessor != null){
-            Collection<Plugin> plugins = pluginAccessor.getPlugins();
-
-            log.trace("injectPredefinedTypeInfo - entity className : {} ", entity.className);
-
-            String fullmodulekey = entity.getModuleKey();
-            final String entityModuleKey =  (String)( fullmodulekey == null || fullmodulekey.isEmpty() ? entity.className : fullmodulekey) ;
-            Optional<Plugin> plugin = plugins.stream().filter(p ->  entityModuleKey.startsWith(p.getKey())).findFirst();
-            if (plugin.isPresent()) {
-                entity.plugin = new WorkflowPluginEntity(plugin.get());;
-            }
-            if(Const.isSystemClassType(entity.className)){
-                entity.plugin = WorkflowPluginEntity.CreateJiraSystemEntity(entity.plugin);
-            } else if (Const.isBundledClassType(entity.className)){
-                entity.plugin = WorkflowPluginEntity.CreateJiraBundlePluginEntity(entity.plugin);
-            }
-
-            if(entity.plugin == null){
-                entity.plugin = WorkflowPluginEntity.CreateUnknownPluginEntity();
-            }
-        }
-
         // predefined
         PredefinedInfo predefinedInfo = getPredefinedInfo(entity);
         if( predefinedInfo == null ){
             //String className, String name, String description
             predefinedInfo = new PredefinedInfo(entity.className, entity.classSimpleName, "");
+
         }
+
+        // plugin info
+        Collection<Plugin> plugins = pluginAccessor.getPlugins();
+        log.trace("injectPredefinedTypeInfo - entity className : {} ", entity.className);
+
+        String fullmodulekey = entity.getModuleKey();
+        final String entityModuleKey =  (String)( fullmodulekey == null || fullmodulekey.isEmpty() ? entity.className : fullmodulekey) ;
+        Optional<Plugin> plugin = plugins.stream().filter(p ->  entityModuleKey.startsWith(p.getKey())).findFirst();
+        entity.plugin =  WorkflowPluginEntity.Create(entity.className, plugin);;
 
         // args
         addArgDisplyed(entity);

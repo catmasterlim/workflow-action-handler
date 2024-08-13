@@ -39,7 +39,7 @@ public class WorkflowActionConditionEntity extends WorkflowActionEntity  {
         super(WorkflowActionType.Condition);
 
         this.id= descriptor.getId();
-        this.className = (String)descriptor.getArgs().get("class.name");
+        this.className = ((String)descriptor.getArgs().get("class.name")).trim();
         this.classSimpleName = this.className.substring(this.className.lastIndexOf(".")+1);
         this.name = descriptor.getName();
         this.order = order;

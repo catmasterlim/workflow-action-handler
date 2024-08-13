@@ -93,7 +93,7 @@ define('jira-workflow-action-handler/search-view', [
             // action list
             let htmlActionList = Templates.actionList({
                 title: "Action List",
-                isDraft : Variables.searchResult.isDraft,
+                workflowMode : Variables.searchResult.workflowMode,
                 workflowName : Variables.searchResult.name,
                 actions : Variables.searchResult.actions,
                 maps : Variables.searchResult.maps
@@ -122,6 +122,7 @@ define('jira-workflow-action-handler/search-view', [
         _getWorkflowData() {
                 return {
                     isDraft: !!jQuery(".status-draft").length,
+                    workflowMode : !!jQuery(".status-draft").length ? "draft" : "live",
                     isEditable: !!jQuery("#edit-workflow-trigger").length,
                     isInactive: !!jQuery(".status-inactive").length,
                     name: jQuery(".workflow-name").text(),
@@ -136,7 +137,7 @@ define('jira-workflow-action-handler/search-view', [
             let workflowData = this._getWorkflowData();
             console.log('--> workflowData : ', workflowData);
             let data = {
-                "isDraft" : workflowData.isDraft
+                "workflowMode" : workflowData.isDraft ? "draft" : "live"
                 , "workflowName" : workflowData.name
                 , "includedFiltered" : false
             };
@@ -207,13 +208,14 @@ define('jira-workflow-action-handler/search-view', [
             searchOptionContainer.find('.search-option').empty();
             // reverse ( prepend ) - 아래 순서의 역순으로 option 등록
             {
+                let optionId = 'transition-id';
                 let items = {}
                 let transitionMap = Variables.searchResult.maps.transitionMap;
                 for(let a of Variables.searchResult.actions){
                     let transition = transitionMap[a.transitionId];
                     items[a.transitionId] = transition['name'] + '(' + a.transitionId + ')';
                 }
-                let searchOptionClass = this.getInstSearchOptionClass('transition-id', 'TransitionId', true, items, {}, true);
+                let searchOptionClass = this.getInstSearchOptionClass(optionId, 'Transition', true, items, {}, true);
                 let html = searchOptionClass.getHtml();
                 searchOptionContainer.prepend(html);
                 searchOptionClass.regEvent(this._changeShowActionBySearchOption.bind(this));
@@ -226,7 +228,7 @@ define('jira-workflow-action-handler/search-view', [
                 for(let a of Variables.searchResult.actions){
                   items[a.plugin.key] = a.plugin.name;
                 }
-                let searchOptionClass = this.getInstSearchOptionClass(optionId, 'ActionPlugin', true, items, itemsChecked);
+                let searchOptionClass = this.getInstSearchOptionClass(optionId, 'Plugin', true, items, itemsChecked, true);
                 let html = searchOptionClass.getHtml();
                 searchOptionContainer.prepend(html);
                 searchOptionClass.regEvent(this._changeShowActionBySearchOption.bind(this));

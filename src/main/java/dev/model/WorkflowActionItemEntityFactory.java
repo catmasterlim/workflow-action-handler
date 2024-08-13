@@ -13,13 +13,13 @@ public class WorkflowActionItemEntityFactory {
 
     WorkflowTransitionModel transitionModel;
     JiraWorkflow workflow;
-    boolean isDraft;
+    String workflowMode;
     WorkflowActionFilterModel filter;
     
-    public WorkflowActionItemEntityFactory(JiraWorkflow workflow, boolean isDraft, WorkflowActionFilterModel filter){
-        this.transitionModel = new WorkflowTransitionModel(workflow, isDraft);
+    public WorkflowActionItemEntityFactory(JiraWorkflow workflow, String workflowMode, WorkflowActionFilterModel filter){
+        this.transitionModel = new WorkflowTransitionModel(workflow, workflowMode);
         this.workflow = workflow;
-        this.isDraft = isDraft;
+        this.workflowMode = workflowMode;
         this.filter = filter;
     }
     

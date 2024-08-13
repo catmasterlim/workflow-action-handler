@@ -22,34 +22,34 @@
     <context>jiraWorkflowActionHandler</context> 
   </web-resource>  
   <!-- Admin Config -->  
-  <web-section name="WorkflowActinHandlerAdminConfigSection" i18n-name-key="workflow-actin-handler-admin-config-section.name" key="workflow-actin-handler-admin-config-section" location="admin_plugins_menu" weight="1000"> 
-    <description key="workflow-actin-handler-admin-config-section.description">The WorkflowActinHandlerAdminConfigSection Plugin</description>  
-    <label key="workflow-actin-handler-admin-config-section.label"/> 
-  </web-section>  
-  <webwork1 key="admin-config" name="AdminConfig" i18n-name-key="admin-config.name" alias="workflowActionHandler">
-    <description key="admin-config.description">The AdminConfig Plugin</description>  
-    <actions> 
-      <action name="dev.jira.webwork.AdminConfigAction" alias="adminConfig">
-        <view name="success">/templates/admin-config/success.vm</view>  
-        <view name="input">/templates/admin-config/input.vm</view>  
-        <view name="error">/templates/admin-config/error.vm</view> 
-      </action>
+<!--  <web-section name="WorkflowActinHandlerAdminConfigSection" i18n-name-key="workflow-actin-handler-admin-config-section.name" key="workflow-actin-handler-admin-config-section" location="admin_plugins_menu" weight="1000"> -->
+<!--    <description key="workflow-actin-handler-admin-config-section.description">The WorkflowActinHandlerAdminConfigSection Plugin</description>  -->
+<!--    <label key="workflow-actin-handler-admin-config-section.label"/> -->
+<!--  </web-section>  -->
+<!--  <webwork1 key="admin-config" name="AdminConfig" i18n-name-key="admin-config.name" alias="workflowActionHandler">-->
+<!--    <description key="admin-config.description">The AdminConfig Plugin</description>  -->
+<!--    <actions> -->
+<!--      <action name="dev.jira.webwork.AdminConfigAction" alias="adminConfig">-->
+<!--        <view name="success">/templates/admin-config/success.vm</view>  -->
+<!--        <view name="input">/templates/admin-config/input.vm</view>  -->
+<!--        <view name="error">/templates/admin-config/error.vm</view> -->
+<!--      </action>-->
 
-      <action name="dev.jira.webwork.WorkflowActionSearchAction" alias="workflowActionSearch">
-        <view name="success">/templates/workflow-action-search/main.vm</view>
-        <view name="error">/templates/workflow-action-search/error.vm</view>
-        <view name="notloggedin">/templates/workflow-action-search/notloggedin.vm</view>
-        <view name="nopermission">/templates/workflow-action-search/nopermission.vm</view>
-        <view name="invalidworkflowname">/templates/workflow-action-search/invalidworkflowname.vm</view>
-      </action>
+<!--      <action name="dev.jira.webwork.WorkflowActionSearchAction" alias="workflowActionSearch">-->
+<!--        <view name="success">/templates/workflow-action-search/main.vm</view>-->
+<!--        <view name="error">/templates/workflow-action-search/error.vm</view>-->
+<!--        <view name="notloggedin">/templates/workflow-action-search/notloggedin.vm</view>-->
+<!--        <view name="nopermission">/templates/workflow-action-search/nopermission.vm</view>-->
+<!--        <view name="invalidworkflowname">/templates/workflow-action-search/invalidworkflowname.vm</view>-->
+<!--      </action>-->
 
-    </actions> 
-  </webwork1>  
-  <web-item name="AdminConfigWebItem" i18n-name-key="admin-config-web-item.name" key="admin-config-web-item" section="admin_plugins_menu/workflow-actin-handler-admin-config-section" weight="1000"> 
-    <description key="admin-config-web-item.description">The AdminConfigWebItem Plugin</description>  
-    <label key="admin-config-web-item.label"/>  
-    <link linkId="admin-config-web-item-link">/secure/workflowActionHandler/adminConfig!default.jspa</link>
-  </web-item>
+<!--    </actions> -->
+<!--  </webwork1>  -->
+<!--  <web-item name="AdminConfigWebItem" i18n-name-key="admin-config-web-item.name" key="admin-config-web-item" section="admin_plugins_menu/workflow-actin-handler-admin-config-section" weight="1000"> -->
+<!--    <description key="admin-config-web-item.description">The AdminConfigWebItem Plugin</description>  -->
+<!--    <label key="admin-config-web-item.label"/>  -->
+<!--    <link linkId="admin-config-web-item-link">/secure/workflowActionHandler/adminConfig!default.jspa</link>-->
+<!--  </web-item>-->
   <!--  -->  
   <web-resource key="loader">
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
@@ -77,9 +77,9 @@
   </web-resource>
 
   <web-resource key="jira-workflow-action-handler-main">
-    <context>jira.workflow.view</context>  
-    <!--    <context>atl.general</context>  -->  
-    <dependency>jira.webresources:jira-global</dependency>  
+    <context>jira.workflow.view</context>
+
+    <dependency>jira.webresources:jira-global</dependency>
     <dependency>jira.webresources:set-focus</dependency>  
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:web-resource-manager</dependency>  
     <dependency>com.atlassian.plugins.atlassian-plugins-webresource-plugin:i18n</dependency>
@@ -119,13 +119,9 @@
     <resource type="download" name="Application.js" location="/js/wah-application.js"/>
 
   </web-resource>  
-  <rest name="Workflow Action Handler Rest" i18n-name-key="workflow-action-handler-rest.name" key="workflow-action-handler-rest" path="/workflowactionhandler" version="1.0"> 
-    <description key="workflow-action-handler-rest.description">The Workflow Action Handler Rest Plugin</description> 
-  </rest>  
+  <rest name="Workflow Action Handler Rest" i18n-name-key="workflow-action-handler-rest.name" key="workflow-action-handler-rest" path="/workflowactionhandler" version="1.0">
+    <description key="workflow-action-handler-rest.description">The Workflow Action Handler Rest Plugin</description>
+  </rest>
 
-
-<!--  <web-resource key="simple-web-resource">-->
-<!--    <data key="simple-data" class="dev.data.WorkflowActionHandlerAnalyticsDataProviderImpl" />-->
-<!--  </web-resource>-->
 
 </atlassian-plugin>

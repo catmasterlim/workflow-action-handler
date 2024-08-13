@@ -100,6 +100,8 @@ public class WorkflowActionSearchAction extends JiraWebActionSupport
             return "invalidworkflowname";
         }
 
+        this.webResourceAssembler.resources().requireContext("jira.workflow.view");
+
         return SUCCESS;
     }
 
@@ -145,7 +147,7 @@ public class WorkflowActionSearchAction extends JiraWebActionSupport
     }
 
     public String getHeaderHtml() {
-        return this.workflowHeaderWebComponent.getHtml(getWorkflow(), "workflow_designer", getProject());
+        return this.workflowHeaderWebComponent.getHtml(getWorkflow(), "workflow_action_handler", getProject());
 //        return  "";
     }
 //

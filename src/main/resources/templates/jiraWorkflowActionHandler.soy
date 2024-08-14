@@ -547,11 +547,7 @@
 
                 {let $plugin : $a['plugin'] /}
                 <th id="action-plugin" value="{$plugin['key']}" alt="{$plugin['key']}">
-                    {if $plugin['key'] == 'com.atlassian.jira.plugin.bundled'}
-                        {$plugin['name']}
-                    {else}
-                        Commercial Plugin
-                    {/if}
+                    {$plugin['name']}
                 <span</th>
                 <th id="action-args">
                     {call .actionArgs}

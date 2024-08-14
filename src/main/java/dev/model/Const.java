@@ -81,16 +81,7 @@ public class Const {
             , "com.atlassian.jira.workflow.function.misc.CreateCommentFunction"
             , "com.atlassian.jira.workflow.function.issue.GenerateChangeHistoryFunction"
     );
-//    private static List<String> bundledClassList = Arrays.asList(
-//             "com.atlassian.jira.workflow.condition.PermissionCondition"
-//            , "com.atlassian.jira.workflow.function.issue.AssignToCurrentUserFunction"
-//            , "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
-//            , "com.atlassian.jira.workflow.function.issue.AssignToLeadFunction"
-//            , "com.atlassian.jira.workflow.function.issue.AssignToReporterFunction"
-//            , "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
-//            , "com.atlassian.jira.plugins.webhooks.workflow.TriggerWebhookFunction"
-//            , ""
-//    );
+
     public static boolean isSystemClassType(String classFullName){
         if(classFullName == null || classFullName.isEmpty() ){
             return false;
@@ -398,8 +389,13 @@ public class Const {
 
         // plugin info
         log.trace("injectPredefinedTypeInfo - entity className : {} ", entity.className);
+        entity.plugin =  WorkflowPluginEntity.Create(entity.className, getPlugin(entity));
 
-        entity.plugin =  WorkflowPluginEntity.Create(entity.className, getPlugin(entity));;
+        // TODO : Bundled Plugin 이 아닌 모든 plugin은 임시로 Commercial Plugin로 표시
+        if( entity.plugin.isBundledPlugin == false ){
+            entity.plugin.name = "Commercial Plugin";
+            entity.plugin.key = "CommercialPlugin";
+        }
 
         // args
         addArgDisplyed(entity);

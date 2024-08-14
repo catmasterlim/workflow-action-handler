@@ -5,7 +5,6 @@
  * @param title the title of the dialog
  * @param workflowMode workflowMode
  * @param workflowName name of workflow
- * @param atl_token draft token
  */
 {template .searchDialog}
 <section
@@ -26,8 +25,10 @@
         <h2>
                 <span class="">{$workflowName}</span>
                 <span class=""> workflowMode : {$workflowMode} </span>
-                <span class="hidden" id="workflow-action-handler-atl_token" > atl_token : {$atl_token} </span>
         </h2>
+
+        <div id="workflow-action-handler-message">
+        </div>
 
 
         <div id="container-workflow-action-handler-searchbar" > 
@@ -183,6 +184,7 @@
 /**
 * Action Condition Args
 * @param workflowMode workflowMode
+* @param atl_token draft token
 * @param workflowName name of workflow
 * @param maps map of all
 * @param transition transtion of workflow
@@ -209,16 +211,16 @@
         {if $workflowMode == 'draft'}
         <div class="aui-buttons">
             <a target="_blank" class="aui-button aui-button-link criteria-condition-add-grouped"  {if not $hasMultiInTransition}  aria-disabled="true"  {/if}
-            href="AddWorkflowTransitionCondition!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}&amp;nested=true" title="Add grouped condition" resolved="">
+            href="AddWorkflowTransitionCondition!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}&amp;nested=true" title="Add grouped condition" resolved="">
             <span class="aui-icon aui-icon-small aui-iconfont-devtools-fork">
             Add grouped condition
             </span>
             </a>
-            <a target="_blank" class="aui-button aui-button-link criteria-condition-edit" {if $countArgs < 2} aria-disabled="true" {/if} href="EditWorkflowTransitionConditionParams!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
+            <a target="_blank" class="aui-button aui-button-link criteria-condition-edit" {if $countArgs < 2} aria-disabled="true" {/if} href="EditWorkflowTransitionConditionParams!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
             <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
             </a>
 
-            <a target="_blank" class="aui-button aui-button-link criteria-condition-delete" href="DeleteWorkflowTransitionCondition.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+            <a target="_blank" class="aui-button aui-button-link criteria-condition-delete" href="DeleteWorkflowTransitionCondition.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
             <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
             </a>
         </div>
@@ -271,6 +273,7 @@
 /**
 * Action Validator Args
 * @param workflowMode workflowMode
+* @param atl_token draft token
 * @param workflowName name of workflow
 * @param maps map of all
 * @param transition transtion of workflow
@@ -296,10 +299,10 @@
         {if $workflowMode == 'draft'}
         <div class="aui-buttons">
 
-            <a target="_blank" {if $countArgs < 2} aria-disabled="true" {/if} class="aui-button aui-button-link criteria-validator-edit" href="EditWorkflowTransitionValidatorParams!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
+            <a target="_blank" {if $countArgs < 2} aria-disabled="true" {/if} class="aui-button aui-button-link criteria-validator-edit" href="EditWorkflowTransitionValidatorParams!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
                 <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
             </a>
-            <a target="_blank" class="aui-button aui-button-link criteria-validator-delete" href="DeleteWorkflowTransitionValidator.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+            <a target="_blank" class="aui-button aui-button-link criteria-validator-delete" href="DeleteWorkflowTransitionValidator.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
                 <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
             </a>
         </div>
@@ -332,6 +335,7 @@
 /**
 * Action PostFunction Args
 * @param workflowMode workflowMode
+* @param atl_token draft token
 * @param workflowName name of workflow
 * @param maps map of all
 * @param transition transtion of workflow
@@ -359,10 +363,10 @@
     <li class="criteria-item" style="border-top: 0px;list-style-type: none;">
         {if $workflowMode == 'draft'}
         <div class="aui-buttons">
-            <a target="_blank" {if $countArgs < 3} aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-edit" href="EditWorkflowTransitionPostFunctionParams!default.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
+            <a target="_blank" {if $countArgs < 3} aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-edit" href="EditWorkflowTransitionPostFunctionParams!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
                 <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
             </a>
-            <a target="_blank" {if not $canDelete } aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-delete" href="DeleteWorkflowTransitionPostFunction.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+            <a target="_blank" {if not $canDelete } aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-delete" href="DeleteWorkflowTransitionPostFunction.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
                 <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
             </a>
         </div>
@@ -403,6 +407,7 @@
 /**
 * Action Args
 * @param workflowMode workflowMode
+* @param atl_token draft token
 * @param workflowName name of workflow
 * @param maps map of all
 * @param transition transtion of workflow
@@ -423,6 +428,7 @@
         {case 'Condition'}
             {call .actionConditionArgs}
                 {param workflowMode: $workflowMode /}
+                {param atl_token: $atl_token /}
                 {param workflowName: $workflowName /}
                 {param maps: $maps /}
                 {param transition: $transition /}
@@ -432,6 +438,7 @@
         {case 'Validator'}
             {call .actionValidatorArgs}
                 {param workflowMode: $workflowMode /}
+                {param atl_token: $atl_token /}
                 {param workflowName: $workflowName /}
                 {param maps: $maps /}
                 {param transition: $transition /}
@@ -440,6 +447,7 @@
         {case 'PostFunction'}
             {call .actionPostFunctionArgs}
                 {param workflowMode: $workflowMode /}
+                {param atl_token: $atl_token /}
                 {param workflowName: $workflowName /}
                 {param maps: $maps /}
                 {param transition: $transition /}
@@ -465,6 +473,7 @@
  * /secure/admin/workflows/ViewWorkflowTransition.jspa?
  * workflowMode=draft&workflowName=TEST%3A+Project+Management+Workflow&descriptorTab=conditions&workflowStep=1&workflowTransition=11
  * @param workflowMode workflowMode
+ * @param atl_token draft token
  * @param workflowName name of workflow
  * @param transition transition of workflow
  * @param actionType type of action
@@ -486,13 +495,14 @@
         {let $descriptorTab : 'postfunctions' /}
     {/switch}
 
-  <a target="_blank" href="ViewWorkflowTransition.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}" title="" id="edit_action_{$workflowStepId}_{$workflowTransition}">{$transition['name']}</a>
+  <a target="_blank" href="ViewWorkflowTransition.jspa?workflowMode={$workflowMode}&amp;{if $workflowMode=='draft'}atl_token={$atl_token}&amp;{/if}workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}" title="" id="edit_action_{$workflowStepId}_{$workflowTransition}">{$transition['name']}</a>
   <span class="smallgrey">({$workflowTransition})</span>
 {/template}
 
 /**
  * Action List
  * @param workflowMode workflowMode
+ * @param atl_token draft token
  * @param workflowName name of workflow
  * @param actions name of workflow
  * @param maps map of all
@@ -525,7 +535,7 @@
     {let $transitionMap : $maps['transitionMap']/}
         {foreach $a in $actions}
             {let $transition : $transitionMap[$a['transitionId']] /}
-            <tr class='hidden' >
+            <tr class='hidden workflow-action-handler-item' >
                 <td id="action-name" value="{$a['name']}" alt="{$a['description']}">{$a['name']}</td>
                 <th id="action-type" value="{$a['type']}" >{$a['type']}</th>
                 <th id="action-order" value={$a['order']} >{$a['order']}</th>
@@ -540,6 +550,7 @@
                 <th id="action-args">
                     {call .actionArgs}
                         {param workflowMode: $workflowMode /}
+                        {param atl_token: $atl_token /}
                         {param workflowName: $workflowName /}
                         {param maps : $maps /}
                         {param transition: $transition /}
@@ -549,6 +560,7 @@
                 <th id="transition-id" value="{$a['transitionId']}" >
                     {call .transitionLink}
                         {param workflowMode: $workflowMode /}
+                        {param atl_token: $atl_token /}
                         {param workflowName: $workflowName /}
                         {param transition: $transition /}
                         {param actionType: $a['type'] /}

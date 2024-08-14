@@ -94,6 +94,7 @@ define('jira-workflow-action-handler/search-view', [
             let htmlActionList = Templates.actionList({
                 title: "Action List",
                 workflowMode : Variables.searchResult.workflowMode,
+                atl_token : Utils.getDraftToken(),
                 workflowName : Variables.searchResult.name,
                 actions : Variables.searchResult.actions,
                 maps : Variables.searchResult.maps
@@ -105,8 +106,44 @@ define('jira-workflow-action-handler/search-view', [
             // sorted table
             AJS.tablessortable.setTableSortable(AJS.$(".aui-table-sortable"));
 
+            // reg event - delete
+            this._regDeleteAction(jQuery('#container-workflow-action-handler-actions .criteria-condition-delete')) ;
+            this._regDeleteAction(jQuery('#container-workflow-action-handler-actions .criteria-validator-delete')) ;
+            this._regDeleteAction(jQuery('#container-workflow-action-handler-actions .criteria-post-function-delete')) ;
+
             //
             this._changeShowActionBySearchOption();
+        }
+
+        _regDeleteAction(btnDelete){
+            btnDelete.on('click', e => {
+                            e.preventDefault();
+                            let linkNode = e.target;
+                            let link = linkNode.getAttribute('href');
+                            if(link == undefined){
+                                linkNode = e.target.parentNode;
+                                link = linkNode.getAttribute('href');
+                            }
+
+                            let workflowBaseUrl =  AJS.contextPath() + '/secure/admin/workflows/';
+
+                            jQuery.ajax({
+                                url : workflowBaseUrl +  link
+                                , method : "GET"
+                                , success : function(result, textStatus, jqXHR) {
+                                    jQuery(linkNode).closest('.workflow-action-handler-item').remove();
+                                    Utils.searchAction();
+                                }
+                                , error: function(jqXHR, textStatus, error) {
+                                    AJS.messages.error("#workflow-action-handler-message", {
+                                        id: 'js-message-example',
+                                        title: 'fail',
+                                        body: '<p>'+ error + '</p>'
+                                    });
+                                  }
+                            });
+
+                        });
         }
 
         searchResultProcess(){

@@ -6,6 +6,7 @@ define("jira-workflow-action-handler/Application", [
     "jira-workflow-action-handler/templates",
     "jira-workflow-action-handler/variables",
     "jira-workflow-action-handler/search-view",
+    "jira-workflow-action-handler/utils"
 ], function(
     wrmRequire,
     WRMData,
@@ -13,7 +14,8 @@ define("jira-workflow-action-handler/Application", [
     require,
     Templates,
     Variables,
-    SearchView
+    SearchView,
+    Utils
 ) {
 
     class ApplicationWorkflowActionHandler {
@@ -39,8 +41,7 @@ define("jira-workflow-action-handler/Application", [
                 isEditable: !!jQuery("#edit-workflow-trigger").length,
                 isInactive: !!jQuery(".status-inactive").length,
                 name: jQuery(".workflow-name").text(),
-                project: jQuery("#workflow-designer-project").val(),
-                atl_token : jQuery('#publish-draft').length != 0 ? new URLSearchParams(jQuery('#discard-draft').attr('href')).get('atl_token') : ""
+                project: jQuery("#workflow-designer-project").val()
             };
         }
 
@@ -51,7 +52,6 @@ define("jira-workflow-action-handler/Application", [
                 isDraft : this._workflowData.isDraft,
                 workflowMode : this._workflowData.isDraft ? "draft" : "live",
                 workflowName : this._workflowData.name,
-                atl_token : this._workflowData.atl_token,
                 actions : []
             });
         }
@@ -59,7 +59,7 @@ define("jira-workflow-action-handler/Application", [
         _eventShow(e){
             e.preventDefault();
             let classThis = JIRA.WorkflowActionHandler.Variables.Application;
-            AJS.$('#workflow-action-handler-search-button').trigger('click');
+            Utils.searchAction();
             AJS.dialog2(classThis._workflowView).show();
         }
         _setupActionLink(){

@@ -9,7 +9,7 @@ define("jira-workflow-action-handler/loader", [
     require,
 ) {
 
-    // console.log('----> jira-workflow-action-handler/loader');
+    // console.log(('----> jira-workflow-action-handler/loader');
 
     return {
         /**

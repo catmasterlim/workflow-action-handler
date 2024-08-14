@@ -55,6 +55,7 @@ public class WorkflowPluginEntity {
             }
         } else {
             pluginEntity = CreateUnknownPluginEntity();
+            pluginEntity.in_key = classFullName;
         }
 
         if(plugin.isPresent()) {

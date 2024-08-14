@@ -2,6 +2,7 @@ package dev.model;
 
 import com.atlassian.jira.config.ConstantsManager;
 import com.atlassian.jira.issue.fields.CustomField;
+import com.atlassian.plugin.ModuleDescriptor;
 import com.atlassian.plugin.Plugin;
 import com.atlassian.plugin.PluginAccessor;
 import org.slf4j.Logger;
@@ -360,6 +361,31 @@ public class Const {
         return entity;
     }
 
+    public static Optional<Plugin> getPlugin(WorkflowActionEntity entity){
+        Map<String, String> mapPackage = new HashMap<>();
+
+        //
+        mapPackage.put("ch.beecom.jira.jsu.workflow.", "com.googlecode.jira-suite-utilities");
+        mapPackage.put("com.onresolve.jira.", "com.onresolve.jira.groovy.groovyrunnerscriptrunner-workflow-function-com");
+        mapPackage.put("com.onresolve.scriptrunner.", "com.onresolve.jira.groovy.groovyrunnerscriptrunner-workflow-function-com");
+
+        //
+        Collection<Plugin> plugins = pluginAccessor.getPlugins();
+
+        String fullmodulekey = entity.getModuleKey();
+        if( fullmodulekey == null || fullmodulekey.isEmpty() ){
+            Optional<String> finded = mapPackage.keySet().stream().filter( it -> entity.className.startsWith(it) ).findFirst();
+            if( finded.isPresent() ){
+                fullmodulekey = mapPackage.get( finded.get() );
+            } else {
+                log.trace(" plugin trace - not find : {}", entity.className);
+            }
+        }
+        final String entityModuleKey =  (String)( fullmodulekey == null || fullmodulekey.isEmpty() ? entity.className : fullmodulekey) ;
+        Optional<Plugin> plugin = plugins.stream().filter(p ->  entityModuleKey.startsWith(p.getKey())  || p.getModuleDescriptor(entityModuleKey) != null ).findFirst();
+        return plugin;
+    }
+
     public static void injectPredefinedTypeInfo(WorkflowActionEntity entity){
 
         // predefined
@@ -371,13 +397,9 @@ public class Const {
         }
 
         // plugin info
-        Collection<Plugin> plugins = pluginAccessor.getPlugins();
         log.trace("injectPredefinedTypeInfo - entity className : {} ", entity.className);
 
-        String fullmodulekey = entity.getModuleKey();
-        final String entityModuleKey =  (String)( fullmodulekey == null || fullmodulekey.isEmpty() ? entity.className : fullmodulekey) ;
-        Optional<Plugin> plugin = plugins.stream().filter(p ->  entityModuleKey.startsWith(p.getKey())).findFirst();
-        entity.plugin =  WorkflowPluginEntity.Create(entity.className, plugin);;
+        entity.plugin =  WorkflowPluginEntity.Create(entity.className, getPlugin(entity));;
 
         // args
         addArgDisplyed(entity);

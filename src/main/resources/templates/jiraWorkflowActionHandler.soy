@@ -5,6 +5,7 @@
  * @param title the title of the dialog
  * @param workflowMode workflowMode
  * @param workflowName name of workflow
+ * @param atl_token draft token
  */
 {template .searchDialog}
 <section
@@ -25,6 +26,7 @@
         <h2>
                 <span class="">{$workflowName}</span>
                 <span class=""> workflowMode : {$workflowMode} </span>
+                <span class="hidden" id="workflow-action-handler-atl_token" > atl_token : {$atl_token} </span>
         </h2>
 
 
@@ -256,7 +258,7 @@
                 {if $countArgs < 2 and isNonnull($desc) }
                     {$desc}
                 {else}
-                    <b> Not Define </b>
+                    <b> Not Supported Plugin </b>
                     {foreach $arg in $args}
                         {$arg} : {$args[$arg]}
                     {/foreach}
@@ -317,7 +319,7 @@
                 {if $countArgs < 2 and isNonnull($desc) }
                     {$desc}
                 {else}
-                    <b> Not Define </b>
+                    <b> Not Supported Plugin </b>
                     {foreach $arg in $args}
                         {$arg} : {$args[$arg]}
                     {/foreach}
@@ -388,7 +390,7 @@
                 {if $countArgs < 3 and isNonnull($desc) }
                     {$desc}
                 {else}
-                    <b> Not Define </b>
+                    <b> Not Supported Plugin </b>
                     {foreach $arg in $args}
                         {$arg} : {$args[$arg]}
                     {/foreach}
@@ -465,15 +467,24 @@
  * @param workflowMode workflowMode
  * @param workflowName name of workflow
  * @param transition transition of workflow
+ * @param actionType type of action
  *
  */
 {template .transitionLink}
     {let $workflowTransition : $transition['id'] /}
-    {let $descriptorTab : 'conditions' /}
-
     {let $workflowSteps : $transition['steps'] /}
     {let $workflowStep : $workflowSteps[0] /}
     {let $workflowStepId : $workflowStep['id'] /}
+
+    {let $descriptorTab : 'postfunctions' /}
+    {switch $actionType}
+      {case 'Condition'}
+        {let $descriptorTab : 'conditions' /}
+      {case 'Validator'}
+        {let $descriptorTab : 'validators' /}
+      {default}
+        {let $descriptorTab : 'postfunctions' /}
+    {/switch}
 
   <a target="_blank" href="ViewWorkflowTransition.jspa?workflowMode={$workflowMode}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}" title="" id="edit_action_{$workflowStepId}_{$workflowTransition}">{$transition['name']}</a>
   <span class="smallgrey">({$workflowTransition})</span>
@@ -540,6 +551,7 @@
                         {param workflowMode: $workflowMode /}
                         {param workflowName: $workflowName /}
                         {param transition: $transition /}
+                        {param actionType: $a['type'] /}
                     {/call}
                 </th>
             </tr>

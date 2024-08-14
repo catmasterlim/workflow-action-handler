@@ -39,7 +39,8 @@ define("jira-workflow-action-handler/Application", [
                 isEditable: !!jQuery("#edit-workflow-trigger").length,
                 isInactive: !!jQuery(".status-inactive").length,
                 name: jQuery(".workflow-name").text(),
-                project: jQuery("#workflow-designer-project").val()
+                project: jQuery("#workflow-designer-project").val(),
+                atl_token : jQuery('#publish-draft').length != 0 ? new URLSearchParams(jQuery('#discard-draft').attr('href')).get('atl_token') : ""
             };
         }
 
@@ -50,6 +51,7 @@ define("jira-workflow-action-handler/Application", [
                 isDraft : this._workflowData.isDraft,
                 workflowMode : this._workflowData.isDraft ? "draft" : "live",
                 workflowName : this._workflowData.name,
+                atl_token : this._workflowData.atl_token,
                 actions : []
             });
         }

@@ -55,7 +55,7 @@ define('jira-workflow-action-handler/utils', [
     }
 
 
-    console.log('----> jira-workflow-action-handler/utils');
+    // console.log('----> jira-workflow-action-handler/utils');
     // make sure that the template namespace is in place
     AJS.namespace("JIRA.WorkflowActionHandler.Utils");
 

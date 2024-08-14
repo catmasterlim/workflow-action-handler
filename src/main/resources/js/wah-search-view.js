@@ -19,7 +19,7 @@ define('jira-workflow-action-handler/search-view', [
         }
 
         init(){
-            console.log('---> SearchViewClass : init');
+            // console.log('---> SearchViewClass : init');
             this._setupSearchOption();
         }
 
@@ -172,7 +172,7 @@ define('jira-workflow-action-handler/search-view', [
         async search(){
 
             let workflowData = this._getWorkflowData();
-            console.log('--> workflowData : ', workflowData);
+            // console.log('--> workflowData : ', workflowData);
             let data = {
                 "workflowMode" : workflowData.isDraft ? "draft" : "live"
                 , "workflowName" : workflowData.name
@@ -194,7 +194,7 @@ define('jira-workflow-action-handler/search-view', [
                       }
                 });
             }).then( (result) => {
-                console.log('--> search then ok ');
+                // console.log('--> search then ok ');
                  Variables.searchResult = result;
                 this.searchResultProcess();
             })
@@ -206,7 +206,7 @@ define('jira-workflow-action-handler/search-view', [
       _setupSearchOption(){
 
             if(AJS.$('#container-workflow-action-handler-searchbar').length != 1 ){
-                console.log('---> _setupSearchOption : not exists container-workflow-action-handler-searchbar');
+                // console.log('---> _setupSearchOption : not exists container-workflow-action-handler-searchbar');
                 return;
             }
 
@@ -218,7 +218,7 @@ define('jira-workflow-action-handler/search-view', [
             searchButton.off('click');
             searchButton.on('click', e => {
                 e.preventDefault();
-                console.log('---> search actions');
+                // console.log('---> search actions');
                 var that = e.target;
                 if (!that.isBusy()) {
                     that.busy();
@@ -239,7 +239,7 @@ define('jira-workflow-action-handler/search-view', [
                     };
             }
 
-            console.log('Variables.searchResult : ', Variables.searchResult);
+            // console.log('Variables.searchResult : ', Variables.searchResult);
 
             let searchOptionContainer = AJS.$('#container-workflow-action-handler-searchbar ul');
             searchOptionContainer.find('.search-option').empty();
@@ -300,7 +300,7 @@ define('jira-workflow-action-handler/search-view', [
 //  ?.
   //--------------- end search options ----------- ---
 
-  console.log('----> jira-workflow-action-handler/search-view');
+  // console.log('----> jira-workflow-action-handler/search-view');
   AJS.namespace("JIRA.WorkflowActionHandler.SearchView");
 
   let app = new SearchViewClass();

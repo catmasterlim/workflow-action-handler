@@ -9,7 +9,7 @@ define("jira-workflow-action-handler/loader", [
     require,
 ) {
 
-    console.log('----> jira-workflow-action-handler/loader');
+    // console.log('----> jira-workflow-action-handler/loader');
 
     return {
         /**
@@ -21,8 +21,10 @@ define("jira-workflow-action-handler/loader", [
          * @returns a jQuery promise that is resolved on success, or rejected on failure.
          */
         load: function requireWRM(done) {
+
             return new Promise(function (resolve, reject) {
                 wrmRequire(["wrc!dev.jiraWorkflowActionHandler"], function () {
+
                     done && done(require("jira-workflow-action-handler/loader"));
                 }).done(resolve).fail(reject);
             });

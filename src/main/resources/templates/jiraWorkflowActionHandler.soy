@@ -485,17 +485,18 @@
     {let $workflowStep : $workflowSteps[0] /}
     {let $workflowStepId : $workflowStep['id'] /}
 
-    {let $descriptorTab : 'postfunctions' /}
-    {switch $actionType}
-      {case 'Condition'}
-        {let $descriptorTab : 'conditions' /}
-      {case 'Validator'}
-        {let $descriptorTab : 'validators' /}
-      {default}
-        {let $descriptorTab : 'postfunctions' /}
-    {/switch}
+    {let $descriptorTab}
+        {switch $actionType}
+          {case 'Condition'}
+            conditions
+          {case 'Validator'}
+            validators
+          {default}
+            postfunctions
+        {/switch}
+    {/let}
 
-  <a target="_blank" href="ViewWorkflowTransition.jspa?workflowMode={$workflowMode}&amp;{if $workflowMode=='draft'}atl_token={$atl_token}&amp;{/if}workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}" title="" id="edit_action_{$workflowStepId}_{$workflowTransition}">{$transition['name']}</a>
+  <a target="_blank" test="{$actionType}" href="ViewWorkflowTransition.jspa?workflowMode={$workflowMode}&amp;{if $workflowMode=='draft'}atl_token={$atl_token}&amp;{/if}workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}" title="" id="edit_action_{$workflowStepId}_{$workflowTransition}">{$transition['name']}</a>
   <span class="smallgrey">({$workflowTransition})</span>
 {/template}
 

@@ -22,9 +22,18 @@
         <h1 class="aui-dialog2-header-main" id="dialog-show-button--heading">{$title}</h1>
     </header>
     <div class="aui-dialog2-content" id="dialog-show-button--description">
-        <h2>
-                <span class="">{$workflowName}</span>
-                <span class=""> workflowMode : {$workflowMode} </span>
+        <h2 class="workflow-action-handler-name">
+
+
+            <span class="">{$workflowName}</span>
+
+            <span class="hidden"> workflowMode : {$workflowMode} </span>
+            </span> &nbsp </span>
+            {if $workflowMode == 'draft'}
+            <span id="workflow-action-handler-loz-workflow-draft" class="aui-lozenge status-draft" title="A draft workflow is a draft version of an active workflow, which can be published to apply all changes.">Draft</span>
+            {else}
+            <span id="workflow-action-handler-loz-workflow-active" class="aui-lozenge status-active" title="An active workflow is a workflow currently assigned to at least one scheme which is associated with one or more projects.">Active</span>
+            {/if}
         </h2>
 
         <div id="workflow-action-handler-message">

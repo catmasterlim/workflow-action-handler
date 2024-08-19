@@ -129,11 +129,14 @@ define('jira-workflow-action-handler/search-options', [
         _changeSelected(val, isChecked){
             let hasSelected = Object.keys(this.selectedItems).length > 0;
             let selectedOptionText = this.optionLabel + " : All";
+            let selectedOptionTextFull = '';
             if( hasSelected ){
-                selectedOptionText = Utils.truncateString( Utils.arrayFromValues(this.selectedItems).join(','), 15);
+                selectedOptionTextFull = Utils.arrayFromValues(this.selectedItems).join(',');
+                selectedOptionText = Utils.truncateString( selectedOptionTextFull, 15);
             }
             // console.log(('selectedOptionText : ', selectedOptionText);
             jQuery('#'+this.optionId+'-button').text(selectedOptionText);
+            jQuery('#'+this.optionId+'-button').attr('title', selectedOptionTextFull);
 
             // selected to top
             let elContainerSelected = jQuery(`#${this.optionId}-dropdown .selected-items`);

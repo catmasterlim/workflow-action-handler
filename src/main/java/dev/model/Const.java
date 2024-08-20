@@ -5,6 +5,8 @@ import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.plugin.ModuleDescriptor;
 import com.atlassian.plugin.Plugin;
 import com.atlassian.plugin.PluginAccessor;
+import dev.model.customInterpreters.ActionInterpreter;
+import dev.model.customInterpreters.ActionInterpreterMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -402,6 +404,12 @@ public class Const {
 
         entity.name = predefinedInfo.name;
         entity.description = predefinedInfo.description;
+
+        //
+        ActionInterpreter interpreter = ActionInterpreterMgr.Inst().getInterperter(entity);
+        if(interpreter != null ) {
+            entity = interpreter.interpreterEntity(entity);
+        }
     }
 
 }

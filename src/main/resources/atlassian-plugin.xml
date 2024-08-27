@@ -94,7 +94,8 @@
     <dependency>com.atlassian.auiplugin:aui-table</dependency>  
     <dependency>com.atlassian.auiplugin:aui-table-sortable</dependency>  
     <dependency>com.atlassian.auiplugin:inline-dialog</dependency>  
-    <dependency>com.atlassian.auiplugin:aui-dialog2</dependency>  
+    <dependency>com.atlassian.auiplugin:aui-dialog2</dependency>
+    <dependency>com.atlassian.auiplugin:aui-message</dependency>
     <dependency>com.atlassian.auiplugin:soy</dependency>
 
 

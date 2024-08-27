@@ -79,17 +79,17 @@ define('jira-workflow-action-handler/search-options', [
                 let val = e.target.getAttribute('value');
                 let text = e.target.textContent;
 
-//                console.log('isChecked :',  isChecked);
-//                console.log('val :',val);
-//                console.log('text :',text);
-//                console.log('e.target :',e.target);
+//                // console.log(('isChecked :',  isChecked);
+//                // console.log(('val :',val);
+//                // console.log(('text :',text);
+//                // console.log(('e.target :',e.target);
 
                 if (isChecked) {
                     this.selectedItems[val] = text;
                 } else {
                     delete this.selectedItems[val];
                 }
-                console.log('optionId', this.optionId, 'selectedItems  : ', this.selectedItems);
+                // console.log(('optionId', this.optionId, 'selectedItems  : ', this.selectedItems);
 
                 this._changeSelected(val, isChecked);
             });
@@ -112,10 +112,10 @@ define('jira-workflow-action-handler/search-options', [
                 elInput.on('input', e => {
                     e.preventDefault();
                     let val = e.target.value
-                    console.log( 'find value ', val);
+                    // console.log(( 'find value ', val);
                     let elItems = jQuery('#'+this.optionId+'-dropdown .items aui-item-checkbox');
                     for(let item of elItems){
-                        console.log('item text : ', item.textContent);
+                        // console.log(('item text : ', item.textContent);
                         if(val=="" || item.textContent.includes(val) ){
                           jQuery(item).show();
                         }else {
@@ -129,11 +129,14 @@ define('jira-workflow-action-handler/search-options', [
         _changeSelected(val, isChecked){
             let hasSelected = Object.keys(this.selectedItems).length > 0;
             let selectedOptionText = this.optionLabel + " : All";
+            let selectedOptionTextFull = '';
             if( hasSelected ){
-                selectedOptionText = Utils.truncateString( Utils.arrayFromValues(this.selectedItems).join(','), 15);
+                selectedOptionTextFull = Utils.arrayFromValues(this.selectedItems).join(',');
+                selectedOptionText = Utils.truncateString( selectedOptionTextFull, 15);
             }
-            console.log('selectedOptionText : ', selectedOptionText);
+            // console.log(('selectedOptionText : ', selectedOptionText);
             jQuery('#'+this.optionId+'-button').text(selectedOptionText);
+            jQuery('#'+this.optionId+'-button').attr('title', selectedOptionTextFull);
 
             // selected to top
             let elContainerSelected = jQuery(`#${this.optionId}-dropdown .selected-items`);
@@ -166,12 +169,12 @@ define('jira-workflow-action-handler/search-options', [
 
         _eventSearchOption_find(e){
               let val = e.target.value
-              console.log( 'find value ', val);
+              // console.log(( 'find value ', val);
 
               let items = AJS.$('#action-name-dropdown  aui-item-checkbox')
 
               for(let item of items){
-                console.log('item text : ', item.textContent);
+                // console.log(('item text : ', item.textContent);
                 if(val=="" || item.textContent.includes(val) ){
                   item.style.visibility = "visible";
                 }else {
@@ -185,7 +188,7 @@ define('jira-workflow-action-handler/search-options', [
 
   //--------------- end search options ----------- ---
 
-  console.log('----> jira-workflow-action-handler/search-options');
+  // console.log(('----> jira-workflow-action-handler/search-options');
   AJS.namespace("JIRA.WorkflowActionHandler.SearchOptions");
 
   return SearchOptionClass;

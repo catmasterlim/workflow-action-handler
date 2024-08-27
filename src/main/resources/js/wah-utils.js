@@ -1,4 +1,8 @@
-define('jira-workflow-action-handler/utils', [], function () {
+define('jira-workflow-action-handler/utils', [
+    "jquery"
+], function (
+    jQuery
+) {
 
     class Utils {
         arrayFromKeys(items, defaultVal){
@@ -24,15 +28,38 @@ define('jira-workflow-action-handler/utils', [], function () {
             return str;
         }
 
-//        getUrl
+        getDraftToken(){
+            if( jQuery('#publish-draft').length  == 0) {
+                return '';
+            }
+
+            try{
+                let token = new URLSearchParams(jQuery('#discard-draft').attr('href')).get('atl_token');
+                if(token == undefined){
+                    return ''
+                }
+
+                return token;
+
+            } catch (err){
+
+            }
+
+            return '';
+        }
+
+        searchAction(){
+            AJS.$('#workflow-action-handler-search-button').trigger('click');
+        }
+
     }
 
 
-    console.log('----> jira-workflow-action-handler/utils');
+    // console.log(('----> jira-workflow-action-handler/utils');
     // make sure that the template namespace is in place
     AJS.namespace("JIRA.WorkflowActionHandler.Utils");
 
-    let utils = new Utils()
+    let utils = new Utils();
     return utils;
 });
 

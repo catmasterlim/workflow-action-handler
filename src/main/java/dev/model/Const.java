@@ -2,6 +2,7 @@ package dev.model;
 
 import com.atlassian.jira.config.ConstantsManager;
 import com.atlassian.jira.issue.fields.CustomField;
+import com.atlassian.plugin.ModuleDescriptor;
 import com.atlassian.plugin.Plugin;
 import com.atlassian.plugin.PluginAccessor;
 import org.slf4j.Logger;
@@ -80,15 +81,7 @@ public class Const {
             , "com.atlassian.jira.workflow.function.misc.CreateCommentFunction"
             , "com.atlassian.jira.workflow.function.issue.GenerateChangeHistoryFunction"
     );
-    private static List<String> bundledClassList = Arrays.asList(
-             "com.atlassian.jira.workflow.condition.PermissionCondition"
-            , "com.atlassian.jira.workflow.function.issue.AssignToCurrentUserFunction"
-            , "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
-            , "com.atlassian.jira.workflow.function.issue.AssignToLeadFunction"
-            , "com.atlassian.jira.workflow.function.issue.AssignToReporterFunction"
-            , "com.atlassian.jira.workflow.function.issue.UpdateIssueFieldFunction"
-            , "com.atlassian.jira.plugins.webhooks.workflow.TriggerWebhookFunction"
-    );
+
     public static boolean isSystemClassType(String classFullName){
         if(classFullName == null || classFullName.isEmpty() ){
             return false;
@@ -99,7 +92,19 @@ public class Const {
         if(classFullName == null || classFullName.isEmpty() ){
             return false;
         }
-        return bundledClassList.contains(classFullName);
+
+        if( mapPredefinedConditionInfo.get(classFullName) != null ){
+            return true;
+        }
+        if( mapPredefinedValidatorInfo.get(classFullName) != null ){
+            return true;
+        }
+        if( mapPredefinedPostFunctionInfo.get(classFullName) != null ){
+            return true;
+        }
+
+        return false;
+
     }
 
     private static final Map<String, PredefinedInfo > mapPredefinedConditionInfo ;
@@ -184,6 +189,31 @@ public class Const {
 
     }
 
+    private static final Map<String, PredefinedInfo > mapPredefinedValidatorInfo ;
+    static {
+        mapPredefinedValidatorInfo = new HashMap<>();
+        PredefinedInfo predefinedInfo = null;
+        predefinedInfo = new PredefinedInfo(
+                "com.atlassian.jira.workflow.validator.PermissionValidator"
+                ,"Permission Validator"
+                , "Validates that the user has a permission."
+        );
+        mapPredefinedValidatorInfo.put(predefinedInfo.className, predefinedInfo);
+
+        predefinedInfo = new PredefinedInfo(
+                "com.atlassian.jira.workflow.validator.UserPermissionValidator"
+                ,"User Permission Validator"
+                , "Validates that the user has a permission, where the OSWorkflow variable holding the username is configurable. Obsolete. "
+        );
+        mapPredefinedValidatorInfo.put(predefinedInfo.className, predefinedInfo);
+
+        /**
+         Permission Validator 	Validates that the user has a permission.
+         User Permission Validator 	Validates that the user has a permission, where the OSWorkflow variable holding the username is configurable. Obsolete.
+         */
+
+    }
+
     private static final Map<String, PredefinedInfo > mapPredefinedPostFunctionInfo ;
     static {
         mapPredefinedPostFunctionInfo = new HashMap<>();
@@ -231,11 +261,13 @@ public class Const {
 
     }
 
-    private static PredefinedInfo getPredefinedInfo(WorkflowActionEntity entity ){
+    private static PredefinedInfo getPredefinedInfo(WorkflowActionEntity entity){
         WorkflowActionType actionType = entity.type;
         switch (actionType){
             case Condition:
                 return mapPredefinedConditionInfo.get(entity.className);
+            case Validator:
+                return mapPredefinedValidatorInfo.get(entity.className);
             case PostFunction:
                 return mapPredefinedPostFunctionInfo.get(entity.className);
         }
@@ -320,36 +352,49 @@ public class Const {
         return entity;
     }
 
-    public static void injectPredefinedTypeInfo(WorkflowActionEntity entity){
+    public static Optional<Plugin> getPlugin(WorkflowActionEntity entity){
+        Map<String, String> mapPackage = new HashMap<>();
 
-        // plugin info
-        if(pluginAccessor != null){
-            Collection<Plugin> plugins = pluginAccessor.getPlugins();
+        //
+        mapPackage.put("ch.beecom.jira.jsu.workflow.", "com.googlecode.jira-suite-utilities");
+        mapPackage.put("com.onresolve.jira.", "com.onresolve.jira.groovy.groovyrunnerscriptrunner-workflow-function-com");
+        mapPackage.put("com.onresolve.scriptrunner.", "com.onresolve.jira.groovy.groovyrunnerscriptrunner-workflow-function-com");
 
-            log.trace("injectPredefinedTypeInfo - entity className : {} ", entity.className);
+        //
+        Collection<Plugin> plugins = pluginAccessor.getPlugins();
 
-            String fullmodulekey = entity.getModuleKey();
-            final String entityModuleKey =  (String)( fullmodulekey == null || fullmodulekey.isEmpty() ? entity.className : fullmodulekey) ;
-            Optional<Plugin> plugin = plugins.stream().filter(p ->  entityModuleKey.startsWith(p.getKey())).findFirst();
-            if (plugin.isPresent()) {
-                entity.plugin = new WorkflowPluginEntity(plugin.get());;
-            }
-            if(Const.isSystemClassType(entity.className)){
-                entity.plugin = WorkflowPluginEntity.CreateJiraSystemEntity(entity.plugin);
-            } else if (Const.isBundledClassType(entity.className)){
-                entity.plugin = WorkflowPluginEntity.CreateJiraBundlePluginEntity(entity.plugin);
-            }
-
-            if(entity.plugin == null){
-                entity.plugin = WorkflowPluginEntity.CreateUnknownPluginEntity();
+        String fullmodulekey = entity.getModuleKey();
+        if( fullmodulekey == null || fullmodulekey.isEmpty() ){
+            Optional<String> finded = mapPackage.keySet().stream().filter( it -> entity.className.startsWith(it) ).findFirst();
+            if( finded.isPresent() ){
+                fullmodulekey = mapPackage.get( finded.get() );
+            } else {
+                log.trace(" plugin trace - not find : {}", entity.className);
             }
         }
+        final String entityModuleKey =  (String)( fullmodulekey == null || fullmodulekey.isEmpty() ? entity.className : fullmodulekey) ;
+        Optional<Plugin> plugin = plugins.stream().filter(p ->  entityModuleKey.startsWith(p.getKey())  || p.getModuleDescriptor(entityModuleKey) != null ).findFirst();
+        return plugin;
+    }
+
+    public static void injectPredefinedTypeInfo(WorkflowActionEntity entity){
 
         // predefined
         PredefinedInfo predefinedInfo = getPredefinedInfo(entity);
         if( predefinedInfo == null ){
             //String className, String name, String description
             predefinedInfo = new PredefinedInfo(entity.className, entity.classSimpleName, "");
+
+        }
+
+        // plugin info
+        log.trace("injectPredefinedTypeInfo - entity className : {} ", entity.className);
+        entity.plugin =  WorkflowPluginEntity.Create(entity.className, getPlugin(entity));
+
+        // TODO : Bundled Plugin 이 아닌 모든 plugin은 임시로 Commercial Plugin로 표시
+        if( entity.plugin.isBundledPlugin == false ){
+            entity.plugin.name = "Commercial Plugin";
+            entity.plugin.key = "CommercialPlugin";
         }
 
         // args

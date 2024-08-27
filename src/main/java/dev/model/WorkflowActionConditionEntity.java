@@ -4,6 +4,7 @@ package dev.model;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,16 +36,22 @@ public class WorkflowActionConditionEntity extends WorkflowActionEntity  {
     @XmlElement(name = "isNegate")
     public boolean isNegate;
 
+    @XmlElement(name = "temp")
+    public String temp;
+
+
+
     public WorkflowActionConditionEntity(ConditionDescriptor descriptor, JiraWorkflow workflow, int order, int transitionId){
         super(WorkflowActionType.Condition);
 
         this.id= descriptor.getId();
-        this.className = (String)descriptor.getArgs().get("class.name");
+        this.temp = descriptor.getClass().getName();
+        this.className = ((String)descriptor.getArgs().get("class.name")).trim();
         this.classSimpleName = this.className.substring(this.className.lastIndexOf(".")+1);
         this.name = descriptor.getName();
         this.order = order;
         this.transitionId = transitionId;
-        this.args = descriptor.getArgs();
+        this.args = new HashMap(descriptor.getArgs());
         if(this.args.get("statuses") != null){
             String str = (String)this.args.get("statuses");
             this.args.put("statuses", str.split(","));

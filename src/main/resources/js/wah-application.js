@@ -6,6 +6,7 @@ define("jira-workflow-action-handler/Application", [
     "jira-workflow-action-handler/templates",
     "jira-workflow-action-handler/variables",
     "jira-workflow-action-handler/search-view",
+    "jira-workflow-action-handler/utils"
 ], function(
     wrmRequire,
     WRMData,
@@ -13,7 +14,8 @@ define("jira-workflow-action-handler/Application", [
     require,
     Templates,
     Variables,
-    SearchView
+    SearchView,
+    Utils
 ) {
 
     class ApplicationWorkflowActionHandler {
@@ -24,7 +26,7 @@ define("jira-workflow-action-handler/Application", [
         execute(){
             this._setupPage();
            /* //
-            console.log("this._workflowView.length : " + this._workflowView.length);
+            // console.log(("this._workflowView.length : " + this._workflowView.length);
             if (this._workflowView.length > 0) {
 
             }*/
@@ -44,7 +46,7 @@ define("jira-workflow-action-handler/Application", [
         }
 
         _getSearchView() {
-            console.log(  " _getSearchView - _workflowData : " + this._workflowData);
+            // console.log((  " _getSearchView - _workflowData : " + this._workflowData);
             return Templates.searchDialog({
                 title: "Action Search Dialog",
                 isDraft : this._workflowData.isDraft,
@@ -57,21 +59,21 @@ define("jira-workflow-action-handler/Application", [
         _eventShow(e){
             e.preventDefault();
             let classThis = JIRA.WorkflowActionHandler.Variables.Application;
-            AJS.$('#workflow-action-handler-search-button').trigger('click');
+            Utils.searchAction();
             AJS.dialog2(classThis._workflowView).show();
         }
         _setupActionLink(){
             let actionLinkEl = jQuery("#jira-workflow-action-handler");
             // button
             let hasLinkButton = !!actionLinkEl.length;
-            console.log('--->  hasLinkButton : ' + hasLinkButton);
+            // console.log(('--->  hasLinkButton : ' + hasLinkButton);
             if( hasLinkButton ){
                 return;
             }
 
             // link buttons ( Digram | Text ) - Text
             let el = jQuery('#workflow-links');
-            console.log('--->  target : ' + el.length);
+            // console.log(('--->  target : ' + el.length);
             if(el.length > 0){
                 el.append(
                     '<a class="aui-button" id="jira-workflow-action-handler" resolved="">Action Search</a>'
@@ -144,7 +146,7 @@ define("jira-workflow-action-handler/Application", [
 
         _setupPage() {
 
-            console.log('---> _setupPage');
+            // console.log(('---> _setupPage');
 
             this._workflowData = this._getWorkflowData();
             this._workflowLinkContainer = jQuery("#workflow-links");
@@ -153,7 +155,7 @@ define("jira-workflow-action-handler/Application", [
         }
     }
 
-    console.log('----> jira-workflow-action-handler/Application');
+    // console.log(('----> jira-workflow-action-handler/Application');
     AJS.namespace("JIRA.WorkflowActionHandler.Application");
 
     let app = new ApplicationWorkflowActionHandler();

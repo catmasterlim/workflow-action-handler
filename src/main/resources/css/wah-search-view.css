@@ -1,3 +1,8 @@
+.workflow-action-handler-name {
+    display: flex;
+    align-items: center;
+}
+
 .search-option-button-menu {
   --aui-btn-bg: var(--aui-button-subtle-bg-color,transparent);
   --aui-btn-border: var(--aui-button-subtle-border-color,transparent);
@@ -24,3 +29,4 @@
 .criteria-list > .search-option > button.active{
       background-color: var(--aui-btn-bg);
 }
+

@@ -27,9 +27,6 @@ public class WorkflowActionConditionEntity extends WorkflowActionEntity  {
     @XmlElement(name = "countArgs")
     public int countArgs;
 
-    @XmlElement(name = "asXML")
-    public String asXML;
-
     @XmlElement(name = "isFiltered")
     public boolean isFiltered;
 

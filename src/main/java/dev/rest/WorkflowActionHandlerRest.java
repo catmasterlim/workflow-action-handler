@@ -2,23 +2,19 @@ package dev.rest;
 
 import com.atlassian.jira.config.ResolutionManager;
 import com.atlassian.jira.config.StatusCategoryManager;
-import com.atlassian.jira.permission.GlobalPermissionKey;
-import com.atlassian.jira.permission.ProjectPermission;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.security.JiraAuthenticationContext;
-import com.atlassian.jira.util.json.JSONObject;
-import com.atlassian.jira.util.json.JsonUtil;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.jira.workflow.WorkflowManager;
 import com.atlassian.jira.config.ConstantsManager;
-//import com.atlassian.jira.component.ComponentAccessor;
 
 
 import com.atlassian.sal.api.user.UserKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -61,6 +57,7 @@ public class WorkflowActionHandlerRest {
     private final com.atlassian.jira.security.PermissionManager permissionManager;
 
 
+    @Inject
     public WorkflowActionHandlerRest(WorkflowManager workflowManager, JiraAuthenticationContext jiraAuthenticationContext, com.atlassian.sal.api.user.UserManager userManager, ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager, com.atlassian.plugin.PluginAccessor pluginAccessor, ResolutionManager resolutionManager, com.atlassian.jira.security.PermissionManager permissionManager) {
         this.workflowManager = workflowManager;
         this.jiraAuthenticationContext = jiraAuthenticationContext;

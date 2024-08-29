@@ -12,19 +12,19 @@ import com.atlassian.jira.workflow.WorkflowManager;
 import com.atlassian.plugin.spring.scanner.annotation.imports.JiraImport;
 import com.atlassian.sal.api.websudo.WebSudoRequired;
 import com.atlassian.webresource.api.assembler.WebResourceAssembler;
-//import dev.data.WorkflowActionHandlerAnalyticsDataProvider;
-import dev.api.WorkflowActionHandlerAnalyticsDataProvider;
+
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.jira.util.JiraComponentFactory;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
-@SupportedMethods({RequestMethod.GET})
-@WebSudoRequired
+import org.springframework.util.StringUtils;
+
 public class WorkflowActionSearchAction extends JiraWebActionSupport
 {
     private static final Logger log = LoggerFactory.getLogger(WorkflowActionSearchAction.class);
@@ -43,19 +43,11 @@ public class WorkflowActionSearchAction extends JiraWebActionSupport
     @JiraImport
     private final WorkflowManager workflowManager;
 
-//    @JiraImport
-//    private final PageBuilderService pageBuilderService;
-
-//    @JiraImport
     private final WebResourceAssembler webResourceAssembler;
 
     private final WorkflowHeaderWebComponent workflowHeaderWebComponent;
-//
 
-//    @Autowired
-//    private final WorkflowActionHandlerAnalyticsDataProvider workflowActionHandlerAnalyticsDataProvider;
-
-//    @Autowired
+   @Inject
     public WorkflowActionSearchAction(
             ApplicationProperties applicationProperties
             , JiraAuthenticationContext jiraAuthenticationContext
@@ -71,7 +63,7 @@ public class WorkflowActionSearchAction extends JiraWebActionSupport
         this.workflowHeaderWebComponent = (WorkflowHeaderWebComponent)JiraComponentFactory.getInstance().createObject(WorkflowHeaderWebComponent.class);;
     }
 
-    @SupportedMethods({RequestMethod.GET})
+    @GET
     @Override
     public String execute() throws Exception {
 

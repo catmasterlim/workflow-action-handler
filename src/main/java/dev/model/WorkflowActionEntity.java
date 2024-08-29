@@ -47,7 +47,7 @@ public class WorkflowActionEntity {
     @XmlElement(name = "countArgs")
     public int countArgs;
 
-    @XmlElement(name = "asXML")
+    // @XmlElement(name = "asXML")
     public String asXML;
 
 

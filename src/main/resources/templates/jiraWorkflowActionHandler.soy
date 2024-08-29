@@ -220,16 +220,16 @@
         {if $workflowMode == 'draft'}
         <div class="aui-buttons">
             <a target="_blank" class="aui-button aui-button-link criteria-condition-add-grouped"  {if not $hasMultiInTransition}  aria-disabled="true"  {/if}
-            href="AddWorkflowTransitionCondition!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}&amp;nested=true" title="Add grouped condition" resolved="">
+            href="AddWorkflowTransitionCondition!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowTransition={$workflowTransition}&amp;count={$count}&amp;nested=true" title="Add grouped condition" resolved="">
             <span class="aui-icon aui-icon-small aui-iconfont-devtools-fork">
             Add grouped condition
             </span>
             </a>
-            <a target="_blank" class="aui-button aui-button-link criteria-condition-edit" {if $countArgs < 2} aria-disabled="true" {/if} href="EditWorkflowTransitionConditionParams!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
+            <a target="_blank" class="aui-button aui-button-link criteria-condition-edit" {if $countArgs < 2} aria-disabled="true" {/if} href="EditWorkflowTransitionConditionParams!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
             <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
             </a>
 
-            <a target="_blank" class="aui-button aui-button-link criteria-condition-delete" href="DeleteWorkflowTransitionCondition.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+            <a target="_blank" class="aui-button aui-button-link criteria-condition-delete" href="DeleteWorkflowTransitionCondition.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
             <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
             </a>
         </div>
@@ -308,10 +308,10 @@
         {if $workflowMode == 'draft'}
         <div class="aui-buttons">
 
-            <a target="_blank" {if $countArgs < 2} aria-disabled="true" {/if} class="aui-button aui-button-link criteria-validator-edit" href="EditWorkflowTransitionValidatorParams!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
+            <a target="_blank" {if $countArgs < 2} aria-disabled="true" {/if} class="aui-button aui-button-link criteria-validator-edit" href="EditWorkflowTransitionValidatorParams!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
                 <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
             </a>
-            <a target="_blank" class="aui-button aui-button-link criteria-validator-delete" href="DeleteWorkflowTransitionValidator.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+            <a target="_blank" class="aui-button aui-button-link criteria-validator-delete" href="DeleteWorkflowTransitionValidator.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
                 <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
             </a>
         </div>
@@ -372,10 +372,10 @@
     <li class="criteria-item" style="border-top: 0px;list-style-type: none;">
         {if $workflowMode == 'draft'}
         <div class="aui-buttons">
-            <a target="_blank" {if $countArgs < 3} aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-edit" href="EditWorkflowTransitionPostFunctionParams!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
+            <a target="_blank" {if $countArgs < 3} aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-edit" href="EditWorkflowTransitionPostFunctionParams!default.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Edit" resolved="">
                 <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
             </a>
-            <a target="_blank" {if not $canDelete } aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-delete" href="DeleteWorkflowTransitionPostFunction.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
+            <a target="_blank" {if not $canDelete } aria-disabled="true" {/if} class="aui-button aui-button-link criteria-post-function-delete" href="DeleteWorkflowTransitionPostFunction.jspa?workflowMode={$workflowMode}&amp;atl_token={$atl_token}&amp;workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowTransition={$workflowTransition}&amp;count={$count}" title="Delete" resolved="">
                 <span class="aui-icon aui-icon-small aui-iconfont-remove">Delete</span>
             </a>
         </div>
@@ -505,7 +505,7 @@
         {/switch}
     {/let}
 
-  <a target="_blank" test="{$actionType}" href="ViewWorkflowTransition.jspa?workflowMode={$workflowMode}&amp;{if $workflowMode=='draft'}atl_token={$atl_token}&amp;{/if}workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowStep={$workflowStepId}&amp;workflowTransition={$workflowTransition}" title="" id="edit_action_{$workflowStepId}_{$workflowTransition}">{$transition['name']}</a>
+  <a target="_blank" test="{$actionType}" href="ViewWorkflowTransition.jspa?workflowMode={$workflowMode}&amp;{if $workflowMode=='draft'}atl_token={$atl_token}&amp;{/if}workflowName={$workflowName}&amp;descriptorTab={$descriptorTab}&amp;workflowTransition={$workflowTransition}" title="" id="edit_action_{$workflowStepId}_{$workflowTransition}">{$transition['name']}</a>
   <span class="smallgrey">({$workflowTransition})</span>
 {/template}
 

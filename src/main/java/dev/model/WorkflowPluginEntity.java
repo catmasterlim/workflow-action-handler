@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Optional;
 
 
 @XmlRootElement(name = "WorkflowPluginEntity")
@@ -18,6 +19,12 @@ public class WorkflowPluginEntity {
 
     @XmlElement(name = "name")
     public String name;
+
+    @XmlElement(name = "in_key")
+    public String in_key;
+
+    @XmlElement(name = "in_name")
+    public String in_name;
 
     @XmlElement(name = "isSystemPlugin")
     public boolean isSystemPlugin;
@@ -32,12 +39,38 @@ public class WorkflowPluginEntity {
         this.isBundledPlugin = false;
     }
 
-    public WorkflowPluginEntity(Plugin plugin){
-        this.key = plugin.getKey();
-        this.name = plugin.getName();
-        this.isSystemPlugin = false;
-        this.isBundledPlugin = plugin.isBundledPlugin();
+
+
+    public static WorkflowPluginEntity Create(String classFullName, Optional<Plugin> plugin){
+
+        boolean isBundledPlugin = Const.isBundledClassType(classFullName);
+        boolean isSystemPlugin = Const.isSystemClassType(classFullName);
+
+        WorkflowPluginEntity pluginEntity = null;
+        if(isBundledPlugin){
+            if( isSystemPlugin ) {
+                pluginEntity = CreateJiraBundlePluginEntity();
+            } else {
+                pluginEntity = CreateJiraSystemEntity();
+            }
+        } else {
+            pluginEntity = CreateUnknownPluginEntity();
+            pluginEntity.in_key = classFullName;
+        }
+
+        if(plugin.isPresent()) {
+            if (isBundledPlugin == false) {
+                pluginEntity.key = plugin.get().getKey();
+                pluginEntity.name = plugin.get().getName();
+            } else {
+                pluginEntity.in_key = plugin.get().getKey();
+                pluginEntity.in_name = plugin.get().getName();
+            }
+        }
+
+        return pluginEntity;
     }
+
 
     public static  WorkflowPluginEntity CreateUnknownPluginEntity(){
         WorkflowPluginEntity entity = new WorkflowPluginEntity();
@@ -46,29 +79,18 @@ public class WorkflowPluginEntity {
         entity.isBundledPlugin = false;
         return  entity;
     }
-    public static  WorkflowPluginEntity CreateJiraBundlePluginEntity(WorkflowPluginEntity pluginEntity){
+    public static  WorkflowPluginEntity CreateJiraBundlePluginEntity(){
         WorkflowPluginEntity entity = new WorkflowPluginEntity();
-        if( pluginEntity == null ) {
-            entity.key = "com.atlassian.jira.plugin.bundled";
-            entity.name = "Jira Bundled Plugin";
-        } else {
-            entity.key = pluginEntity.key;
-            entity.name = pluginEntity.name;
-        }
+
+        entity.key = "com.atlassian.jira.plugin.bundled";
         entity.name = "Jira Bundled Plugin";
         entity.isSystemPlugin = false;
         entity.isBundledPlugin = true;
         return  entity;
     }
-    public static  WorkflowPluginEntity CreateJiraSystemEntity(WorkflowPluginEntity pluginEntity){
+    public static  WorkflowPluginEntity CreateJiraSystemEntity(){
         WorkflowPluginEntity entity = new WorkflowPluginEntity();
-        if( pluginEntity == null ) {
-            entity.key = "com.atlassian.jira.plugin.bundled";
-            entity.name = "Jira Bundled Plugin";
-        } else {
-            entity.key = pluginEntity.key;
-            entity.name = pluginEntity.name;
-        }
+        entity.key = "com.atlassian.jira.plugin.bundled";
         entity.name = "Jira Bundled Plugin";
         entity.isSystemPlugin = true;
         entity.isBundledPlugin = true;

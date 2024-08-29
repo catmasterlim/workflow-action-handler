@@ -13,6 +13,8 @@ package dev.data;
  import com.atlassian.webresource.api.data.WebResourceDataProvider;
  import com.google.common.collect.ImmutableMap;
  import dev.api.WorkflowActionHandlerAnalyticsDataProvider;
+ import dev.api.WorkflowActionHandlerHelper;
+ import org.springframework.beans.factory.annotation.Autowired;
 
  import java.io.IOException;
  import java.io.Writer;
@@ -36,12 +38,16 @@ public class WorkflowActionHandlerAnalyticsDataProviderImpl
     @JiraImport
     private final JiraAuthenticationContext jiraAuthenticationContext;
 
+    @Autowired
+    private final WorkflowActionHandlerHelper helper;
 
-    public WorkflowActionHandlerAnalyticsDataProviderImpl(ProjectPermissionHelper projectPermissionHelper, GlobalPermissionManager globalPermissionManager, ProjectWorkflowSchemeHelper projectWorkflowSchemeHelper, JiraAuthenticationContext jiraAuthenticationContext) {
+
+    public WorkflowActionHandlerAnalyticsDataProviderImpl(ProjectPermissionHelper projectPermissionHelper, GlobalPermissionManager globalPermissionManager, ProjectWorkflowSchemeHelper projectWorkflowSchemeHelper, JiraAuthenticationContext jiraAuthenticationContext, WorkflowActionHandlerHelper helper) {
         this.projectPermissionHelper = projectPermissionHelper;
         this.globalPermissionManager = globalPermissionManager;
         this.projectWorkflowSchemeHelper = projectWorkflowSchemeHelper;
         this.jiraAuthenticationContext = jiraAuthenticationContext;
+        this.helper = helper;
     }
 
     @Override

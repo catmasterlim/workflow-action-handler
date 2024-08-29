@@ -15,6 +15,12 @@ public class ErrorFactory {
         return model;
     }
 
+    public static ErrorModel CreateNoLoginError(){
+        ErrorModel model = new ErrorModel(400, "Login", "로그인 상태가 아님", "");
+        return model;
+    }
+
+
     public static ErrorModel CreatePermissionError(){
         ErrorModel model = new ErrorModel(400, "PermissionError", "권한이 없음", "");
         return model;

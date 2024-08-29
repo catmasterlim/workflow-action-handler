@@ -31,8 +31,8 @@ public class WorkflowActionModel {
     @XmlElement(name = "description")
     private String description;
 
-    @XmlElement(name = "isDraft")
-    public boolean isDraft;
+    @XmlElement(name = "workflowMode")
+    public String workflowMode;
 
     @XmlElement(name = "isActive")
     public boolean isActive;
@@ -51,16 +51,16 @@ public class WorkflowActionModel {
     public WorkflowActionModel() {
     }
 
-    public WorkflowActionModel(ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager, boolean includedSystem, boolean includedFiltered, JiraWorkflow workflow, boolean isDraft, WorkflowActionFilterModel filer ) {
+    public WorkflowActionModel(ConstantsManager constantsManager, StatusCategoryManager statusCategoryManager, boolean includedSystem, boolean includedFiltered, JiraWorkflow workflow, String workflowMode, WorkflowActionFilterModel filer ) {
 
         this.name = workflow.getName();
-        this.isDraft = isDraft;
+        this.workflowMode = workflowMode;
         this.description = workflow.getDescription();
 
         // maps
 
         // transition
-        WorkflowTransitionModel transitionModel = new WorkflowTransitionModel(workflow, isDraft);
+        WorkflowTransitionModel transitionModel = new WorkflowTransitionModel(workflow, workflowMode);
         this.transitionMap = transitionModel.getTransitionMap();
         this.maps.put("transitionMap", this.transitionMap);
         // status
@@ -70,7 +70,7 @@ public class WorkflowActionModel {
         statusCategoryManager.getStatusCategories().forEach(el -> this.statusCategoryMap.put( el.getId(), new WorkflowStatusCategoryEntity(el, workflow) ));
         this.maps.put("statusCategoryMap", this.statusCategoryMap);
 
-        WorkflowActionItemEntityFactory factory = new WorkflowActionItemEntityFactory(workflow, isDraft, filer);
+        WorkflowActionItemEntityFactory factory = new WorkflowActionItemEntityFactory(workflow, workflowMode, filer);
 
 
         for(ActionDescriptor transition :  workflow.getAllActions()){

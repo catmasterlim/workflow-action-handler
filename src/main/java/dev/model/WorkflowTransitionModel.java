@@ -19,8 +19,8 @@ public class WorkflowTransitionModel {
     @XmlElement(name = "description")
     private String description;
 
-    @XmlElement(name = "isDraft")
-    public boolean isDraft;
+    @XmlElement(name = "workflowMode")
+    public String workflowMode;
 
     @XmlElement(name = "isActive")
     public boolean isActive;
@@ -33,9 +33,9 @@ public class WorkflowTransitionModel {
     public WorkflowTransitionModel() {
     }
 
-    public WorkflowTransitionModel(JiraWorkflow workflow, boolean isDraft) {
+    public WorkflowTransitionModel(JiraWorkflow workflow, String workflowMode) {
         this.name = workflow.getName();
-        this.isDraft = isDraft;
+        this.workflowMode = workflowMode;
         this.description = workflow.getDescription();
 
         for(ActionDescriptor transition :  workflow.getAllActions()){

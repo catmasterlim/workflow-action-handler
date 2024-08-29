@@ -4,6 +4,7 @@ package dev.model;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +25,12 @@ public class WorkflowActionPostFunctionEntity extends WorkflowActionEntity {
         super(WorkflowActionType.PostFunction);
 
         this.id= descriptor.getId();
-        this.className = (String)descriptor.getArgs().get("class.name");
+        this.className = ((String)descriptor.getArgs().get("class.name")).trim();
         this.classSimpleName = this.className.substring(this.className.lastIndexOf(".")+1);
         this.name = descriptor.getName();
         this.order = order;
         this.transitionId = transitionId;
-        this.args = descriptor.getArgs();
+        this.args = new HashMap(descriptor.getArgs());
         this.countArgs = this.args.size();
         this.asXML = descriptor.asXML();
         this.isFiltered = false;
